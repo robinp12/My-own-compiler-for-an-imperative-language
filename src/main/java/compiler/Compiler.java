@@ -3,8 +3,22 @@
  */
 package compiler;
 
+import compiler.Lexer.Lexer;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.Reader;
+import java.io.StringReader;
+
 public class Compiler {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         System.out.println("Hello from the compiler !");
+        Reader reader = new StringReader("var x int=12;");
+        Lexer lexer = new Lexer(reader);
+
+        lexer.getNextSymbol();
+        lexer.getNextSymbol();
+
+        System.out.println("3nd symbol : " + lexer.getNextSymbol().toChar());
     }
 }
