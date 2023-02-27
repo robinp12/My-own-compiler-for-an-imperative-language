@@ -2,12 +2,10 @@ package compiler.Lexer;
 
 public class Symbol {
 
-    private char symbol;
+    private final SymbolKind kind;
 
-    public Symbol(char symbol){
-        this.symbol = symbol;
+    public Symbol(SymbolKind kind){
+        this.kind = kind;
     }
-    public char toChar() {
-        return symbol;
-    }
+
 }

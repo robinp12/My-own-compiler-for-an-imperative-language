@@ -1,35 +1,44 @@
 package compiler.Lexer;
-import java.io.IOException;
 import java.io.Reader;
+import java.util.Arrays;
 
 public class Lexer {
 
-    private Reader input;
-    private StringBuilder stringBuilder;
-    private int next;
+    private int count;
+    final static byte EOI = 0x1A;
+    char[] array = new char[100];
 
     public Lexer(Reader input){
-        this.input = input;
-        this.stringBuilder = new StringBuilder();
-        this.next = 0;
-
-        int valChar;
-
-        while (true) {
-            try {
-                if ((valChar = input.read()) == -1) break;
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-            stringBuilder.append((char) valChar);
+        try {
+            input.read(array);
+        } catch (Exception e) {
+            e.getStackTrace();
         }
+    }
+    public int get_char(int i){
+        return i < array.length ? this.array[i] : EOI;
     }
 
     public Symbol getNextSymbol() {
-        char character = this.stringBuilder.charAt(next);
-        this.next+=1;
-
-        return new Symbol(character);
+        while(true){
+            System.out.println((char) get_char(count));
+            switch (get_char(count)){
+                case ' ':
+                    break;
+                case '\t':
+                case '\n':
+                case '/':
+                    if(get_char(++count)=='/'){
+                        // Case of comment
+                        System.out.println("got a comment (//)");
+                    }
+                case ';':
+                    System.out.println("got an end line (;)");
+                case EOI:
+                    System.out.println("EOF");
+                    return null;
+            }
+            count++;
+        }
     }
-
 }
