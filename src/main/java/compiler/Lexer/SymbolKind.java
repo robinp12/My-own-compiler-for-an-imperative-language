@@ -21,6 +21,7 @@ public enum SymbolKind {
     MINUS("-"),
     STAR("*"),
     SLASH("/"),
+    COMMENT("//"),
     PERC("%"),
     EQEQ("=="),
     DIFF("<>"),
