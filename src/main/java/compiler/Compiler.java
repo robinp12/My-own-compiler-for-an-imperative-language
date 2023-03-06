@@ -4,20 +4,19 @@
 package compiler;
 
 import compiler.Lexer.Lexer;
+import compiler.Lexer.Symbol;
 
-import java.io.IOException;
-import java.io.Reader;
 import java.io.StringReader;
 
 public class Compiler {
     public static void main(String[] args) {
         System.out.println("Hello from the compiler !");
         String input = "var x int = 2;";
-
         StringReader reader = new StringReader(input);
         Lexer lexer = new Lexer(reader);
-        lexer.getNextSymbol();
+        for (Symbol symbol : lexer.symbols) {
+            System.out.println(symbol.toString());
+        }
 
-        reader.close();
     }
 }
