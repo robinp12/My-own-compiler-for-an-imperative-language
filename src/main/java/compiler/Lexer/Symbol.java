@@ -16,6 +16,6 @@ public class Symbol {
 
     @Override public String toString ()
     {
-        return "Symbol{kind = " + kind + ", string = " + string + "}";
+        return "Symbol{kind = " + kind + ", string = '" + string + "'}";
     }
 }

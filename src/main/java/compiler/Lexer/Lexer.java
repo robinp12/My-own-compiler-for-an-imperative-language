@@ -122,8 +122,14 @@ public class Lexer {
                 case '(' : i++; return new Symbol(SymbolKind.LPAR);
                 case '/' :
                     if (get_char(++i) == '/'){
+                        // comments
+                        StringBuilder str = new StringBuilder();
+                        while (get_char(++i) != '\n' ){
+                            if(get_char(i) == EOI) break;
+                            str.append((char) get_char(i));
+                        }
                         i++;
-                        return new Symbol(SymbolKind.COMMENT);
+                        return new Symbol(SymbolKind.COMMENT,str.toString());
                     }
                     return new Symbol(SymbolKind.SLASH);
 
