@@ -2,6 +2,9 @@ package compiler.Lexer;
 
 public enum SymbolKind {
 
+    INT("int"),
+    DOUBLE("double"),
+    NUM("number"),
     CONST("const"),
     RECORD("record"),
     VAR("var"),
@@ -37,7 +40,11 @@ public enum SymbolKind {
     RBRACK("]"),
     DOT("."),
     SEMI(";"),
-    COMA(",");
+    COMA(","),
+    LITERAL("literal"),
+    STRING("string"),
+    TRUE("true"),
+    FALSE("false");
 
 
 

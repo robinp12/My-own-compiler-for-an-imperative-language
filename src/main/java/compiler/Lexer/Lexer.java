@@ -26,7 +26,7 @@ public class Lexer {
                 throw new RuntimeException(e);
             }
         }
-        input_string = str.codePoints().toArray();
+        input_string = str.toLowerCase().codePoints().toArray();
         System.out.println(str);
         symbols = lex();
 
@@ -46,22 +46,68 @@ public class Lexer {
         return i < input_string.length ? this.input_string[i] : EOI;
     }
 
-    public String get_literal(int i){
-        String lit = new String();
-
+    public String get_literal(){
+        String lit = String.valueOf((char) get_char(i)); i++;
+        while(i < input_string.length){
+            char c = (char) get_char(i);
+            switch (c){
+                case 'a': case 'b': case 'c': case 'd':
+                case 'e': case 'f': case 'g': case 'h':
+                case 'i': case 'j': case 'k': case 'l':
+                case 'm': case 'n': case 'o': case 'p':
+                case 'q': case 'r': case 's': case 't':
+                case 'u': case 'v': case 'w': case 'x':
+                case 'y': case 'z': case '_': case '0':
+                case '1': case '2': case '3': case '4':
+                case '5': case '6': case '7': case '8':
+                case '9':{ lit += String.valueOf(c); i++; break;}
+                default:
+                    return lit;
+            }
+        }
         return lit;
+    }
+
+    public String get_number(){
+        String num = String.valueOf((char) get_char(i)); i++;
+        while(i < input_string.length){
+            char c = (char) get_char(i);
+            switch (c){
+                case '0': case '1': case '2': case '3':
+                case '4': case '5': case '6': case '7':
+                case '9': case '.': { num += String.valueOf(c); i++; break;}
+                default:
+                    return num;
+            }
+        }
+        return num;
+    }
+
+    public String get_string(){
+        String str = String.valueOf((char) get_char(i)); i++;
+        while(i < input_string.length ){
+            char c = (char) get_char(i);
+            switch (c){
+                case '"':
+                    return str;
+                default:
+                    { str += String.valueOf(c); i++; break;}
+            }
+        }
+        return str;
     }
     
     public Symbol getNextSymbol() {
-        int[] buf = new int[50];
-        int start;
-        while(true)
+        int c;
+        while(i < input_string.length)
         {
             switch (get_char(i))
             {
-                case ' ':
-                case '\t':
-                case '\n':
+                case ' ': case '\t': case '\n':
+                    do {c = get_char(++i); }
+                    while (c == ' ' || c == '\t' || c == '\n');
+                    break;
+
                 case EOI : return null;
 
                 //delimiters
@@ -115,8 +161,12 @@ public class Lexer {
                         i+=2;
                         return new Symbol(SymbolKind.TO);
                     }
+                    else if (get_char(i+1) == 'r' && get_char(i+2) == 'u' && get_char(i+3) == 'e'){
+                        i+=4;
+                        return new Symbol(SymbolKind.TRUE);
+                    }
                     else
-                        return new Symbol(SymbolKind.STRINGLITERAL,get_literal(i));
+                        return new Symbol(SymbolKind.LITERAL,get_literal());
 
                 case 'b' :
                     if (get_char(i+1) == 'y'){
@@ -124,15 +174,19 @@ public class Lexer {
                         return new Symbol(SymbolKind.BY);
                     }
                     else
-                        return new Symbol(SymbolKind.STRINGLITERAL,get_literal(i));
+                        return new Symbol(SymbolKind.LITERAL,get_literal());
 
                 case 'i' :
                     if (get_char(i+1) == 'f'){
                         i+=2;
                         return new Symbol(SymbolKind.IF);
                     }
+                    else if (get_char(i+1) == 'n' && get_char(i+2) == 't'){
+                        i+=3;
+                        return new Symbol(SymbolKind.INT);
+                    }
                     else
-                        return new Symbol(SymbolKind.STRINGLITERAL,get_literal(i));
+                        return new Symbol(SymbolKind.LITERAL,get_literal());
 
                 case 'o' :
                     if (get_char(i+1) == 'r'){
@@ -140,7 +194,7 @@ public class Lexer {
                         return new Symbol(SymbolKind.OR);
                     }
                     else
-                        return new Symbol(SymbolKind.STRINGLITERAL,get_literal(i));
+                        return new Symbol(SymbolKind.LITERAL,get_literal());
 
                 case 'a' :
                     if (get_char(i+1) == 'n' && get_char(i+2) == 'd'){
@@ -148,15 +202,19 @@ public class Lexer {
                         return new Symbol(SymbolKind.AND);
                     }
                     else
-                        return new Symbol(SymbolKind.STRINGLITERAL,get_literal(i));
+                        return new Symbol(SymbolKind.LITERAL,get_literal());
 
                 case 'f' :
                     if (get_char(i+1) == 'o' && get_char(i+2) == 'r'){
                         i+=3;
                         return new Symbol(SymbolKind.FOR);
                     }
+                    else if (get_char(i+1) == 'a' && get_char(i+2) == 'l' && get_char(i+3) == 's' && get_char(i+4) == 'e'){
+                        i+=5;
+                        return new Symbol(SymbolKind.FALSE);
+                    }
                     else
-                        return new Symbol(SymbolKind.STRINGLITERAL,get_literal(i));
+                        return new Symbol(SymbolKind.LITERAL,get_literal());
 
                 case 'v' :
                     if (get_char(i+1) == 'a' && get_char(i+2) == 'r'){
@@ -168,7 +226,7 @@ public class Lexer {
                         return new Symbol(SymbolKind.VAL);
                     }
                     else
-                        return new Symbol(SymbolKind.STRINGLITERAL,get_literal(i));
+                        return new Symbol(SymbolKind.LITERAL,get_literal());
 
                 case 'e' :
                     if (get_char(i+1) == 'l' && get_char(i+2) == 's' && get_char(i+3) == 'e'){
@@ -176,7 +234,7 @@ public class Lexer {
                         return new Symbol(SymbolKind.ELSE);
                     }
                     else
-                        return new Symbol(SymbolKind.STRINGLITERAL,get_literal(i));
+                        return new Symbol(SymbolKind.LITERAL,get_literal());
 
                 case 'p' :
                     if (get_char(i+1) == 'r' && get_char(i+2) == 'o' && get_char(i+3) == 'c'){
@@ -184,7 +242,7 @@ public class Lexer {
                         return new Symbol(SymbolKind.PROC);
                     }
                     else
-                        return new Symbol(SymbolKind.STRINGLITERAL,get_literal(i));
+                        return new Symbol(SymbolKind.LITERAL,get_literal());
 
                 case 'w' :
                     if (get_char(i+1) == 'h' && get_char(i+2) == 'i' && get_char(i+3) == 'l' && get_char(i+4) == 'e'){
@@ -192,7 +250,7 @@ public class Lexer {
                         return new Symbol(SymbolKind.WHILE);
                     }
                     else
-                        return new Symbol(SymbolKind.STRINGLITERAL,get_literal(i));
+                        return new Symbol(SymbolKind.LITERAL,get_literal());
 
                 case 'c' :
                     if (get_char(i+1) == 'o' && get_char(i+2) == 'n' && get_char(i+3) == 's' && get_char(i+4) == 't'){
@@ -200,7 +258,7 @@ public class Lexer {
                         return new Symbol(SymbolKind.CONST);
                     }
                     else
-                        return new Symbol(SymbolKind.STRINGLITERAL,get_literal(i));
+                        return new Symbol(SymbolKind.LITERAL,get_literal());
 
                 case 'r' :
                     if (get_char(i+1) == 'e' && get_char(i+2) == 't' && get_char(i+3) == 'u' && get_char(i+4) == 'r' && get_char(i+5) == 'n'){
@@ -212,13 +270,36 @@ public class Lexer {
                         return new Symbol(SymbolKind.RECORD);
                     }
                     else
-                        return new Symbol(SymbolKind.STRINGLITERAL,get_literal(i));
+                        return new Symbol(SymbolKind.LITERAL,get_literal());
+
+                case 'd':
+                    if (get_char(i+1) == 'o' && get_char(i+2) == 'u' && get_char(i+3) == 'b' && get_char(i+4) == 'l' && get_char(i+5) == 'e'){
+                        i+=6;
+                        return new Symbol(SymbolKind.DOUBLE);
+                    }
+                    else
+                        return new Symbol(SymbolKind.LITERAL,get_literal());
+
+                case 'g': case 'h': case 'j':
+                case 'k': case 'l': case 'm': case 'n':
+                case 'q': case 's': case 'u': case 'x':
+                case 'y': case 'z': case '_':
+                    return new Symbol(SymbolKind.LITERAL,get_literal());
+
+                case '0': case '1': case '2': case '3':
+                case '4': case '5': case '6': case '7':
+                case '8': case '9': return new Symbol(SymbolKind.NUM, get_number());
+
+                case '"':
+                    { i++; return new Symbol(SymbolKind.STRING, get_string()); }
 
                 default:
+                    System.out.println("Illegal argument : " + (char)get_char(i) );
                     throw new IllegalArgumentException();
 
             }
         }
+        return null;
     }
 
 }
