@@ -17,16 +17,25 @@ public class TestLexer {
         String input = "var x int = 2;";
         StringReader reader = new StringReader(input);
         Lexer lexer = new Lexer(reader);
-        for (Symbol symbol : lexer.symbols) {
-            assertNotNull(symbol);
+        Symbol symbol = lexer.getNextSymbol();
+        assertNotNull(symbol);
+        assertEquals(symbol.kind,SymbolKind.VAR);
+        for (int i = 0; i < 3; i++) {
+            symbol = lexer.getNextSymbol();
         }
+        assertEquals(symbol.kind,SymbolKind.EQUALS);
     }
     @Test
     public void testComment() {
         String input = "//var a int = 0;";
         StringReader reader = new StringReader(input);
         Lexer lexer = new Lexer(reader);
-        assertEquals(lexer.symbols[0].kind,SymbolKind.COMMENT);
+        Symbol symbol = lexer.getNextSymbol();
+        do{
+            assertEquals(symbol.kind,SymbolKind.COMMENT);
+            symbol = lexer.getNextSymbol();
+        } while (symbol != null);
+
     }
 
     @Test
@@ -34,8 +43,13 @@ public class TestLexer {
         String input = "var x double = 2.00;";
         StringReader reader = new StringReader(input);
         Lexer lexer = new Lexer(reader);
-        assertEquals(lexer.symbols[2].kind,SymbolKind.DOUBLE);
-        assertEquals(lexer.symbols[3].kind,SymbolKind.EQUALS);
+        Symbol symbol = lexer.getNextSymbol();
+        for (int i = 0; i < 2; i++) {
+            symbol = lexer.getNextSymbol();
+        }
+        assertEquals(symbol.kind,SymbolKind.DOUBLE);
+        symbol = lexer.getNextSymbol();
+        assertEquals(symbol.kind,SymbolKind.EQUALS);
     }
 
     @Test
@@ -43,8 +57,12 @@ public class TestLexer {
         String input = "if(10<=5) return 1 else return 0";
         StringReader reader = new StringReader(input);
         Lexer lexer = new Lexer(reader);
-        assertEquals(lexer.symbols[0].kind,SymbolKind.IF);
-        assertEquals(lexer.symbols[8].kind,SymbolKind.ELSE);
+        Symbol symbol = lexer.getNextSymbol();
+        assertEquals(symbol.kind,SymbolKind.IF);
+        for (int i = 0; i < 8; i++) {
+            symbol = lexer.getNextSymbol();
+        }
+        assertEquals(symbol.kind,SymbolKind.ELSE);
     }
 
     @Test
@@ -52,9 +70,11 @@ public class TestLexer {
         String input = "this is a test";
         StringReader reader = new StringReader(input);
         Lexer lexer = new Lexer(reader);
-        for (Symbol symbol : lexer.symbols) {
+        Symbol symbol = lexer.getNextSymbol();
+        do{
             assertEquals(symbol.kind, SymbolKind.LITERAL);
-        }
+            symbol = lexer.getNextSymbol();
+        } while (symbol != null);
     }
 
     @Test
@@ -63,7 +83,12 @@ public class TestLexer {
         StringReader reader = new StringReader(input);
         Lexer lexer = new Lexer(reader);
         assertNotNull(lexer);
-        assertEquals(lexer.symbols[4].kind,SymbolKind.LESSEQ);
+        Symbol symbol = lexer.getNextSymbol();
+        for (int i = 0; i < 4; i++) {
+            symbol = lexer.getNextSymbol();
+        }
+        assertEquals(symbol.kind,SymbolKind.LESSEQ);
+
     }
 
     @Test
@@ -71,15 +96,17 @@ public class TestLexer {
         String input = "    ";
         StringReader reader = new StringReader(input);
         Lexer lexer = new Lexer(reader);
-        assertEquals(0,lexer.symbols.length);
+        Symbol symbol = lexer.getNextSymbol();
+        assertNull(symbol);
     }
 
     @Test
     public void testException() {
         String input = " # ";
         StringReader reader = new StringReader(input);
+        Lexer lexer = new Lexer(reader);
         assertThrows(IllegalArgumentException.class, () -> {
-            Lexer lexer = new Lexer(reader);
+            lexer.getNextSymbol();
         });
     }
 

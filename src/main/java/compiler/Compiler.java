@@ -11,12 +11,14 @@ import java.io.StringReader;
 public class Compiler {
     public static void main(String[] args) {
         System.out.println("Hello from the compiler !");
-        String input = "double ysh >= 8.903 // test str =  ouioui \n var x int = 2; ";
+        String input = "double _ysh1 >= 8.903 // test str =  ouioui \n var x int = 2; ";
         StringReader reader = new StringReader(input);
         Lexer lexer = new Lexer(reader);
-        for (Symbol symbol : lexer.symbols) {
-            System.out.println(symbol.toString());
-        }
+        Symbol symbol = lexer.getNextSymbol();
+        do{
+            System.out.println(symbol);
+            symbol = lexer.getNextSymbol();
 
+        } while (symbol != null);
     }
 }

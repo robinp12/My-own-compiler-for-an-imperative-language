@@ -9,7 +9,6 @@ public class Lexer {
     public final int[] input_string;
     private int i;
 
-    public final Symbol[] symbols;
 
 
     public Lexer(Reader input) {
@@ -28,19 +27,8 @@ public class Lexer {
         }
         input_string = str.toLowerCase().codePoints().toArray();
         System.out.println(str);
-        symbols = lex();
-
     }
 
-    public Symbol[] lex(){
-        ArrayList<Symbol> symbols = new ArrayList<>(input_string.length/10);
-        i = 0;
-        Symbol symbol;
-        while ((symbol = getNextSymbol()) != null)
-            symbols.add(symbol);
-
-        return symbols.toArray(new Symbol[0]);
-    }
 
     public int get_char(int i){
         return i < input_string.length ? this.input_string[i] : EOI;
