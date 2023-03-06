@@ -45,11 +45,18 @@ public class Lexer {
     public int get_char(int i){
         return i < input_string.length ? this.input_string[i] : EOI;
     }
+
+    public String get_literal(int i){
+        String lit = new String();
+
+        return lit;
+    }
     
     public Symbol getNextSymbol() {
+        int[] buf = new int[50];
+        int start;
         while(true)
         {
-            int c;
             switch (get_char(i))
             {
                 case ' ':
@@ -102,11 +109,116 @@ public class Lexer {
                     }
                     return new Symbol(SymbolKind.MORE);
 
+                //keywords
+                case 't' :
+                    if (get_char(i+1) == 'o'){
+                        i+=2;
+                        return new Symbol(SymbolKind.TO);
+                    }
+                    else
+                        return new Symbol(SymbolKind.STRINGLITERAL,get_literal(i));
+
+                case 'b' :
+                    if (get_char(i+1) == 'y'){
+                        i+=2;
+                        return new Symbol(SymbolKind.BY);
+                    }
+                    else
+                        return new Symbol(SymbolKind.STRINGLITERAL,get_literal(i));
+
+                case 'i' :
+                    if (get_char(i+1) == 'f'){
+                        i+=2;
+                        return new Symbol(SymbolKind.IF);
+                    }
+                    else
+                        return new Symbol(SymbolKind.STRINGLITERAL,get_literal(i));
+
+                case 'o' :
+                    if (get_char(i+1) == 'r'){
+                        i+=2;
+                        return new Symbol(SymbolKind.OR);
+                    }
+                    else
+                        return new Symbol(SymbolKind.STRINGLITERAL,get_literal(i));
+
+                case 'a' :
+                    if (get_char(i+1) == 'n' && get_char(i+2) == 'd'){
+                        i+=3;
+                        return new Symbol(SymbolKind.AND);
+                    }
+                    else
+                        return new Symbol(SymbolKind.STRINGLITERAL,get_literal(i));
+
+                case 'f' :
+                    if (get_char(i+1) == 'o' && get_char(i+2) == 'r'){
+                        i+=3;
+                        return new Symbol(SymbolKind.FOR);
+                    }
+                    else
+                        return new Symbol(SymbolKind.STRINGLITERAL,get_literal(i));
+
+                case 'v' :
+                    if (get_char(i+1) == 'a' && get_char(i+2) == 'r'){
+                        i+=3;
+                        return new Symbol(SymbolKind.VAR);
+                    }
+                    else if (get_char(i+1) == 'a' && get_char(i+2) == 'l'){
+                        i+=3;
+                        return new Symbol(SymbolKind.VAL);
+                    }
+                    else
+                        return new Symbol(SymbolKind.STRINGLITERAL,get_literal(i));
+
+                case 'e' :
+                    if (get_char(i+1) == 'l' && get_char(i+2) == 's' && get_char(i+3) == 'e'){
+                        i+=4;
+                        return new Symbol(SymbolKind.ELSE);
+                    }
+                    else
+                        return new Symbol(SymbolKind.STRINGLITERAL,get_literal(i));
+
+                case 'p' :
+                    if (get_char(i+1) == 'r' && get_char(i+2) == 'o' && get_char(i+3) == 'c'){
+                        i+=4;
+                        return new Symbol(SymbolKind.PROC);
+                    }
+                    else
+                        return new Symbol(SymbolKind.STRINGLITERAL,get_literal(i));
+
+                case 'w' :
+                    if (get_char(i+1) == 'h' && get_char(i+2) == 'i' && get_char(i+3) == 'l' && get_char(i+4) == 'e'){
+                        i+=5;
+                        return new Symbol(SymbolKind.WHILE);
+                    }
+                    else
+                        return new Symbol(SymbolKind.STRINGLITERAL,get_literal(i));
+
+                case 'c' :
+                    if (get_char(i+1) == 'o' && get_char(i+2) == 'n' && get_char(i+3) == 's' && get_char(i+4) == 't'){
+                        i+=5;
+                        return new Symbol(SymbolKind.CONST);
+                    }
+                    else
+                        return new Symbol(SymbolKind.STRINGLITERAL,get_literal(i));
+
+                case 'r' :
+                    if (get_char(i+1) == 'e' && get_char(i+2) == 't' && get_char(i+3) == 'u' && get_char(i+4) == 'r' && get_char(i+5) == 'n'){
+                        i+=6;
+                        return new Symbol(SymbolKind.RETURN);
+                    }
+                    else if (get_char(i+1) == 'e' && get_char(i+2) == 'c' && get_char(i+3) == 'o' && get_char(i+4) == 'r' && get_char(i+5) == 'd'){
+                        i+=6;
+                        return new Symbol(SymbolKind.RECORD);
+                    }
+                    else
+                        return new Symbol(SymbolKind.STRINGLITERAL,get_literal(i));
+
                 default:
-                    
+                    throw new IllegalArgumentException();
+
             }
         }
-        return null;
     }
 
 }
