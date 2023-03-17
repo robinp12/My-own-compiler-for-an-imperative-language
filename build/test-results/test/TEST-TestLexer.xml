@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="TestLexer" tests="1" skipped="0" failures="0" errors="0" timestamp="2023-03-06T16:54:09" hostname="LAPTOP-QUU5U7G9" time="0.012">
+  <properties/>
+  <testcase name="testException" classname="TestLexer" time="0.012"/>
+  <system-out><![CDATA[ # 
+Illegal argument : #
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
