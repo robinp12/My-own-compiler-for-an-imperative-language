@@ -4,11 +4,9 @@ import compiler.Lexer.Lexer;
 import compiler.Lexer.Symbol;
 
 public class Parser {
-    public Lexer lexer;
-    public Symbol root;
+    private Symbol root;
 
-    public Parser(Lexer lexer){
-        this.lexer = lexer;
+    public Parser(Lexer lexer) {
         this.root = lexer.getNextSymbol();
     }
 
@@ -16,5 +14,4 @@ public class Parser {
     public Symbol getAST(){
         return root;
     }
-
 }

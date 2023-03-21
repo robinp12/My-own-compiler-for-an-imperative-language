@@ -4,14 +4,13 @@
 package compiler;
 
 import compiler.Lexer.Lexer;
-import compiler.Lexer.Symbol;
-import compiler.Parser.BasicASTNode;
 import compiler.Parser.Parser;
 
 import java.io.StringReader;
+import java.text.ParseException;
 
 public class Compiler {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws ParseException {
         System.out.println("Hello from the compiler !");
         String input = "double _ysh1 >= 8.903 // test str =  ouioui \n var x int = 2; ";
         StringReader reader = new StringReader(input);
