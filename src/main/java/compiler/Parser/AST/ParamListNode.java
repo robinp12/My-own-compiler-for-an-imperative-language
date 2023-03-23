@@ -6,6 +6,9 @@ import compiler.Lexer.SymbolKind;
 import java.text.ParseException;
 import java.util.ArrayList;
 
+import static compiler.Parser.Parser.lookahead;
+import static compiler.Parser.Parser.match;
+
 public class ParamListNode extends ParamNode{
 
     public ParamListNode(String identifier, TypeNode type, String name) throws ParseException {

@@ -5,7 +5,10 @@ import compiler.Lexer.SymbolKind;
 import java.text.ParseException;
 import java.util.ArrayList;
 
-public class MethodNode extends TypeNode{
+import static compiler.Parser.Parser.match;
+
+public class MethodNode {
+    //TODO
 
     private String identifier;
     private TypeNode returnType;
@@ -13,7 +16,6 @@ public class MethodNode extends TypeNode{
     private BlockNode body;
 
     public MethodNode(String identifier, TypeNode returnType, ArrayList<ParamNode> parameters, BlockNode body) throws ParseException {
-        super(identifier);
         this.identifier = identifier;
         this.returnType = returnType;
         this.parameters = parameters;
@@ -21,9 +23,9 @@ public class MethodNode extends TypeNode{
     }
 
     public MethodNode parseMethod() throws ParseException{
-        // TODO
-        TypeNode returnType = parseType();
-        String name = match(SymbolKind.LITERAL).string;
+        //TODO
+        TypeNode returnType = null;
+        String name = match(SymbolKind.LITERAL).attribute;
         match(SymbolKind.LPAR);
         ArrayList<ParamNode> params = null;
         match(SymbolKind.RPAR);

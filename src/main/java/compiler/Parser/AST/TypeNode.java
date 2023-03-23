@@ -5,7 +5,9 @@ import compiler.Lexer.SymbolKind;
 
 import java.text.ParseException;
 
-public class TypeNode extends BasicASTNode {
+import static compiler.Parser.Parser.match;
+
+public class TypeNode {
     private String identifier;
 
     public TypeNode(String identifier) throws ParseException {
@@ -14,7 +16,8 @@ public class TypeNode extends BasicASTNode {
     }
 
     public TypeNode parseType() throws ParseException {
+        //TODO Only INT for now
         Symbol identifier = match(SymbolKind.INT);
-        return new TypeNode(identifier.string);
+        return new TypeNode(identifier.attribute);
     }
 }

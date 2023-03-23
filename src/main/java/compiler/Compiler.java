@@ -4,17 +4,38 @@
 package compiler;
 
 import compiler.Lexer.Lexer;
+import compiler.Lexer.SymbolKind;
+import compiler.Parser.AST.MethodNode;
 import compiler.Parser.Parser;
 
 import java.io.StringReader;
 import java.text.ParseException;
+import static compiler.Parser.Parser.lookahead;
+import static compiler.Parser.Parser.match;
+
 
 public class Compiler {
-    public static void main(String[] args) throws ParseException {
+    public static void main(String[] args){
         System.out.println("Hello from the compiler !");
         String input = "double _ysh1 >= 8.903 // test str =  ouioui \n var x int = 2; ";
         StringReader reader = new StringReader(input);
         Lexer lexer = new Lexer(reader);
-        Parser parser = new Parser(lexer);
+        try {
+            new Parser(lexer);
+            match(SymbolKind.DOUBLE);
+            match(SymbolKind.LITERAL);
+            match(SymbolKind.MOREEQ);
+            match(SymbolKind.NUM);
+            match(SymbolKind.COMMENT);
+            match(SymbolKind.VAR);
+            match(SymbolKind.LITERAL);
+            match(SymbolKind.INT);
+            match(SymbolKind.EQUALS);
+            match(SymbolKind.NUM);
+            match(SymbolKind.SEMI);
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 }

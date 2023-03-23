@@ -5,7 +5,9 @@ import compiler.Lexer.SymbolKind;
 import java.text.ParseException;
 import java.util.ArrayList;
 
-public class RecordNode extends BasicASTNode{
+import static compiler.Parser.Parser.match;
+
+public class RecordNode {
 
     private String identifier;
     private TypeNode returnType;
@@ -19,7 +21,7 @@ public class RecordNode extends BasicASTNode{
 
     public RecordNode parseRecord() throws ParseException{
         // TODO
-        String name = match(SymbolKind.LITERAL).string;
+        String name = match(SymbolKind.LITERAL).attribute;
         match(SymbolKind.LBRACE);
         ArrayList<ParamNode> params = null;
         match(SymbolKind.RBRACE);

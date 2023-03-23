@@ -5,7 +5,9 @@ import compiler.Lexer.SymbolKind;
 import java.text.ParseException;
 import java.util.ArrayList;
 
-public class RecordCallNode extends BasicASTNode{
+import static compiler.Parser.Parser.match;
+
+public class RecordCallNode{
 
     private RecordNode record;
     private ArrayList<ParamNode> parameters;
