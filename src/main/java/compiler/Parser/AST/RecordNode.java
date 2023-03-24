@@ -7,14 +7,14 @@ import java.util.ArrayList;
 
 import static compiler.Parser.Parser.match;
 
-public class RecordNode {
+public class RecordNode extends ExpressionNode {
 
     private String identifier;
     private TypeNode returnType;
     private ArrayList<ParamNode> parameters;
     private BlockNode body;
 
-    public RecordNode(String identifier, ArrayList<ParamNode> parameters) throws ParseException {
+    public RecordNode(String identifier, ArrayList<ParamNode> parameters) {
         this.identifier = identifier;
         this.parameters = parameters;
     }
@@ -23,7 +23,7 @@ public class RecordNode {
         // TODO
         String name = match(SymbolKind.LITERAL).attribute;
         match(SymbolKind.LBRACE);
-        ArrayList<ParamNode> params = null;
+        ArrayList<ParamNode> params = ParamListNode.parseParams();
         match(SymbolKind.RBRACE);
         return new RecordNode(name,params);
     }

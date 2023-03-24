@@ -3,12 +3,12 @@ package compiler.Parser.AST;
 import java.text.ParseException;
 import java.util.ArrayList;
 
-public class BlockNode {
+public class BlockNode extends ExpressionNode{
     //TODO
-    public BlockNode() throws ParseException {
+    public BlockNode() {
     }
 
-    public BlockNode parseBlock() throws ParseException {
+    public static BlockNode parseBlock() throws ParseException {
         return new BlockNode();
     }
 }

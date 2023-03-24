@@ -9,19 +9,15 @@ import java.util.ArrayList;
 import static compiler.Parser.Parser.lookahead;
 import static compiler.Parser.Parser.match;
 
-public class ParamListNode extends ParamNode{
+public class ParamListNode extends ExpressionNode {
 
-    public ParamListNode(String identifier, TypeNode type, String name) throws ParseException {
-        super(identifier, type, name);
-    }
-
-    public ArrayList<ParamNode> parseParams() throws ParseException{
+    public static ArrayList<ParamNode> parseParams() throws ParseException{
         ArrayList<ParamNode> parameters = new ArrayList<>();
         if(lookahead.kind != SymbolKind.RPAR){
-            parameters.add(parseParam());
+            parameters.add(ParamNode.parseParam());
             while (lookahead.kind.equals(SymbolKind.COMA)){
                 match(SymbolKind.COMA);
-                parameters.add(parseParam());
+                parameters.add(ParamNode.parseParam());
             }
         }
         return parameters;

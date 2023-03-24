@@ -11,7 +11,7 @@ public class AssignmentNode extends ExpressionNode{
     private ExpressionNode left;
     private ExpressionNode right;
 
-    public AssignmentNode(ExpressionNode left, ExpressionNode right) throws ParseException {
+    public AssignmentNode(ExpressionNode left, ExpressionNode right) {
         this.left = left;
         this.right = right;
     }

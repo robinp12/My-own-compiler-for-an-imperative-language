@@ -7,17 +7,16 @@ import java.text.ParseException;
 
 import static compiler.Parser.Parser.match;
 
-public class TypeNode {
+public class TypeNode extends ExpressionNode {
     private String identifier;
 
-    public TypeNode(String identifier) throws ParseException {
-        super();
+    public TypeNode(String identifier) {
         this.identifier = identifier;
     }
 
-    public TypeNode parseType() throws ParseException {
-        //TODO Only INT for now
-        Symbol identifier = match(SymbolKind.INT);
+    public static TypeNode parseType() throws ParseException {
+        //TODO
+        Symbol identifier = match(SymbolKind.LITERAL);
         return new TypeNode(identifier.attribute);
     }
 }

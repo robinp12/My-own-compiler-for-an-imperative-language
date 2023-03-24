@@ -2,11 +2,9 @@ package compiler.Parser.AST;
 
 import java.text.ParseException;
 
-public class StatementNode {
+public class StatementNode extends ExpressionNode {
 
-
-    public StatementNode() throws ParseException {
+    public StatementNode() {
         
     }
-
 }
