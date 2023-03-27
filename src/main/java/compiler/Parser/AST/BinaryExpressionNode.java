@@ -8,7 +8,6 @@ public class BinaryExpressionNode extends ExpressionNode {
     private ExpressionNode right;
 
     public BinaryExpressionNode(ExpressionNode left, Symbol operator, ExpressionNode right) {
-        super();
         this.left = left;
         this.operator = operator;
         this.right = right;
@@ -24,6 +23,11 @@ public class BinaryExpressionNode extends ExpressionNode {
 
     public ExpressionNode getRight() {
         return right;
+    }
+
+    @Override
+    public <T> T accept(NodeVisitor<T> visitor) {
+        return visitor.visit(this);
     }
 
 }

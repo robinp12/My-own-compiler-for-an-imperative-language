@@ -3,20 +3,19 @@ package compiler.Parser.AST;
 import compiler.Lexer.Symbol;
 import compiler.Lexer.SymbolKind;
 
-import java.text.ParseException;
-
-import static compiler.Parser.Parser.match;
-
 public class TypeNode extends ExpressionNode {
-    private String identifier;
+    private final Symbol typeSymbol;
 
-    public TypeNode(String identifier) {
-        this.identifier = identifier;
+    public TypeNode(Symbol typeSymbol) {
+        this.typeSymbol = typeSymbol;
     }
 
-    public static TypeNode parseType() throws ParseException {
-        //TODO
-        Symbol identifier = match(SymbolKind.LITERAL);
-        return new TypeNode(identifier.attribute);
+    public Symbol getTypeSymbol() {
+        return typeSymbol;
+    }
+
+    @Override
+    public <T> T accept(NodeVisitor<T> visitor) {
+        return visitor.visit(this);
     }
 }
