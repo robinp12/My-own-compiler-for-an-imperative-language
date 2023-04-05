@@ -25,8 +25,7 @@ public class BinaryExpressionNode extends ExpressionNode {
         return right;
     }
 
-    @Override
-    public <T> T accept(NodeVisitor<T> visitor) {
+    public <T> T accept(NodeVisitor visitor) {
         return visitor.visit(this);
     }
 

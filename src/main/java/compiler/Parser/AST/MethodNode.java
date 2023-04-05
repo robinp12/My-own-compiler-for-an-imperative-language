@@ -22,14 +22,20 @@ public class MethodNode extends ExpressionNode {
         this.body = body;
     }
 
-    public MethodNode parseMethod() throws ParseException{
-        TypeNode returnType = TypeNode.parseType();
+    public static MethodNode parseMethod() throws ParseException{
+        match(SymbolKind.PROC);
         String name = match(SymbolKind.LITERAL).attribute;
         match(SymbolKind.LPAR);
         ArrayList<ParamNode> params = ParamListNode.parseParams();
         match(SymbolKind.RPAR);
+        TypeNode returnType = TypeNode.parseType();
         BlockNode body = BlockNode.parseBlock();
+        System.out.println(name);
         return new MethodNode(name, returnType, params, body);
     }
 
+    @Override
+    public <T> T accept(NodeVisitor visitor) {
+        return null;
+    }
 }

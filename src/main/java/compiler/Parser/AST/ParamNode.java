@@ -4,6 +4,8 @@ import compiler.Lexer.Symbol;
 import compiler.Lexer.SymbolKind;
 
 import java.text.ParseException;
+
+import static compiler.Parser.Parser.lookahead;
 import static compiler.Parser.Parser.match;
 
 public class ParamNode extends ExpressionNode {
@@ -16,9 +18,13 @@ public class ParamNode extends ExpressionNode {
     }
 
     public static ParamNode parseParam() throws ParseException{
-        TypeNode type = TypeNode.parseType();
         Symbol identifier = match(SymbolKind.LITERAL);
+        TypeNode type = TypeNode.parseType();
         return new ParamNode(type,identifier.attribute);
     }
 
+    @Override
+    public <T> T accept(NodeVisitor visitor) {
+        return null;
+    }
 }

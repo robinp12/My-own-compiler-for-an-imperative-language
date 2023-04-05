@@ -1,2 +1,10 @@
- # 
-Illegal argument : #
+&proc square(v int) int {return v*v;}
+)(Optional message) Matching Symbol PROC
+,(Optional message) Matching Symbol LITERAL
+)(Optional message) Matching Symbol LPAR
+	LITERAL
+,(Optional message) Matching Symbol LITERAL
+((Optional message) Matching Symbol INT
+)(Optional message) Matching Symbol RPAR
+((Optional message) Matching Symbol INT
++(Optional message) Matching Symbol LBRACE

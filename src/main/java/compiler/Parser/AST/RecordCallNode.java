@@ -27,4 +27,8 @@ public class RecordCallNode extends ExpressionNode {
         return new RecordCallNode(null,params);
     }
 
+    @Override
+    public <T> T accept(NodeVisitor visitor) {
+        return null;
+    }
 }

@@ -28,4 +28,8 @@ public class RecordNode extends ExpressionNode {
         return new RecordNode(name,params);
     }
 
+    @Override
+    public <T> T accept(NodeVisitor visitor) {
+        return null;
+    }
 }

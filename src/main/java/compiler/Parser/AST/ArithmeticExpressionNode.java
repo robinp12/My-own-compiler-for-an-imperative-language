@@ -58,4 +58,9 @@ public class ArithmeticExpressionNode extends ExpressionNode {
             throw new ParseException("Unexpected token: " + lookahead, 0);
         }
     }
+
+    @Override
+    public <T> T accept(NodeVisitor visitor) {
+        return null;
+    }
 }

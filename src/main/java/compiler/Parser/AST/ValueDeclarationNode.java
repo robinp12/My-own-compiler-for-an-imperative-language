@@ -1,26 +1,34 @@
 package compiler.Parser.AST;
+
 import compiler.Lexer.Symbol;
 import compiler.Lexer.SymbolKind;
 
 import java.text.ParseException;
+
 import static compiler.Parser.Parser.match;
 
-public class VariableDeclarationNode {
+public class ValueDeclarationNode extends ExpressionNode{
     private String name;
     private TypeNode type;
     private Symbol initialValue;
 
-    public VariableDeclarationNode(){
+    public ValueDeclarationNode(){
     }
 
-    public static VariableDeclarationNode parseDeclarationVar() throws ParseException {
-        match(SymbolKind.VAR);
+    public static ValueDeclarationNode parseDeclarationVal() throws ParseException {
+        match(SymbolKind.VAL);
         AssignmentNode.parseAssignment();
         Symbol semi = match(SymbolKind.SEMI);
-        return new VariableDeclarationNode();
+        return new ValueDeclarationNode();
     }
+
     @Override
     public String toString() {
-        return "var " + name + " " + type + " = " + initialValue;
+        return "val " + name + " " + type + " = " + initialValue;
+    }
+
+    @Override
+    public <T> T accept(NodeVisitor visitor) {
+        return null;
     }
 }

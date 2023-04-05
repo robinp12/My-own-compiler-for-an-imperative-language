@@ -22,17 +22,6 @@ public class Compiler {
         Lexer lexer = new Lexer(reader);
         try {
             new Parser(lexer);
-            match(SymbolKind.DOUBLE);
-            match(SymbolKind.LITERAL);
-            match(SymbolKind.MOREEQ);
-            match(SymbolKind.NUM);
-            match(SymbolKind.COMMENT);
-            match(SymbolKind.VAR);
-            match(SymbolKind.LITERAL);
-            match(SymbolKind.INT);
-            match(SymbolKind.EQUALS);
-            match(SymbolKind.NUM);
-            match(SymbolKind.SEMI);
         } catch (ParseException e) {
             throw new RuntimeException(e);
         }

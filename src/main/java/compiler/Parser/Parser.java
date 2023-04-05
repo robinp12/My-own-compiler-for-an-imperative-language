@@ -3,10 +3,10 @@ package compiler.Parser;
 import compiler.Lexer.Lexer;
 import compiler.Lexer.Symbol;
 import compiler.Lexer.SymbolKind;
-import compiler.Parser.AST.ExpressionNode;
-import compiler.Parser.AST.Program;
+import compiler.Parser.AST.*;
 
 import java.text.ParseException;
+import java.util.ArrayList;
 
 public class Parser {
     private static Lexer lexer;
@@ -16,21 +16,24 @@ public class Parser {
         this.lexer = lexer;
         this.lookahead = lexer.getNextSymbol();
     }
+    private boolean isAtEnd() {
+        return lookahead.equals(null);
+    }
 
     /* Must return root of AST */
-    public ExpressionNode getAST(){
-        List<ExpressionNode> expressions = new ArrayList<>();
+    public ExpressionNode getAST() throws ParseException {
+        ArrayList<ExpressionNode> expressions = new ArrayList<>();
 
-        while (!isAtEnd()) {
-            try {
-                ExpressionNode expr = parseExpr();
-                expressions.add(expr);
-            } catch (SyntaxErrorException e) {
-                // Report the error and continue parsing
-                System.err.println(e.getMessage());
-                synchronize();
-            }
-            //this.lookahead = lexer.getNextSymbol();
+        SymbolKind nextSymbol = lookahead.kind;
+        if(nextSymbol == SymbolKind.VAR){
+            VariableDeclarationNode var = VariableDeclarationNode.parseDeclarationVar();
+        }
+        if(nextSymbol == SymbolKind.VAL){
+            ValueDeclarationNode val = ValueDeclarationNode.parseDeclarationVal();
+        }
+        if(nextSymbol == SymbolKind.PROC){
+            //TODO
+            MethodNode method = MethodNode.parseMethod();
         }
 
         return new ProgramNode(expressions);
@@ -46,13 +49,5 @@ public class Parser {
             lookahead = lexer.getNextSymbol();
             return matchingSymbol;
         }
-    }
-
-    private boolean isAtEnd() {
-        return lookahead.equals(null);
-    }
-
-    private parseExpr(){
-        
     }
 }

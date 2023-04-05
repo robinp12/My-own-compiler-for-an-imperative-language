@@ -1,6 +1,5 @@
 package compiler.Parser.AST;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class ProgramNode extends ExpressionNode {
@@ -16,7 +15,7 @@ public class ProgramNode extends ExpressionNode {
     }
 
     @Override
-    public <T> T accept(NodeVisitor<T> visitor) {
+    public <T> T accept(NodeVisitor visitor) {
         return visitor.visit(this);
     }
 }
