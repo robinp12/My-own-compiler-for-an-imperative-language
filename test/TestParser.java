@@ -34,7 +34,23 @@ public class TestParser {
     }
     @Test
     public void testBasicProc() throws ParseException {
-        String input = "proc square(v int) int {return v*v;}";
+        String input = "proc square(v int) int {return 0+1;}";
+        StringReader reader = new StringReader(input);
+        Lexer lexer = new Lexer(reader);
+        Parser parser = new Parser(lexer);
+        parser.getAST();
+    }
+    @Test
+    public void testBasicIf() throws ParseException {
+        String input = "if v == 10 { return true; }";
+        StringReader reader = new StringReader(input);
+        Lexer lexer = new Lexer(reader);
+        Parser parser = new Parser(lexer);
+        parser.getAST();
+    }
+    @Test
+    public void testBasicElse() throws ParseException {
+        String input = "if v == 10 { return true; } else { return false;}";
         StringReader reader = new StringReader(input);
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);

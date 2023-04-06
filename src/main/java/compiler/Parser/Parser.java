@@ -32,11 +32,13 @@ public class Parser {
             ValueDeclarationNode val = ValueDeclarationNode.parseDeclarationVal();
         }
         if(nextSymbol == SymbolKind.PROC){
-            //TODO
             MethodNode method = MethodNode.parseMethod();
         }
+        if(nextSymbol == SymbolKind.IF){
+            IfStatementNode ifStmt = IfStatementNode.parseIfStatement();
+        }
 
-        return new ProgramNode(expressions);
+        return null;
     }
 
     public static Symbol match(SymbolKind token) throws ParseException {

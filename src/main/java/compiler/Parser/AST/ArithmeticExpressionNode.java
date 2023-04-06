@@ -20,7 +20,7 @@ public class ArithmeticExpressionNode extends ExpressionNode {
         this.rightOperand = rightOperand;
     }
 
-    public BinaryExpressionNode parseArithmeticExpression() throws ParseException {
+    public static BinaryExpressionNode parseArithmeticExpression() throws ParseException {
         ExpressionNode left = term();
         if(lookahead.kind == SymbolKind.PLUS || lookahead.kind == SymbolKind.MINUS){
             Symbol operator = match(lookahead.kind);
@@ -32,7 +32,7 @@ public class ArithmeticExpressionNode extends ExpressionNode {
 
 
     // Règle pour un terme arithmétique simple (multiplication et division uniquement)
-    public ExpressionNode term() throws ParseException {
+    public static ExpressionNode term() throws ParseException {
         ExpressionNode left = factor();
         while (lookahead.kind == SymbolKind.STAR || lookahead.kind == SymbolKind.SLASH) {
             Symbol operator = match(lookahead.kind); // match le prochain jeton attendu (TIMES ou DIVIDE)
@@ -44,7 +44,10 @@ public class ArithmeticExpressionNode extends ExpressionNode {
     }
 
     // Règle pour un facteur (un nombre ou une expression parenthésée)
-    public ExpressionNode factor() throws ParseException {
+    public static ExpressionNode factor() throws ParseException {
+        if (lookahead.kind == SymbolKind.LITERAL){
+            Symbol var = match(SymbolKind.LITERAL);
+        }
         if (lookahead.kind == SymbolKind.NUM) {
             Symbol number = match(SymbolKind.NUM); // match le prochain jeton attendu (NUMBER)
             // Créer un nouveau nœud d'expression pour représenter le nombre

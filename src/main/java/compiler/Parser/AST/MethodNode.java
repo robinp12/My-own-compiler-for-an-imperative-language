@@ -1,5 +1,6 @@
 package compiler.Parser.AST;
 
+import compiler.Lexer.Symbol;
 import compiler.Lexer.SymbolKind;
 
 import java.text.ParseException;
@@ -10,12 +11,12 @@ import static compiler.Parser.Parser.match;
 public class MethodNode extends ExpressionNode {
     //TODO
 
-    private String identifier;
+    private Symbol identifier;
     private TypeNode returnType;
     private ArrayList<ParamNode> parameters;
     private BlockNode body;
 
-    public MethodNode(String identifier, TypeNode returnType, ArrayList<ParamNode> parameters, BlockNode body) {
+    public MethodNode(Symbol identifier, TypeNode returnType, ArrayList<ParamNode> parameters, BlockNode body) {
         this.identifier = identifier;
         this.returnType = returnType;
         this.parameters = parameters;
@@ -24,13 +25,12 @@ public class MethodNode extends ExpressionNode {
 
     public static MethodNode parseMethod() throws ParseException{
         match(SymbolKind.PROC);
-        String name = match(SymbolKind.LITERAL).attribute;
+        Symbol name = match(SymbolKind.LITERAL);
         match(SymbolKind.LPAR);
         ArrayList<ParamNode> params = ParamListNode.parseParams();
         match(SymbolKind.RPAR);
         TypeNode returnType = TypeNode.parseType();
         BlockNode body = BlockNode.parseBlock();
-        System.out.println(name);
         return new MethodNode(name, returnType, params, body);
     }
 

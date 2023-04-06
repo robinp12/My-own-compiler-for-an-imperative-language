@@ -6,6 +6,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 
 import static compiler.Parser.AST.StatementListNode.parseStatements;
+import static compiler.Parser.Parser.lookahead;
 import static compiler.Parser.Parser.match;
 
 

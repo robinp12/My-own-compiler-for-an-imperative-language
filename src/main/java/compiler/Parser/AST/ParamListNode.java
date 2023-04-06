@@ -14,7 +14,6 @@ public class ParamListNode extends ExpressionNode {
     public static ArrayList<ParamNode> parseParams() throws ParseException{
         ArrayList<ParamNode> parameters = new ArrayList<>();
         if(lookahead.kind != SymbolKind.RPAR){
-            System.out.println(lookahead.kind);
             parameters.add(ParamNode.parseParam());
             while (lookahead.kind.equals(SymbolKind.COMA)){
                 match(SymbolKind.COMA);

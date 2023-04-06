@@ -8,29 +8,31 @@ import java.util.ArrayList;
 import static compiler.Parser.Parser.match;
 
 
-public class AssignmentNode extends ExpressionNode{
+public class AssignmentNode extends StatementNode{
     // TODO
 
     private Symbol identifier;
     private TypeNode type;
     private Symbol value;
 
-    public AssignmentNode(Symbol identifier, TypeNode type, Symbol value) {
+    public AssignmentNode(ExpressionNode expression, Symbol identifier, TypeNode type, Symbol value) {
+        super(expression);
         this.identifier = identifier;
         this.type = type;
         this.value = value;
     }
 
     public static AssignmentNode parseAssignment() throws ParseException{
+        ExpressionNode expressionNode = new ExpressionNode() {
+            @Override
+            public <T> T accept(NodeVisitor visitor) {
+                return null;
+            }
+        };
         Symbol identifier = match(SymbolKind.LITERAL);
         TypeNode type = TypeNode.parseType();
         match(SymbolKind.EQUALS);
         Symbol value = match(SymbolKind.NUM);
-        return new AssignmentNode(identifier, type, value);
-    }
-
-    @Override
-    public <T> T accept(NodeVisitor visitor) {
-        return null;
+        return new AssignmentNode(expressionNode,identifier, type, value);
     }
 }
