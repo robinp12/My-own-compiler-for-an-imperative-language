@@ -5,6 +5,8 @@ import compiler.Lexer.SymbolKind;
 
 import java.text.ParseException;
 import java.util.ArrayList;
+
+import static compiler.Parser.Parser.lookahead;
 import static compiler.Parser.Parser.match;
 
 
@@ -29,10 +31,16 @@ public class AssignmentNode extends StatementNode{
                 return null;
             }
         };
+        //VariableDeclarationNode left = VariableDeclarationNode.parseDeclarationVar();
         Symbol identifier = match(SymbolKind.LITERAL);
         TypeNode type = TypeNode.parseType();
         match(SymbolKind.EQUALS);
-        Symbol value = match(SymbolKind.NUM);
+        Symbol value = null;
+        switch (lookahead.kind){
+            case NUM -> value = match(SymbolKind.NUM);
+            case TRUE -> value = match(SymbolKind.TRUE);
+            case FALSE -> value = match(SymbolKind.FALSE);
+        }
         return new AssignmentNode(expressionNode,identifier, type, value);
     }
 }

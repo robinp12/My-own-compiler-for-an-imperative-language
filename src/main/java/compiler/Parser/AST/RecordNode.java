@@ -19,13 +19,14 @@ public class RecordNode extends ExpressionNode {
         this.parameters = parameters;
     }
 
-    public RecordNode parseRecord() throws ParseException{
+    public static RecordNode parseRecord() throws ParseException{
         // TODO
+        match(SymbolKind.RECORD);
         String name = match(SymbolKind.LITERAL).attribute;
         match(SymbolKind.LBRACE);
-        ArrayList<ParamNode> params = ParamListNode.parseParams();
+        //...
         match(SymbolKind.RBRACE);
-        return new RecordNode(name,params);
+        return new RecordNode(name,null);
     }
 
     @Override

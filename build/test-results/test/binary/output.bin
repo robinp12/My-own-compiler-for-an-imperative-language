@@ -1,55 +1,7 @@
-3if v == 10 { return true; } else { return false;}
-'(Optional message) Matching Symbol IF
+while va >= 3 { }
+*(Optional message) Matching Symbol WHILE
 ,(Optional message) Matching Symbol LITERAL
-)(Optional message) Matching Symbol EQEQ
++(Optional message) Matching Symbol MOREEQ
 ((Optional message) Matching Symbol NUM
 +(Optional message) Matching Symbol LBRACE
-+(Optional message) Matching Symbol RETURN
-)(Optional message) Matching Symbol TRUE
-)(Optional message) Matching Symbol SEMI
 +(Optional message) Matching Symbol RBRACE
-)(Optional message) Matching Symbol ELSE
-+(Optional message) Matching Symbol LBRACE
-+(Optional message) Matching Symbol RETURN
-*(Optional message) Matching Symbol FALSE
-)(Optional message) Matching Symbol SEMI
-+(Optional message) Matching Symbol RBRACE
-&proc square(v int) int {return 0+1;}
-)(Optional message) Matching Symbol PROC
-,(Optional message) Matching Symbol LITERAL
-)(Optional message) Matching Symbol LPAR
-,(Optional message) Matching Symbol LITERAL
-((Optional message) Matching Symbol INT
-)(Optional message) Matching Symbol RPAR
-((Optional message) Matching Symbol INT
-+(Optional message) Matching Symbol LBRACE
-+(Optional message) Matching Symbol RETURN
-((Optional message) Matching Symbol NUM
-)(Optional message) Matching Symbol PLUS
-((Optional message) Matching Symbol NUM
-)(Optional message) Matching Symbol SEMI
-+(Optional message) Matching Symbol RBRACE
-val a int = 3;
-((Optional message) Matching Symbol VAL
-,(Optional message) Matching Symbol LITERAL
-((Optional message) Matching Symbol INT
-+(Optional message) Matching Symbol EQUALS
-((Optional message) Matching Symbol NUM
-)(Optional message) Matching Symbol SEMI
-var a int = 3;
-((Optional message) Matching Symbol VAR
-,(Optional message) Matching Symbol LITERAL
-((Optional message) Matching Symbol INT
-+(Optional message) Matching Symbol EQUALS
-((Optional message) Matching Symbol NUM
-)(Optional message) Matching Symbol SEMI
-if v == 10 { return true; }
-'(Optional message) Matching Symbol IF
-,(Optional message) Matching Symbol LITERAL
-)(Optional message) Matching Symbol EQEQ
-((Optional message) Matching Symbol NUM
-+(Optional message) Matching Symbol LBRACE
-+(Optional message) Matching Symbol RETURN
-)(Optional message) Matching Symbol TRUE
-)(Optional message) Matching Symbol SEMI
-+(Optional message) Matching Symbol RBRACE

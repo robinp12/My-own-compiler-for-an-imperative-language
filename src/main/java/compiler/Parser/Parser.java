@@ -25,19 +25,32 @@ public class Parser {
         ArrayList<ExpressionNode> expressions = new ArrayList<>();
 
         SymbolKind nextSymbol = lookahead.kind;
-        if(nextSymbol == SymbolKind.VAR){
-            VariableDeclarationNode var = VariableDeclarationNode.parseDeclarationVar();
+        switch (nextSymbol){
+            case CONST:
+                ConstantDeclarationNode conststmts = ConstantDeclarationNode.parseDeclarationConst();
+                break;
+            case VAR:
+                VariableDeclarationNode var = VariableDeclarationNode.parseDeclarationVar();
+                break;
+            case VAL:
+                ValueDeclarationNode val = ValueDeclarationNode.parseDeclarationVal();
+                break;
+            case PROC:
+                MethodNode method = MethodNode.parseMethod();
+                break;
+            case IF:
+                IfStatementNode ifStmt = IfStatementNode.parseIfStatement();
+                break;
+            case WHILE:
+                WhileStatementNode whileStmt = WhileStatementNode.parseWhileStatement();
+                break;
+            case FOR:
+                ForStatementNode forStmt = ForStatementNode.parseForStatement();
+                break;
+            case RECORD:
+                RecordNode recordStmt = RecordNode.parseRecord();
+                break;
         }
-        if(nextSymbol == SymbolKind.VAL){
-            ValueDeclarationNode val = ValueDeclarationNode.parseDeclarationVal();
-        }
-        if(nextSymbol == SymbolKind.PROC){
-            MethodNode method = MethodNode.parseMethod();
-        }
-        if(nextSymbol == SymbolKind.IF){
-            IfStatementNode ifStmt = IfStatementNode.parseIfStatement();
-        }
-
         return null;
     }
 
