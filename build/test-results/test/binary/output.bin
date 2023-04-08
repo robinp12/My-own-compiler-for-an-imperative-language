@@ -1,7 +1,0 @@
-while va >= 3 { }
-*(Optional message) Matching Symbol WHILE
-,(Optional message) Matching Symbol LITERAL
-+(Optional message) Matching Symbol MOREEQ
-((Optional message) Matching Symbol NUM
-+(Optional message) Matching Symbol LBRACE
-+(Optional message) Matching Symbol RBRACE
