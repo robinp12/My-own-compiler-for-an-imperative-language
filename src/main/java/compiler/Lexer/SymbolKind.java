@@ -43,9 +43,11 @@ public enum SymbolKind {
     SEMI(";"),
     COMA(","),
     LITERAL("literal"),
+    STR("str type"),
     STRING("string"),
     TRUE("true"),
-    FALSE("false");
+    FALSE("false"),
+    BOOL("boolean");
 
 
 
