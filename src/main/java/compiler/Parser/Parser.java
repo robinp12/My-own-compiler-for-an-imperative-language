@@ -16,42 +16,45 @@ public class Parser {
         this.lexer = lexer;
         this.lookahead = lexer.getNextSymbol();
     }
-    private boolean isAtEnd() {
-        return lookahead.equals(null);
+    private boolean NotAtEnd() {
+        return lookahead != null;
     }
 
     /* Must return root of AST */
     public ExpressionNode getAST() throws ParseException {
         ArrayList<ExpressionNode> expressions = new ArrayList<>();
 
-        SymbolKind nextSymbol = lookahead.kind;
-        switch (nextSymbol){
-            case CONST:
-                ConstantDeclarationNode conststmts = ConstantDeclarationNode.parseDeclarationConst();
-                break;
-            case VAR:
-                VariableDeclarationNode var = VariableDeclarationNode.parseDeclarationVar();
-                break;
-            case VAL:
-                ValueDeclarationNode val = ValueDeclarationNode.parseDeclarationVal();
-                break;
-            case PROC:
-                MethodNode method = MethodNode.parseMethod();
-                break;
-            case IF:
-                IfStatementNode ifStmt = IfStatementNode.parseIfStatement();
-                break;
-            case WHILE:
-                WhileStatementNode whileStmt = WhileStatementNode.parseWhileStatement();
-                break;
-            case FOR:
-                ForStatementNode forStmt = ForStatementNode.parseForStatement();
-                break;
-            case RECORD:
-                RecordNode recordStmt = RecordNode.parseRecord();
-                break;
+        while (NotAtEnd()){
+            switch (lookahead.kind){
+                case CONST:
+                    expressions.add(ConstantDeclarationNode.parseDeclarationConst());
+                    break;
+                case VAR:
+                    expressions.add(VarDeclarationNode.parseDeclarationVar());
+                    break;
+                case VAL:
+                    expressions.add(ValDeclarationNode.parseDeclarationVal());
+                    break;
+                case PROC:
+                    expressions.add(MethodNode.parseMethod());
+                    break;
+                case IF:
+                    expressions.add(IfStatementNode.parseIfStatement());
+                    break;
+                case WHILE:
+                    expressions.add(WhileStatementNode.parseWhileStatement());
+                    break;
+                case FOR:
+                    expressions.add(ForStatementNode.parseForStatement());
+                    break;
+                case RECORD:
+                    expressions.add(RecordNode.parseRecord());
+                    break;
+                default:
+                    throw new ParseException("Error during parsing: illegal symbol" + lookahead,-1);
+            }
         }
-        return null;
+        return new ProgramNode(expressions);
     }
 
     public static Symbol match(SymbolKind token) throws ParseException {
