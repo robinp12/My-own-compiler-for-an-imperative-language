@@ -28,8 +28,4 @@ public class TypeNode extends ExpressionNode {
                 throw new ParseException("Invalid Type",0);
         }
     }
-    @Override
-    public <T> T accept(NodeVisitor visitor) {
-        return null;
-    }
 }

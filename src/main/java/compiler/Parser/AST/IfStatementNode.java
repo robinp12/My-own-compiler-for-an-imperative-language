@@ -8,13 +8,12 @@ import java.util.ArrayList;
 import static compiler.Parser.Parser.lookahead;
 import static compiler.Parser.Parser.match;
 
-public class IfStatementNode extends StatementNode{
+public class IfStatementNode extends ExpressionNode{
 
-    ExpressionNode condition;
-    ArrayList<StatementNode> thenStatements;
-    ArrayList<StatementNode> elseStatements;
-    public IfStatementNode(ExpressionNode condition, ArrayList<StatementNode> thenStatements, ArrayList<StatementNode> elseStatements){
-        super(condition);
+    private ExpressionNode condition;
+    private BlockNode thenStatements;
+    private BlockNode elseStatements;
+    public IfStatementNode(ExpressionNode condition, BlockNode thenStatements, BlockNode elseStatements){
         this.condition = condition;
         this.thenStatements = thenStatements;
         this.elseStatements = elseStatements;
@@ -22,22 +21,15 @@ public class IfStatementNode extends StatementNode{
 
     public static ExpressionNode parseIfStatement() throws ParseException {
         match(SymbolKind.IF);
-        match(SymbolKind.LITERAL);
-        match(SymbolKind.EQEQ);
-        match(SymbolKind.NUM);
-        BlockNode.parseBlock();
-        if(lookahead==null){
-            return new IfStatementNode(null,null,null);
+        ExpressionNode condition =  BinaryExpressionNode.parseConditionNode();
+        BlockNode thenBlock = BlockNode.parseBlock();
+        BlockNode elseBlock = null;
+        if(match(SymbolKind.ELSE) == null){
+            return new IfStatementNode(condition,thenBlock,null);
+        }else {
+            elseBlock = BlockNode.parseBlock();
         }
-        match(SymbolKind.ELSE);
-        BlockNode.parseBlock();
 
-
-        return new IfStatementNode(null,null,null);
-    }
-
-    @Override
-    public <T> T accept(NodeVisitor visitor) {
-        return null;
+        return new IfStatementNode(condition,thenBlock,elseBlock);
     }
 }

@@ -22,6 +22,12 @@ public class MethodNode extends ExpressionNode {
         this.parameters = parameters;
         this.body = body;
     }
+    public ArrayList<ParamNode> getParameters() {
+        return parameters;
+    }
+    public BlockNode getBody() {
+        return body;
+    }
 
     public static MethodNode parseMethod() throws ParseException{
         match(SymbolKind.PROC);
@@ -32,10 +38,5 @@ public class MethodNode extends ExpressionNode {
         TypeNode returnType = TypeNode.parseType();
         BlockNode body = BlockNode.parseBlock();
         return new MethodNode(name, returnType, params, body);
-    }
-
-    @Override
-    public <T> T accept(NodeVisitor visitor) {
-        return null;
     }
 }

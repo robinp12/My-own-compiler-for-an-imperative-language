@@ -13,9 +13,4 @@ public class ProgramNode extends ExpressionNode {
     public List<ExpressionNode> getExpressions(){
         return this.expressions;
     }
-
-    @Override
-    public <T> T accept(NodeVisitor visitor) {
-        return visitor.visit(this);
-    }
 }

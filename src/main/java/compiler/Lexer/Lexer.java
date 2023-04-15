@@ -216,7 +216,7 @@ public class Lexer {
                         return new Symbol(SymbolKind.LITERAL,get_literal());
 
                 case 'v' :
-                    if (get_char(i+1) == 'a' && get_char(i+2) == 'r'){
+                    if (get_char(i) == 'v' && get_char(i+1) == 'a' && get_char(i+2) == 'r'){
                         i+=3;
                         return new Symbol(SymbolKind.VAR);
                     }

@@ -36,9 +36,4 @@ public class MethodCallNode extends ExpressionNode {
         match(SymbolKind.RPAR);
         return new MethodCallNode(name,null,params);
     }
-
-    @Override
-    public <T> T accept(NodeVisitor visitor) {
-        return null;
-    }
 }

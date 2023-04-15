@@ -58,6 +58,7 @@ public class Parser {
     }
 
     public static Symbol match(SymbolKind token) throws ParseException {
+        if(lookahead == null) return null;
         if(lookahead.kind != token){
             throw new ParseException("No match, following is " + lookahead.kind + " but match is token " + token,0);
         }

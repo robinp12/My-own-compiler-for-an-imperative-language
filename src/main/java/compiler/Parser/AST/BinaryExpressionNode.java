@@ -1,8 +1,12 @@
 package compiler.Parser.AST;
 
 import compiler.Lexer.Symbol;
+import compiler.Lexer.SymbolKind;
 
 import java.text.ParseException;
+
+import static compiler.Parser.Parser.lookahead;
+import static compiler.Parser.Parser.match;
 
 /*
 BinaryExpressionNode, on the other hand, is a more general type of node that can be used to represent any binary operation, not just arithmetic.
@@ -21,9 +25,32 @@ public class BinaryExpressionNode extends ExpressionNode {
         this.right = right;
     }
 
-    public static BinaryExpressionNode parseBinaryExpression() throws ParseException {
+    public static ExpressionNode parseConditionNode() throws ParseException {
+        Symbol operator = null;
         //TODO (big big job)
-        return null;
+        String left = match(SymbolKind.LITERAL).attribute;
+        switch (lookahead.kind){
+            case EQEQ:
+                operator = match(SymbolKind.EQEQ);
+                break;
+            case LESSEQ:
+                operator = match(SymbolKind.LESSEQ);
+                break;
+            case MOREEQ:
+                operator = match(SymbolKind.MOREEQ);
+                break;
+            case NOTEQ:
+                operator = match(SymbolKind.NOTEQ);
+                break;
+            case LESS:
+                operator = match(SymbolKind.LESS);
+                break;
+            case MORE:
+                operator = match(SymbolKind.MORE);
+                break;
+        }
+        String right = match(SymbolKind.NUM).attribute;
+        return new BinaryExpressionNode(null, operator, null);
     }
 
     public ExpressionNode getLeft() {
@@ -36,10 +63,6 @@ public class BinaryExpressionNode extends ExpressionNode {
 
     public ExpressionNode getRight() {
         return right;
-    }
-
-    public <T> T accept(NodeVisitor visitor) {
-        return visitor.visit(this);
     }
 
 }

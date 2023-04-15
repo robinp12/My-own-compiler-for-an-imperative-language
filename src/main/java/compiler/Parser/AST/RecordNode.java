@@ -5,32 +5,30 @@ import compiler.Lexer.SymbolKind;
 import java.text.ParseException;
 import java.util.ArrayList;
 
+import static compiler.Parser.Parser.lookahead;
 import static compiler.Parser.Parser.match;
 
 public class RecordNode extends ExpressionNode {
 
     private String identifier;
-    private TypeNode returnType;
-    private ArrayList<ParamNode> parameters;
-    private BlockNode body;
+    private ArrayList<ParamNode> fields;
 
-    public RecordNode(String identifier, ArrayList<ParamNode> parameters) {
+    public RecordNode(String identifier, ArrayList<ParamNode> fields) {
         this.identifier = identifier;
-        this.parameters = parameters;
+        this.fields = fields;
     }
 
     public static RecordNode parseRecord() throws ParseException{
-        // TODO
         match(SymbolKind.RECORD);
-        String name = match(SymbolKind.LITERAL).attribute;
+        String identifier = match(SymbolKind.LITERAL).attribute;
         match(SymbolKind.LBRACE);
-        //...
+        ArrayList<ParamNode> fields = new ArrayList<>();
+        while (lookahead.kind == SymbolKind.LITERAL) {
+            fields.add(ParamNode.parseParam());
+            match(SymbolKind.SEMI);
+        }
         match(SymbolKind.RBRACE);
-        return new RecordNode(name,null);
+        return new RecordNode(identifier,fields);
     }
 
-    @Override
-    public <T> T accept(NodeVisitor visitor) {
-        return null;
-    }
 }

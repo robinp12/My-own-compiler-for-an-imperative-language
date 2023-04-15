@@ -9,7 +9,6 @@ public class StringNode extends ExpressionNode {
     public final String value;
 
     public StringNode(String value){
-        super();
         this.value = value;
     }
 
@@ -17,8 +16,4 @@ public class StringNode extends ExpressionNode {
         return new StringNode(match(SymbolKind.STRING).attribute);
     }
 
-    @Override
-    public <T> T accept(NodeVisitor visitor) {
-        return null;
-    }
 }

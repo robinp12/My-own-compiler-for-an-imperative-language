@@ -10,13 +10,11 @@ import static compiler.Parser.Parser.match;
 
 public class StatementListNode extends StatementNode {
 
-    public StatementListNode(ExpressionNode expression) {
-        super(expression);
+    public StatementListNode() {
     }
 
     public static ArrayList<StatementNode> parseStatements() throws ParseException{
         ArrayList<StatementNode> statements = new ArrayList<>();
-        match(SymbolKind.RETURN);
         if(lookahead.kind == SymbolKind.NUM){
             ArithmeticExpressionNode.parseArithmeticExpression();
         }
@@ -26,12 +24,10 @@ public class StatementListNode extends StatementNode {
         if(lookahead.kind == SymbolKind.FALSE){
             match(SymbolKind.FALSE);
         }
+        if(lookahead.kind == SymbolKind.INT){
+            match(SymbolKind.INT);
+        }
         match(SymbolKind.SEMI);
         return statements;
-    }
-
-    @Override
-    public <T> T accept(NodeVisitor visitor) {
-        return null;
     }
 }

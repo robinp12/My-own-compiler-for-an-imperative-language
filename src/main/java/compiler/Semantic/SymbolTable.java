@@ -19,14 +19,7 @@ public class SymbolTable {
         }
     }
     public TypeNode getTypeOfExpression(ExpressionNode e){
-        if(){
-            if(symbolTable.containsKey(id.name)){
-                return symbolTable.get(id.name);
-            }
-            else {
-                throw new Exception("Unknown Identifier Exception");
-            }
-        }
+        return new TypeNode(null);
     }
 
     public void checkTypes(MethodNode m, SymbolTable globalTable){

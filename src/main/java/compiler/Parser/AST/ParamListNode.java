@@ -1,6 +1,5 @@
 package compiler.Parser.AST;
 
-import compiler.Lexer.Symbol;
 import compiler.Lexer.SymbolKind;
 
 import java.text.ParseException;
@@ -21,10 +20,5 @@ public class ParamListNode extends ExpressionNode {
             }
         }
         return parameters;
-    }
-
-    @Override
-    public <T> T accept(NodeVisitor visitor) {
-        return null;
     }
 }

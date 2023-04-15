@@ -12,22 +12,17 @@ public class ValueNode<T> extends ExpressionNode {
         this.value = value;
     }
 
-    public static ValueNode parseValue() throws ParseException{
+    public static ValueNode<ExpressionNode> parseValue() throws ParseException{
         switch (lookahead.kind){
             case NUM: case DOUBLE:
-                return new ValueNode(ArithmeticExpressionNode.parseArithmeticExpression());
+                return new ValueNode<>(ArithmeticExpressionNode.parseArithmeticExpression());
 
             case TRUE: case FALSE:
-                return new ValueNode(BinaryExpressionNode.parseBinaryExpression());
+                return new ValueNode<>(BinaryExpressionNode.parseConditionNode());
             case STRING:
-                return new ValueNode(StringNode.parseStringExpression());
+                return new ValueNode<>(StringNode.parseStringExpression());
             default:
                 throw new ParseException("Error during value parsing",-1);
         }
-    }
-
-    @Override
-    public <T> T accept(NodeVisitor visitor) {
-        return null;
     }
 }

@@ -11,32 +11,23 @@ import static compiler.Parser.Parser.match;
 public class WhileStatementNode extends StatementNode{
 
     ExpressionNode condition;
-    ArrayList<StatementNode> thenStatements;
-    ArrayList<StatementNode> elseStatements;
-    public WhileStatementNode(ExpressionNode condition, ArrayList<StatementNode> thenStatements, ArrayList<StatementNode> elseStatements){
-        super(condition);
+    ArrayList<StatementNode> statements;
+    public WhileStatementNode(ExpressionNode condition, ArrayList<StatementNode> statements){
         this.condition = condition;
-        this.thenStatements = thenStatements;
-        this.elseStatements = elseStatements;
+        this.statements = statements;
     }
 
     public static ExpressionNode parseWhileStatement() throws ParseException {
         match(SymbolKind.WHILE);
-        //TODO CONDITIONAL
-        match(SymbolKind.LITERAL);
-        if(lookahead.kind==SymbolKind.LESSEQ) match(SymbolKind.LESSEQ);
-        if(lookahead.kind==SymbolKind.MOREEQ) match(SymbolKind.MOREEQ);
-        if(lookahead.kind==SymbolKind.NOTEQ) match(SymbolKind.NOTEQ);
-        if(lookahead.kind==SymbolKind.EQEQ) match(SymbolKind.EQEQ);
-        match(SymbolKind.NUM);
+        ExpressionNode condition = BinaryExpressionNode.parseConditionNode();
         match(SymbolKind.LBRACE);
-        //TODO BLOCK
+        ArrayList<StatementNode> stmts = StatementListNode.parseStatements();
         match(SymbolKind.RBRACE);
-        return new WhileStatementNode(null,null,null);
-    }
 
+        return new WhileStatementNode(condition, stmts);
+    }
     @Override
-    public <T> T accept(NodeVisitor visitor) {
-        return null;
+    public String toString() {
+        return "while (" + condition + ") " + statements;
     }
 }

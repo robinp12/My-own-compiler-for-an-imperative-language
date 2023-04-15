@@ -70,8 +70,4 @@ public class ArithmeticExpressionNode extends ExpressionNode {
         }
     }
 
-    @Override
-    public <T> T accept(NodeVisitor visitor) {
-        return null;
-    }
 }

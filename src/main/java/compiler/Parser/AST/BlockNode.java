@@ -17,14 +17,14 @@ public class BlockNode extends ExpressionNode{
         statements = stmts;
     }
 
+    public ArrayList<StatementNode> getStatements() {
+        return statements;
+    }
     public static BlockNode parseBlock() throws ParseException {
         match(SymbolKind.LBRACE);
+        match(SymbolKind.RETURN);
         ArrayList<StatementNode> statements = parseStatements();
         match(SymbolKind.RBRACE);
         return new BlockNode(statements);
-    }
-    @Override
-    public <T> T accept(NodeVisitor visitor) {
-        return null;
     }
 }

@@ -12,39 +12,25 @@ import static compiler.Parser.Parser.match;
 public class AssignmentNode extends StatementNode{
     // TODO
 
-    private Symbol identifier;
+    private String identifier;
     private TypeNode type;
-    private Symbol value;
+    private ValueNode value;
 
-    public AssignmentNode(ExpressionNode expression, Symbol identifier, TypeNode type, Symbol value) {
-        super(expression);
+    public AssignmentNode(String identifier, TypeNode type, ValueNode value) {
         this.identifier = identifier;
         this.type = type;
         this.value = value;
     }
 
     public static AssignmentNode parseAssignment() throws ParseException{
-        ExpressionNode expressionNode = new ExpressionNode() {
-            @Override
-            public <T> T accept(NodeVisitor visitor) {
-                return null;
-            }
-        };
-        //VarDeclarationNode left = VarDeclarationNode.parseDeclarationVar();
-        Symbol identifier = match(SymbolKind.LITERAL);
+        String identifier = match(SymbolKind.LITERAL).attribute;
         TypeNode type = TypeNode.parseType();
-        match(SymbolKind.EQUALS);
-        Symbol value = null;
-        switch (lookahead.kind){
-            case NUM -> value = match(SymbolKind.NUM);
-            case TRUE -> value = match(SymbolKind.TRUE);
-            case FALSE -> value = match(SymbolKind.FALSE);
+        ValueNode value = null;
+        if (lookahead.kind == SymbolKind.EQUALS){
+            match(SymbolKind.EQUALS);
+            value = ValueNode.parseValue();
         }
-        return new AssignmentNode(expressionNode,identifier, type, value);
+        return new AssignmentNode(identifier, type, value);
     }
 
-    @Override
-    public <T> T accept(NodeVisitor visitor) {
-        return null;
-    }
 }

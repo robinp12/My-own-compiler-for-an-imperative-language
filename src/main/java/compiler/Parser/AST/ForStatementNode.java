@@ -13,7 +13,6 @@ public class ForStatementNode extends StatementNode{
     ArrayList<StatementNode> thenStatements;
     ArrayList<StatementNode> elseStatements;
     public ForStatementNode(ExpressionNode condition, ArrayList<StatementNode> thenStatements, ArrayList<StatementNode> elseStatements){
-        super(condition);
         this.condition = condition;
         this.thenStatements = thenStatements;
         this.elseStatements = elseStatements;
@@ -25,8 +24,4 @@ public class ForStatementNode extends StatementNode{
         return new ForStatementNode(null,null,null);
     }
 
-    @Override
-    public <T> T accept(NodeVisitor visitor) {
-        return null;
-    }
 }

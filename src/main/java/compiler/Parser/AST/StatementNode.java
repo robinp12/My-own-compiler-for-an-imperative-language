@@ -1,8 +1,12 @@
 package compiler.Parser.AST;
 
-public abstract class StatementNode extends ExpressionNode {
-    private ExpressionNode expression;
-    public StatementNode(ExpressionNode expression) {
-        this.expression = expression;
+public class StatementNode extends ExpressionNode{
+    public StatementNode() {
+    }
+
+    public static StatementNode parseStatement(){
+        StatementNode stmt = new StatementNode();
+
+        return stmt;
     }
 }
