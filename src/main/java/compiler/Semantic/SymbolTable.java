@@ -1,9 +1,6 @@
 package compiler.Semantic;
 
-import compiler.Parser.AST.BlockNode;
-import compiler.Parser.AST.MethodNode;
-import compiler.Parser.AST.ParamNode;
-import compiler.Parser.AST.TypeNode;
+import compiler.Parser.AST.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,13 +18,31 @@ public class SymbolTable {
             entries.put(name,type);
         }
     }
-
-    public void checkTypes(MethodNode f, SymbolTable globalTable){
-        SymbolTable localTable = new SymbolTable(globalTable);
-        localTable.add(f.getParameters());
-        checkTypes(f.getBody(),localTable);
+    public TypeNode getTypeOfExpression(ExpressionNode e){
+        if(){
+            if(symbolTable.containsKey(id.name)){
+                return symbolTable.get(id.name);
+            }
+            else {
+                throw new Exception("Unknown Identifier Exception");
+            }
+        }
     }
-    public void checkTypes(BlockNode f, SymbolTable globalTable){
+
+    public void checkTypes(MethodNode m, SymbolTable globalTable){
+        SymbolTable localTable = new SymbolTable(globalTable);
+        localTable.add(m.getParameters());
+        checkTypes(m.getBody(),localTable);
+    }
+    public void checkTypes(BlockNode b, SymbolTable globalTable){
+        checkTypes(b.getStatements());
+    }
+
+    public void checkTypes(ArrayList<StatementNode> statements) {
+        for (StatementNode statement : statements) {
+        }
+    }
+    public void checkTypes(ArrayNode array){
 
     }
 }

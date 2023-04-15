@@ -6,7 +6,6 @@ import java.text.ParseException;
 import java.util.ArrayList;
 
 import static compiler.Parser.AST.StatementListNode.parseStatements;
-import static compiler.Parser.Parser.lookahead;
 import static compiler.Parser.Parser.match;
 
 
@@ -15,6 +14,9 @@ public class BlockNode extends ExpressionNode{
 
     public BlockNode(ArrayList<StatementNode> stmts) {
         statements = stmts;
+    }
+    public ArrayList<StatementNode> getStatements() {
+        return statements;
     }
 
     public static BlockNode parseBlock() throws ParseException {
