@@ -1,6 +1,5 @@
 package compiler.Parser.AST;
 
-import compiler.Lexer.Symbol;
 import compiler.Lexer.SymbolKind;
 
 import java.text.ParseException;
@@ -21,7 +20,7 @@ public class WhileStatementNode extends StatementNode{
         this.elseStatements = elseStatements;
     }
 
-    public static WhileStatementNode parseWhileStatement() throws ParseException {
+    public static ExpressionNode parseWhileStatement() throws ParseException {
         match(SymbolKind.WHILE);
         //TODO CONDITIONAL
         match(SymbolKind.LITERAL);
@@ -34,5 +33,10 @@ public class WhileStatementNode extends StatementNode{
         //TODO BLOCK
         match(SymbolKind.RBRACE);
         return new WhileStatementNode(null,null,null);
+    }
+
+    @Override
+    public <T> T accept(NodeVisitor visitor) {
+        return null;
     }
 }

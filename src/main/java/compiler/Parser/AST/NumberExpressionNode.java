@@ -1,9 +1,9 @@
 package compiler.Parser.AST;
 
 public class NumberExpressionNode extends ExpressionNode{
-    public final int value;
+    public final String value;
 
-    public NumberExpressionNode(int value){
+    public NumberExpressionNode(String value){
         super();
         this.value = value;
     }

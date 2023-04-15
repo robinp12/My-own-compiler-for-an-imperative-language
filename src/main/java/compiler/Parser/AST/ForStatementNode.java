@@ -19,9 +19,14 @@ public class ForStatementNode extends StatementNode{
         this.elseStatements = elseStatements;
     }
 
-    public static ForStatementNode parseForStatement() throws ParseException {
+    public static ExpressionNode parseForStatement() throws ParseException {
         match(SymbolKind.FOR);
         //TODO
         return new ForStatementNode(null,null,null);
+    }
+
+    @Override
+    public <T> T accept(NodeVisitor visitor) {
+        return null;
     }
 }

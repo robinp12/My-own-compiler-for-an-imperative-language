@@ -2,12 +2,11 @@ package compiler.Parser.AST;
 
 import compiler.Lexer.SymbolKind;
 
-import static compiler.Parser.Parser.lookahead;
-import static compiler.Parser.Parser.match;
-
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.List;
+
+import static compiler.Parser.Parser.lookahead;
+import static compiler.Parser.Parser.match;
 
 public class IfStatementNode extends StatementNode{
 
@@ -21,7 +20,7 @@ public class IfStatementNode extends StatementNode{
         this.elseStatements = elseStatements;
     }
 
-    public static IfStatementNode parseIfStatement() throws ParseException {
+    public static ExpressionNode parseIfStatement() throws ParseException {
         match(SymbolKind.IF);
         match(SymbolKind.LITERAL);
         match(SymbolKind.EQEQ);
@@ -35,5 +34,10 @@ public class IfStatementNode extends StatementNode{
 
 
         return new IfStatementNode(null,null,null);
+    }
+
+    @Override
+    public <T> T accept(NodeVisitor visitor) {
+        return null;
     }
 }
