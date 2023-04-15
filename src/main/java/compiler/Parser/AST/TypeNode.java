@@ -1,6 +1,5 @@
 package compiler.Parser.AST;
 
-import compiler.Lexer.Symbol;
 import compiler.Lexer.SymbolKind;
 
 import java.text.ParseException;
@@ -16,15 +15,18 @@ public class TypeNode extends ExpressionNode {
     }
 
     public static TypeNode parseType() throws ParseException {
-        if(lookahead.kind==SymbolKind.INT){
-            Symbol identifier = match(SymbolKind.INT);
-            return new TypeNode(identifier.attribute);
+        switch (lookahead.kind){
+            case DOUBLE:
+                return new TypeNode(match(SymbolKind.DOUBLE).attribute);
+            case INT:
+                return new TypeNode(match(SymbolKind.INT).attribute);
+            case STR:
+                return new TypeNode(match(SymbolKind.STR).attribute);
+            case BOOL:
+                return new TypeNode(match(SymbolKind.BOOL).attribute);
+            default:
+                throw new ParseException("Invalid Type",0);
         }
-        if(lookahead.kind==SymbolKind.DOUBLE){
-            Symbol identifier = match(SymbolKind.DOUBLE);
-            return new TypeNode(identifier.attribute);
-        }
-        return null;
     }
     @Override
     public <T> T accept(NodeVisitor visitor) {

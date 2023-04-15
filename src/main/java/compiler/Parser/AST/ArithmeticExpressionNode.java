@@ -10,22 +10,26 @@ import static compiler.Parser.Parser.match;
 
 public class ArithmeticExpressionNode extends ExpressionNode {
 
-    private Symbol leftOperand;
-    private String operator;
-    private Symbol rightOperand;
+    private ExpressionNode leftOperand;
+    private Symbol operator;
+    private ExpressionNode rightOperand;
 
-    public ArithmeticExpressionNode(Symbol leftOperand, String operator, Symbol rightOperand){
+    /*ArithmeticExpressionNode is a specific type of BinaryExpressionNode that is used to represent arithmetic operations, such as addition, subtraction, multiplication, and division.
+     It typically has two child nodes: a left operand and a right operand, which can themselves be expressions.
+     */
+
+    public ArithmeticExpressionNode(ExpressionNode leftOperand, Symbol operator, ExpressionNode rightOperand){
         this.leftOperand = leftOperand;
         this.operator = operator;
         this.rightOperand = rightOperand;
     }
 
-    public static BinaryExpressionNode parseArithmeticExpression() throws ParseException {
+    public static ArithmeticExpressionNode parseArithmeticExpression() throws ParseException {
         ExpressionNode left = term();
         if(lookahead.kind == SymbolKind.PLUS || lookahead.kind == SymbolKind.MINUS){
             Symbol operator = match(lookahead.kind);
             ExpressionNode right = term();
-            return new BinaryExpressionNode(left,operator,right);
+            return new ArithmeticExpressionNode(left,operator,right);
         }
         return null;
     }
@@ -38,7 +42,7 @@ public class ArithmeticExpressionNode extends ExpressionNode {
             Symbol operator = match(lookahead.kind); // match le prochain jeton attendu (TIMES ou DIVIDE)
             ExpressionNode right = factor();
             // Créer un nouveau nœud d'expression pour représenter l'opération
-            left = new BinaryExpressionNode(left,operator,right);
+            left = new ArithmeticExpressionNode(left,operator,right);
         }
         return left;
     }
@@ -51,7 +55,11 @@ public class ArithmeticExpressionNode extends ExpressionNode {
         if (lookahead.kind == SymbolKind.NUM) {
             Symbol number = match(SymbolKind.NUM); // match le prochain jeton attendu (NUMBER)
             // Créer un nouveau nœud d'expression pour représenter le nombre
-            return new NumberExpressionNode(Integer.parseInt(number.attribute));
+            return new NumberExpressionNode(number.attribute);
+        } else if (lookahead.kind == SymbolKind.DOUBLE) {
+                Symbol number = match(SymbolKind.DOUBLE); // match le prochain jeton attendu (NUMBER)
+                // Créer un nouveau nœud d'expression pour représenter le nombre
+                return new NumberExpressionNode(number.attribute);
         } else if (lookahead.kind == SymbolKind.LPAR) {
             match(SymbolKind.LPAR); // match le prochain jeton attendu (LEFT_PAREN)
             ExpressionNode expression = parseArithmeticExpression(); // analyser l'expression à l'intérieur des parenthèses

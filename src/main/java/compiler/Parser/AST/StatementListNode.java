@@ -30,4 +30,8 @@ public class StatementListNode extends StatementNode {
         return statements;
     }
 
+    @Override
+    public <T> T accept(NodeVisitor visitor) {
+        return null;
+    }
 }

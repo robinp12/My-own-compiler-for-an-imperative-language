@@ -22,12 +22,6 @@ public class MethodNode extends ExpressionNode {
         this.parameters = parameters;
         this.body = body;
     }
-    public ArrayList<ParamNode> getParameters() {
-        return parameters;
-    }
-    public BlockNode getBody() {
-        return body;
-    }
 
     public static MethodNode parseMethod() throws ParseException{
         match(SymbolKind.PROC);

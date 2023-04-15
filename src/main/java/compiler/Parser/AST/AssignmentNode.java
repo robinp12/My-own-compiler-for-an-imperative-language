@@ -4,7 +4,6 @@ import compiler.Lexer.Symbol;
 import compiler.Lexer.SymbolKind;
 
 import java.text.ParseException;
-import java.util.ArrayList;
 
 import static compiler.Parser.Parser.lookahead;
 import static compiler.Parser.Parser.match;
@@ -31,7 +30,7 @@ public class AssignmentNode extends StatementNode{
                 return null;
             }
         };
-        //VariableDeclarationNode left = VariableDeclarationNode.parseDeclarationVar();
+        //VarDeclarationNode left = VarDeclarationNode.parseDeclarationVar();
         Symbol identifier = match(SymbolKind.LITERAL);
         TypeNode type = TypeNode.parseType();
         match(SymbolKind.EQUALS);
@@ -42,5 +41,10 @@ public class AssignmentNode extends StatementNode{
             case FALSE -> value = match(SymbolKind.FALSE);
         }
         return new AssignmentNode(expressionNode,identifier, type, value);
+    }
+
+    @Override
+    public <T> T accept(NodeVisitor visitor) {
+        return null;
     }
 }
