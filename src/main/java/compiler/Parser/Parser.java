@@ -16,45 +16,13 @@ public class Parser {
         this.lexer = lexer;
         this.lookahead = lexer.getNextSymbol();
     }
-    private boolean NotAtEnd() {
+    public static boolean NotAtEnd() {
         return lookahead != null;
     }
 
     /* Must return root of AST */
     public ExpressionNode getAST() throws ParseException {
-        ArrayList<ExpressionNode> expressions = new ArrayList<>();
-
-        while (NotAtEnd()){
-            switch (lookahead.kind){
-                case CONST:
-                    expressions.add(ConstantDeclarationNode.parseDeclarationConst());
-                    break;
-                case VAR:
-                    expressions.add(VarDeclarationNode.parseDeclarationVar());
-                    break;
-                case VAL:
-                    expressions.add(ValDeclarationNode.parseDeclarationVal());
-                    break;
-                case PROC:
-                    expressions.add(MethodNode.parseMethod());
-                    break;
-                case IF:
-                    expressions.add(IfStatementNode.parseIfStatement());
-                    break;
-                case WHILE:
-                    expressions.add(WhileStatementNode.parseWhileStatement());
-                    break;
-                case FOR:
-                    expressions.add(ForStatementNode.parseForStatement());
-                    break;
-                case RECORD:
-                    expressions.add(RecordNode.parseRecord());
-                    break;
-                default:
-                    throw new ParseException("Error during parsing: illegal symbol" + lookahead,-1);
-            }
-        }
-        return new ProgramNode(expressions);
+        return new ProgramNode(StatementNode.parseStatement().statements);
     }
 
     public static Symbol match(SymbolKind token) throws ParseException {
