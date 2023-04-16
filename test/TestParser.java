@@ -67,7 +67,16 @@ public class TestParser {
     @Test
     public void testBasicWhile() throws ParseException {
         // TODO CORRECT WHEN "value" is taken as "val" (also in other case)
-        String input = "while va >= 3 { ; }";
+        String input = "while va >= 3 { val x int; }";
+        StringReader reader = new StringReader(input);
+        Lexer lexer = new Lexer(reader);
+        Parser parser = new Parser(lexer);
+        parser.getAST();
+    }
+    @Test
+    public void testBasicFor() throws ParseException {
+        // TODO CORRECT WHEN "value" is taken as "val" (also in other case)
+        String input = "for i=1 to 100 by 2 { val x int = 1; }";
         StringReader reader = new StringReader(input);
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);

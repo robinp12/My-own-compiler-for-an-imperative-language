@@ -31,9 +31,7 @@ public class SymbolTable {
         checkTypes(b.getStatements());
     }
 
-    public void checkTypes(ArrayList<StatementNode> statements) {
-        for (StatementNode statement : statements) {
-        }
+    public void checkTypes(StatementNode statements) {
     }
     public void checkTypes(ArrayNode array){
 

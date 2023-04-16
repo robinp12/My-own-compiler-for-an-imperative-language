@@ -4,6 +4,7 @@ import compiler.Lexer.Symbol;
 import compiler.Lexer.SymbolKind;
 
 import java.text.ParseException;
+import java.util.ArrayList;
 
 import static compiler.Parser.Parser.lookahead;
 import static compiler.Parser.Parser.match;
@@ -17,9 +18,21 @@ public class AssignmentNode extends StatementNode{
     private ValueNode value;
 
     public AssignmentNode(String identifier, TypeNode type, ValueNode value) {
+        super(null);
         this.identifier = identifier;
         this.type = type;
         this.value = value;
+    }
+
+    public String getIdentifier() {
+        return identifier;
+    }
+    public TypeNode getType() {
+        return type;
+    }
+
+    public ValueNode getValue() {
+        return value;
     }
 
     public static AssignmentNode parseAssignment() throws ParseException{

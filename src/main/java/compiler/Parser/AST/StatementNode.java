@@ -5,6 +5,8 @@ import compiler.Parser.Parser;
 import java.text.ParseException;
 import java.util.ArrayList;
 
+import static compiler.Parser.Parser.lookahead;
+
 public class StatementNode extends ExpressionNode{
     public ArrayList<ExpressionNode> statements;
     public StatementNode(ArrayList<ExpressionNode> statements) {
@@ -14,7 +16,7 @@ public class StatementNode extends ExpressionNode{
     public static StatementNode parseStatement() throws ParseException {
         ArrayList<ExpressionNode> statements = new ArrayList<>();
         while (Parser.NotAtEnd()){
-            switch (Parser.lookahead.kind){
+            switch (lookahead.kind){
                 case CONST:
                     statements.add(ConstantDeclarationNode.parseDeclarationConst());
                     break;
@@ -39,8 +41,11 @@ public class StatementNode extends ExpressionNode{
                 case RECORD:
                     statements.add(RecordNode.parseRecord());
                     break;
+                case RETURN:
+                    statements.add(ReturnNode.parseReturn());
+                    break;
                 default:
-                    throw new ParseException("Error during parsing: illegal symbol" + Parser.lookahead,-1);
+                    throw new ParseException("Error during parsing: illegal symbol" + lookahead,-1);
             }
         }
         return new StatementNode(statements);
