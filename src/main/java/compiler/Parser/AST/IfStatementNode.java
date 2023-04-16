@@ -23,13 +23,12 @@ public class IfStatementNode extends ExpressionNode{
         match(SymbolKind.IF);
         ExpressionNode condition =  BinaryExpressionNode.parseConditionNode();
         BlockNode thenBlock = BlockNode.parseBlock();
-        BlockNode elseBlock = null;
-        if(match(SymbolKind.ELSE) == null){
-            return new IfStatementNode(condition,thenBlock,null);
-        }else {
-            elseBlock = BlockNode.parseBlock();
-        }
 
+        if(lookahead.kind != SymbolKind.ELSE){
+            return new IfStatementNode(condition,thenBlock,null);
+        }
+        match(SymbolKind.ELSE);
+        BlockNode elseBlock = BlockNode.parseBlock();
         return new IfStatementNode(condition,thenBlock,elseBlock);
     }
 }

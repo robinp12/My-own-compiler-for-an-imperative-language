@@ -8,26 +8,23 @@ import java.util.ArrayList;
 import static compiler.Parser.Parser.lookahead;
 import static compiler.Parser.Parser.match;
 
-public class WhileStatementNode extends StatementNode{
+public class WhileStatementNode extends ExpressionNode{
 
     ExpressionNode condition;
-    ArrayList<StatementNode> statements;
-    public WhileStatementNode(ExpressionNode condition, ArrayList<StatementNode> statements){
+    BlockNode block;
+    public WhileStatementNode(ExpressionNode condition, BlockNode block){
         this.condition = condition;
-        this.statements = statements;
+        this.block = block;
     }
 
     public static ExpressionNode parseWhileStatement() throws ParseException {
         match(SymbolKind.WHILE);
         ExpressionNode condition = BinaryExpressionNode.parseConditionNode();
-        match(SymbolKind.LBRACE);
-        ArrayList<StatementNode> stmts = StatementListNode.parseStatements();
-        match(SymbolKind.RBRACE);
-
-        return new WhileStatementNode(condition, stmts);
+        BlockNode block = BlockNode.parseBlock();
+        return new WhileStatementNode(condition, block);
     }
     @Override
     public String toString() {
-        return "while (" + condition + ") " + statements;
+        return "while (" + condition + ") " + block;
     }
 }

@@ -7,12 +7,13 @@ import java.util.ArrayList;
 
 import static compiler.Parser.Parser.match;
 
-public class ForStatementNode extends StatementNode{
-
+public class ForStatementNode extends ExpressionNode{
+    VarDeclarationNode var;
     ExpressionNode condition;
     ArrayList<StatementNode> thenStatements;
     ArrayList<StatementNode> elseStatements;
-    public ForStatementNode(ExpressionNode condition, ArrayList<StatementNode> thenStatements, ArrayList<StatementNode> elseStatements){
+    public ForStatementNode(VarDeclarationNode var, ExpressionNode condition, ArrayList<StatementNode> thenStatements, ArrayList<StatementNode> elseStatements){
+        this.var = var;
         this.condition = condition;
         this.thenStatements = thenStatements;
         this.elseStatements = elseStatements;
@@ -21,7 +22,7 @@ public class ForStatementNode extends StatementNode{
     public static ExpressionNode parseForStatement() throws ParseException {
         match(SymbolKind.FOR);
         //TODO
-        return new ForStatementNode(null,null,null);
+        return new ForStatementNode(null,null,null,null);
     }
 
 }

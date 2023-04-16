@@ -11,19 +11,18 @@ import static compiler.Parser.Parser.match;
 
 
 public class BlockNode extends ExpressionNode{
-    private ArrayList<StatementNode> statements;
+    private StatementNode statements;
 
-    public BlockNode(ArrayList<StatementNode> stmts) {
-        statements = stmts;
+    public BlockNode(StatementNode stmts) {
+        this.statements = stmts;
     }
 
-    public ArrayList<StatementNode> getStatements() {
+    public StatementNode getStatements() {
         return statements;
     }
     public static BlockNode parseBlock() throws ParseException {
         match(SymbolKind.LBRACE);
-        match(SymbolKind.RETURN);
-        ArrayList<StatementNode> statements = parseStatements();
+        StatementNode statements = StatementNode.parseStatement();
         match(SymbolKind.RBRACE);
         return new BlockNode(statements);
     }
