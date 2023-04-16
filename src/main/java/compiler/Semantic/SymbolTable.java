@@ -33,7 +33,7 @@ public class SymbolTable {
 
     public void checkTypes(StatementNode statements) {
     }
-    public void checkTypes(ArrayNode array){
+    public void checkTypes(AssignmentArrayNode array){
 
     }
 }

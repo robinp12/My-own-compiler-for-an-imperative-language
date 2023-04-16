@@ -8,7 +8,7 @@ import static compiler.Parser.Parser.lookahead;
 import static compiler.Parser.Parser.match;
 
 public class TypeNode extends ExpressionNode {
-    private final String typeSymbol;
+    private String typeSymbol = null;
 
     public TypeNode(String typeSymbol) {
         this.typeSymbol = typeSymbol;
@@ -27,5 +27,9 @@ public class TypeNode extends ExpressionNode {
             default:
                 throw new ParseException("Invalid Type",0);
         }
+    }
+
+    public String getTypeSymbol() {
+        return typeSymbol;
     }
 }

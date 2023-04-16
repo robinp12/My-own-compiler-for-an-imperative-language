@@ -172,6 +172,10 @@ public class Lexer {
                         i+=2;
                         return new Symbol(SymbolKind.BY);
                     }
+                    else if (get_char(i+1) == 'o' && get_char(i+2) == 'o' && get_char(i+3) == 'l' && get_char(i+4) == 'e' && get_char(i+5) == 'a' && get_char(i+6) == 'n'){
+                        i+=7;
+                        return new Symbol(SymbolKind.BOOL);
+                    }
                     else
                         return new Symbol(SymbolKind.LITERAL,get_literal());
 
@@ -297,8 +301,9 @@ public class Lexer {
                 case '8': case '9': return new Symbol(SymbolKind.NUM, get_number());
 
                 case '"':
-                    { i++; return new Symbol(SymbolKind.STRING, get_string()); }
-
+                    String str = get_string();
+                    i++;
+                    return new Symbol(SymbolKind.STRING, str);
                 default:
                     System.out.println("Illegal argument : " + (char)get_char(i) );
                     throw new IllegalArgumentException();

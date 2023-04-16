@@ -7,16 +7,7 @@ import java.text.ParseException;
 import compiler.Parser.Parser;
 
 public class TestParser {
-
-    /*@Test
-    public void testBasic() throws ParseException {
-        String input = "var x int = 2;";
-        StringReader reader = new StringReader(input);
-        Lexer lexer = new Lexer(reader);
-        Parser parser = new Parser(lexer);
-        parser.getAST();
-    }*/
-    @Test
+        @Test
     public void testBasicVal() throws ParseException {
         String input = "val a int = 3;";
         StringReader reader = new StringReader(input);
@@ -34,7 +25,7 @@ public class TestParser {
     }
     @Test
     public void testBasicConst() throws ParseException {
-        String input = "const a int = 3;";
+        String input = "const a int = \"test\";";
         StringReader reader = new StringReader(input);
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
@@ -85,6 +76,25 @@ public class TestParser {
     @Test
     public void testBasicRecord() throws ParseException {
         String input = "record Point { x int; name string; }";
+        StringReader reader = new StringReader(input);
+        Lexer lexer = new Lexer(reader);
+        Parser parser = new Parser(lexer);
+        parser.getAST();
+    }
+
+    @Test
+    public void testBasicArray() throws ParseException {
+        String input0 = "var c int[];";
+        String input = "var c boolean[] = int[](10);";
+        StringReader reader = new StringReader(input);
+        Lexer lexer = new Lexer(reader);
+        Parser parser = new Parser(lexer);
+        parser.getAST();
+    }
+
+    @Test
+    public void testBasicAccessArray() throws ParseException {
+        String input = "c[2] = 1;";
         StringReader reader = new StringReader(input);
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);

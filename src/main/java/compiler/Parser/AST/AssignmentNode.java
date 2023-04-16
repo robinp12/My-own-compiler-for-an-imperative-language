@@ -10,15 +10,14 @@ import static compiler.Parser.Parser.lookahead;
 import static compiler.Parser.Parser.match;
 
 
-public class AssignmentNode extends StatementNode{
+public class AssignmentNode extends ExpressionNode{
     // TODO
 
     private String identifier;
     private TypeNode type;
-    private ValueNode value;
+    private ExpressionNode value;
 
-    public AssignmentNode(String identifier, TypeNode type, ValueNode value) {
-        super(null);
+    public AssignmentNode(String identifier, TypeNode type, ExpressionNode value) {
         this.identifier = identifier;
         this.type = type;
         this.value = value;
@@ -31,17 +30,19 @@ public class AssignmentNode extends StatementNode{
         return type;
     }
 
-    public ValueNode getValue() {
+    public ExpressionNode getValue() {
         return value;
     }
 
     public static AssignmentNode parseAssignment() throws ParseException{
         String identifier = match(SymbolKind.LITERAL).attribute;
         TypeNode type = TypeNode.parseType();
-        ValueNode value = null;
+        ExpressionNode value = null;
         if (lookahead.kind == SymbolKind.EQUALS){
             match(SymbolKind.EQUALS);
             value = ValueNode.parseValue();
+        } else if (lookahead.kind == SymbolKind.LBRACK) { // in case of array
+            value = AssignmentArrayNode.parseArrayDeclaration();
         }
         return new AssignmentNode(identifier, type, value);
     }

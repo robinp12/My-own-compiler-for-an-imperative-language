@@ -1,11 +1,13 @@
 package compiler.Parser.AST;
 
+import compiler.Lexer.SymbolKind;
 import compiler.Parser.Parser;
 
 import java.text.ParseException;
 import java.util.ArrayList;
 
 import static compiler.Parser.Parser.lookahead;
+import static compiler.Parser.Parser.match;
 
 public class StatementNode extends ExpressionNode{
     public ArrayList<ExpressionNode> statements;
@@ -43,6 +45,9 @@ public class StatementNode extends ExpressionNode{
                     break;
                 case RETURN:
                     statements.add(ReturnNode.parseReturn());
+                    break;
+                case COMMENT:
+                    match(SymbolKind.COMMENT);
                     break;
                 default:
                     throw new ParseException("Error during parsing: illegal symbol" + lookahead,-1);

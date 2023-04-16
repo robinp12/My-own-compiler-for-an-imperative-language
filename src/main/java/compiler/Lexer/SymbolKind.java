@@ -51,7 +51,7 @@ public enum SymbolKind {
 
 
 
-    public final String name;
+    private final String name;
 
     SymbolKind(String name) {
         this.name = name;
