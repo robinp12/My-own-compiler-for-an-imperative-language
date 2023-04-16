@@ -3,7 +3,6 @@ package compiler.Parser.AST;
 import compiler.Lexer.SymbolKind;
 
 import java.text.ParseException;
-import java.util.ArrayList;
 
 import static compiler.Parser.Parser.lookahead;
 import static compiler.Parser.Parser.match;
@@ -33,7 +32,7 @@ public class AssignmentArrayNode extends ExpressionNode{
         match(SymbolKind.RBRACK);
 
         // If there is a default value
-        if (lookahead.kind == SymbolKind.EQUALS) {
+        if (lookahead.getKind() == SymbolKind.EQUALS) {
             match(SymbolKind.EQUALS);
             type = TypeNode.parseType();
             if(type.getTypeSymbol() != null){
@@ -46,5 +45,13 @@ public class AssignmentArrayNode extends ExpressionNode{
         }
 
         return new AssignmentArrayNode(size, type);
+    }
+
+    @Override
+    public String toString() {
+        return "AssignmentArrayNode{" +
+                "size=" + size +
+                ", type=" + type +
+                '}';
     }
 }

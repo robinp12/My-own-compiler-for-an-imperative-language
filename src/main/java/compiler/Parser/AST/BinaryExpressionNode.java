@@ -28,8 +28,8 @@ public class BinaryExpressionNode extends ExpressionNode {
     public static ExpressionNode parseConditionNode() throws ParseException {
         Symbol operator = null;
         //TODO (big big job)
-        String left = match(SymbolKind.LITERAL).attribute;
-        switch (lookahead.kind){
+        String left = match(SymbolKind.LITERAL).getAttribute();
+        switch (lookahead.getKind()){
             case EQEQ:
                 operator = match(SymbolKind.EQEQ);
                 break;
@@ -49,7 +49,7 @@ public class BinaryExpressionNode extends ExpressionNode {
                 operator = match(SymbolKind.MORE);
                 break;
         }
-        String right = match(SymbolKind.NUM).attribute;
+        String right = match(SymbolKind.NUM).getAttribute();
         return new BinaryExpressionNode(null, operator, null);
     }
 
@@ -65,4 +65,12 @@ public class BinaryExpressionNode extends ExpressionNode {
         return right;
     }
 
+    @Override
+    public String toString() {
+        return "BinaryExpressionNode{" +
+                "left=" + left +
+                ", operator=" + operator +
+                ", right=" + right +
+                '}';
+    }
 }

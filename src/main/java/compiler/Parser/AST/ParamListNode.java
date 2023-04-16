@@ -12,13 +12,18 @@ public class ParamListNode extends ExpressionNode {
 
     public static ArrayList<ParamNode> parseParams() throws ParseException{
         ArrayList<ParamNode> parameters = new ArrayList<>();
-        if(lookahead.kind != SymbolKind.RPAR){
+        if(lookahead.getKind() != SymbolKind.RPAR){
             parameters.add(ParamNode.parseParam());
-            while (lookahead.kind.equals(SymbolKind.COMA)){
+            while (lookahead.getKind().equals(SymbolKind.COMA)){
                 match(SymbolKind.COMA);
                 parameters.add(ParamNode.parseParam());
             }
         }
         return parameters;
+    }
+
+    @Override
+    public String toString() {
+        return super.toString();
     }
 }

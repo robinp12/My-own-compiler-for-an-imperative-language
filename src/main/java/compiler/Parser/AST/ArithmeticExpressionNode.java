@@ -26,8 +26,8 @@ public class ArithmeticExpressionNode extends ExpressionNode {
 
     public static ArithmeticExpressionNode parseArithmeticExpression() throws ParseException {
         ExpressionNode left = term();
-        if(lookahead.kind == SymbolKind.PLUS || lookahead.kind == SymbolKind.MINUS){
-            Symbol operator = match(lookahead.kind);
+        if(lookahead.getKind() == SymbolKind.PLUS || lookahead.getKind() == SymbolKind.MINUS){
+            Symbol operator = match(lookahead.getKind());
             ExpressionNode right = term();
             return new ArithmeticExpressionNode(left,operator,right);
         }
@@ -38,8 +38,8 @@ public class ArithmeticExpressionNode extends ExpressionNode {
     // Règle pour un terme arithmétique simple (multiplication et division uniquement)
     public static ExpressionNode term() throws ParseException {
         ExpressionNode left = factor();
-        while (lookahead.kind == SymbolKind.STAR || lookahead.kind == SymbolKind.SLASH) {
-            Symbol operator = match(lookahead.kind); // match le prochain jeton attendu (TIMES ou DIVIDE)
+        while (lookahead.getKind() == SymbolKind.STAR || lookahead.getKind() == SymbolKind.SLASH) {
+            Symbol operator = match(lookahead.getKind()); // match le prochain jeton attendu (TIMES ou DIVIDE)
             ExpressionNode right = factor();
             // Créer un nouveau nœud d'expression pour représenter l'opération
             left = new ArithmeticExpressionNode(left,operator,right);
@@ -49,18 +49,18 @@ public class ArithmeticExpressionNode extends ExpressionNode {
 
     // Règle pour un facteur (un nombre ou une expression parenthésée)
     public static ExpressionNode factor() throws ParseException {
-        if (lookahead.kind == SymbolKind.LITERAL){
+        if (lookahead.getKind() == SymbolKind.LITERAL){
             Symbol var = match(SymbolKind.LITERAL);
         }
-        if (lookahead.kind == SymbolKind.NUM) {
+        if (lookahead.getKind() == SymbolKind.NUM) {
             Symbol number = match(SymbolKind.NUM); // match le prochain jeton attendu (NUMBER)
             // Créer un nouveau nœud d'expression pour représenter le nombre
-            return new NumberExpressionNode(number.attribute);
-        } else if (lookahead.kind == SymbolKind.DOUBLE) {
+            return new NumberExpressionNode(number.getAttribute());
+        } else if (lookahead.getKind() == SymbolKind.DOUBLE) {
                 Symbol number = match(SymbolKind.DOUBLE); // match le prochain jeton attendu (NUMBER)
                 // Créer un nouveau nœud d'expression pour représenter le nombre
-                return new NumberExpressionNode(number.attribute);
-        } else if (lookahead.kind == SymbolKind.LPAR) {
+                return new NumberExpressionNode(number.getAttribute());
+        } else if (lookahead.getKind() == SymbolKind.LPAR) {
             match(SymbolKind.LPAR); // match le prochain jeton attendu (LEFT_PAREN)
             ExpressionNode expression = parseArithmeticExpression(); // analyser l'expression à l'intérieur des parenthèses
             match(SymbolKind.RPAR); // match le prochain jeton attendu (RIGHT_PAREN)
@@ -70,4 +70,12 @@ public class ArithmeticExpressionNode extends ExpressionNode {
         }
     }
 
+    @Override
+    public String toString() {
+        return "ArithmeticExpressionNode{" +
+                "leftOperand=" + leftOperand +
+                ", operator=" + operator +
+                ", rightOperand=" + rightOperand +
+                '}';
+    }
 }

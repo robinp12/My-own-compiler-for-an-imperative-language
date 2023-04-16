@@ -10,15 +10,18 @@ import static compiler.Parser.Parser.lookahead;
 import static compiler.Parser.Parser.match;
 
 public class StatementNode extends ExpressionNode{
-    public ArrayList<ExpressionNode> statements;
+    private ArrayList<ExpressionNode> statements;
     public StatementNode(ArrayList<ExpressionNode> statements) {
         this.statements = statements;
+    }
+    public ArrayList<ExpressionNode> getStatements() {
+        return statements;
     }
 
     public static StatementNode parseStatement() throws ParseException {
         ArrayList<ExpressionNode> statements = new ArrayList<>();
         while (Parser.NotAtEnd()){
-            switch (lookahead.kind){
+            switch (lookahead.getKind()){
                 case CONST:
                     statements.add(ConstantDeclarationNode.parseDeclarationConst());
                     break;
@@ -56,5 +59,12 @@ public class StatementNode extends ExpressionNode{
             }
         }
         return new StatementNode(statements);
+    }
+
+    @Override
+    public String toString() {
+        return "StatementNode{" +
+                "statements=" + statements +
+                '}';
     }
 }

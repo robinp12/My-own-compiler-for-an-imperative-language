@@ -9,12 +9,18 @@ import static compiler.Parser.Parser.lookahead;
 import static compiler.Parser.Parser.match;
 
 public class WhileStatementNode extends ExpressionNode{
-
-    ExpressionNode condition;
-    BlockNode block;
+    private ExpressionNode condition;
+    private BlockNode block;
     public WhileStatementNode(ExpressionNode condition, BlockNode block){
         this.condition = condition;
         this.block = block;
+    }
+    public ExpressionNode getCondition() {
+        return condition;
+    }
+
+    public BlockNode getBlock() {
+        return block;
     }
 
     public static ExpressionNode parseWhileStatement() throws ParseException {

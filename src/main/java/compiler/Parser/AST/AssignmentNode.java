@@ -35,16 +35,24 @@ public class AssignmentNode extends ExpressionNode{
     }
 
     public static AssignmentNode parseAssignment() throws ParseException{
-        String identifier = match(SymbolKind.LITERAL).attribute;
+        String identifier = match(SymbolKind.LITERAL).getAttribute();
         TypeNode type = TypeNode.parseType();
         ExpressionNode value = null;
-        if (lookahead.kind == SymbolKind.EQUALS){
+        if (lookahead.getKind() == SymbolKind.EQUALS){
             match(SymbolKind.EQUALS);
             value = ValueNode.parseValue();
-        } else if (lookahead.kind == SymbolKind.LBRACK) { // in case of array
+        } else if (lookahead.getKind() == SymbolKind.LBRACK) { // in case of array
             value = AssignmentArrayNode.parseArrayDeclaration();
         }
         return new AssignmentNode(identifier, type, value);
     }
 
+    @Override
+    public String toString() {
+        return "AssignmentNode{" +
+                "identifier='" + identifier + '\'' +
+                ", type=" + type +
+                ", value=" + value +
+                '}';
+    }
 }

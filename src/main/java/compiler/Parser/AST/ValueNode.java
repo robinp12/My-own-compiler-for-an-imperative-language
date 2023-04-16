@@ -11,12 +11,14 @@ public class ValueNode<T> extends ExpressionNode {
     private final T value;
 
     public ValueNode(T value) {
-
         this.value = value;
+    }
+    public T getValue() {
+        return value;
     }
 
     public static ValueNode<ExpressionNode> parseValue() throws ParseException{
-        switch (lookahead.kind){
+        switch (lookahead.getKind()){
             case NUM: case DOUBLE:
                 return new ValueNode<>(ArithmeticExpressionNode.parseArithmeticExpression());
             case TRUE: case FALSE:
@@ -26,5 +28,12 @@ public class ValueNode<T> extends ExpressionNode {
             default:
                 throw new ParseException("Error during value parsing",-1);
         }
+    }
+
+    @Override
+    public String toString() {
+        return "ValueNode{" +
+                "value=" + value +
+                '}';
     }
 }

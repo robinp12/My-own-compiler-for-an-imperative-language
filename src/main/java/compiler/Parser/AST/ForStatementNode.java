@@ -21,6 +21,25 @@ public class ForStatementNode extends ExpressionNode{
         this.step = step;
         this.block = block;
     }
+    public String getVariable() {
+        return variable;
+    }
+
+    public ExpressionNode getStart() {
+        return start;
+    }
+
+    public ExpressionNode getEnd() {
+        return end;
+    }
+
+    public ExpressionNode getStep() {
+        return step;
+    }
+
+    public BlockNode getBlock() {
+        return block;
+    }
 
     public static ExpressionNode parseForStatement() throws ParseException {
         match(SymbolKind.FOR);
@@ -30,7 +49,7 @@ public class ForStatementNode extends ExpressionNode{
 
         match(SymbolKind.TO);
         ExpressionNode end = ValueNode.parseValue();
-        if(lookahead.kind == SymbolKind.BY){
+        if(lookahead.getKind() == SymbolKind.BY){
             match(SymbolKind.BY);
             ExpressionNode step = ValueNode.parseValue();
             BlockNode block = BlockNode.parseBlock();
@@ -42,5 +61,14 @@ public class ForStatementNode extends ExpressionNode{
         }
 
     }
-
+    @Override
+    public String toString() {
+        return "ForStatementNode{" +
+                "variable='" + variable + '\'' +
+                ", start=" + start +
+                ", end=" + end +
+                ", step=" + step +
+                ", block=" + block +
+                '}';
+    }
 }

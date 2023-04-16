@@ -13,4 +13,11 @@ public class ProgramNode extends ExpressionNode {
     public List<ExpressionNode> getExpressions(){
         return this.expressions;
     }
+
+    @Override
+    public String toString() {
+        return "ProgramNode{" +
+                "expressions=" + expressions +
+                '}';
+    }
 }

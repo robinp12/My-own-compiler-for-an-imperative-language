@@ -19,16 +19,36 @@ public class IfStatementNode extends ExpressionNode{
         this.elseStatements = elseStatements;
     }
 
+    public ExpressionNode getCondition() {
+        return condition;
+    }
+
+    public BlockNode getThenStatements() {
+        return thenStatements;
+    }
+
+    public BlockNode getElseStatements() {
+        return elseStatements;
+    }
     public static ExpressionNode parseIfStatement() throws ParseException {
         match(SymbolKind.IF);
         ExpressionNode condition =  BinaryExpressionNode.parseConditionNode();
         BlockNode thenBlock = BlockNode.parseBlock();
 
-        if(lookahead.kind != SymbolKind.ELSE){
+        if(lookahead.getKind() != SymbolKind.ELSE){
             return new IfStatementNode(condition,thenBlock,null);
         }
         match(SymbolKind.ELSE);
         BlockNode elseBlock = BlockNode.parseBlock();
         return new IfStatementNode(condition,thenBlock,elseBlock);
+    }
+
+    @Override
+    public String toString() {
+        return "IfStatementNode{" +
+                "condition=" + condition +
+                ", thenStatements=" + thenStatements +
+                ", elseStatements=" + elseStatements +
+                '}';
     }
 }

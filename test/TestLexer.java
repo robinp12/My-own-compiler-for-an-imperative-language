@@ -19,11 +19,11 @@ public class TestLexer {
         Lexer lexer = new Lexer(reader);
         Symbol symbol = lexer.getNextSymbol();
         assertNotNull(symbol);
-        assertEquals(symbol.kind,SymbolKind.VAR);
+        assertEquals(symbol.getKind(),SymbolKind.VAR);
         for (int i = 0; i < 3; i++) {
             symbol = lexer.getNextSymbol();
         }
-        assertEquals(symbol.kind,SymbolKind.EQUALS);
+        assertEquals(symbol.getKind(),SymbolKind.EQUALS);
     }
     @Test
     public void testComment() {
@@ -32,7 +32,7 @@ public class TestLexer {
         Lexer lexer = new Lexer(reader);
         Symbol symbol = lexer.getNextSymbol();
         do{
-            assertEquals(symbol.kind,SymbolKind.COMMENT);
+            assertEquals(symbol.getKind(),SymbolKind.COMMENT);
             symbol = lexer.getNextSymbol();
         } while (symbol != null);
 
@@ -47,9 +47,9 @@ public class TestLexer {
         for (int i = 0; i < 2; i++) {
             symbol = lexer.getNextSymbol();
         }
-        assertEquals(symbol.kind,SymbolKind.DOUBLE);
+        assertEquals(symbol.getKind(),SymbolKind.DOUBLE);
         symbol = lexer.getNextSymbol();
-        assertEquals(symbol.kind,SymbolKind.EQUALS);
+        assertEquals(symbol.getKind(),SymbolKind.EQUALS);
     }
 
     @Test
@@ -58,11 +58,11 @@ public class TestLexer {
         StringReader reader = new StringReader(input);
         Lexer lexer = new Lexer(reader);
         Symbol symbol = lexer.getNextSymbol();
-        assertEquals(symbol.kind,SymbolKind.IF);
+        assertEquals(symbol.getKind(),SymbolKind.IF);
         for (int i = 0; i < 8; i++) {
             symbol = lexer.getNextSymbol();
         }
-        assertEquals(symbol.kind,SymbolKind.ELSE);
+        assertEquals(symbol.getKind(),SymbolKind.ELSE);
     }
 
     @Test
@@ -72,7 +72,7 @@ public class TestLexer {
         Lexer lexer = new Lexer(reader);
         Symbol symbol = lexer.getNextSymbol();
         do{
-            assertEquals(symbol.kind, SymbolKind.LITERAL);
+            assertEquals(symbol.getKind(), SymbolKind.LITERAL);
             symbol = lexer.getNextSymbol();
         } while (symbol != null);
     }
@@ -87,7 +87,7 @@ public class TestLexer {
         for (int i = 0; i < 4; i++) {
             symbol = lexer.getNextSymbol();
         }
-        assertEquals(symbol.kind,SymbolKind.LESSEQ);
+        assertEquals(symbol.getKind(),SymbolKind.LESSEQ);
 
     }
 

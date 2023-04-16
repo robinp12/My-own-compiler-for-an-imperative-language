@@ -1,8 +1,8 @@
 package compiler.Lexer;
 
 public class Symbol {
-    public final SymbolKind kind;
-    public final String attribute;
+    private final SymbolKind kind;
+    private final String attribute;
 
     public Symbol (SymbolKind kind, String attribute){
         this.kind = kind;
@@ -12,6 +12,14 @@ public class Symbol {
     public Symbol (SymbolKind kind){
         this.kind = kind;
         this.attribute = "";
+    }
+
+    public SymbolKind getKind() {
+        return kind;
+    }
+
+    public String getAttribute() {
+        return attribute;
     }
 
     @Override public String toString ()

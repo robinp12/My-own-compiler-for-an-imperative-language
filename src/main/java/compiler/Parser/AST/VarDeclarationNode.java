@@ -7,9 +7,12 @@ import java.text.ParseException;
 import static compiler.Parser.Parser.match;
 
 public class VarDeclarationNode extends ExpressionNode {
-    ExpressionNode assignment;
+    private ExpressionNode assignment;
     public VarDeclarationNode(ExpressionNode assignment) {
         this.assignment = assignment;
+    }
+    public ExpressionNode getAssignment() {
+        return assignment;
     }
 
     public static ExpressionNode parseDeclarationVar() throws ParseException {
@@ -17,5 +20,12 @@ public class VarDeclarationNode extends ExpressionNode {
         ExpressionNode assignment = AssignmentNode.parseAssignment();
         match(SymbolKind.SEMI);
         return new VarDeclarationNode(assignment);
+    }
+
+    @Override
+    public String toString() {
+        return "VarDeclarationNode{" +
+                "assignment=" + assignment +
+                '}';
     }
 }

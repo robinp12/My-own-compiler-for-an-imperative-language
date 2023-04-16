@@ -43,7 +43,7 @@ public enum SymbolKind {
     SEMI(";"),
     COMA(","),
     LITERAL("literal"),
-    STR("str type"),
+    STR("string type"),
     STRING("string"),
     TRUE("true"),
     FALSE("false"),
@@ -55,5 +55,9 @@ public enum SymbolKind {
 
     SymbolKind(String name) {
         this.name = name;
+    }
+
+    public String getName() {
+        return name;
     }
 }

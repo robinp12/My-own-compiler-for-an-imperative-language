@@ -21,11 +21,18 @@ public class BlockNode extends ExpressionNode{
     }
     public static BlockNode parseBlock() throws ParseException {
         match(SymbolKind.LBRACE);
-        if (lookahead.kind == SymbolKind.RBRACE){
+        if (lookahead.getKind() == SymbolKind.RBRACE){
             match(SymbolKind.RBRACE);
             return new BlockNode(null);
         }
         StatementNode statements = StatementNode.parseStatement();
         return new BlockNode(statements);
+    }
+
+    @Override
+    public String toString() {
+        return "BlockNode{" +
+                "statements=" + statements +
+                '}';
     }
 }

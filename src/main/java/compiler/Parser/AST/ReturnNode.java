@@ -12,6 +12,9 @@ public class ReturnNode extends ExpressionNode {
     public ReturnNode(ValueNode value){
         this.value = value;
     }
+    public ValueNode getValue() {
+        return value;
+    }
 
     public static ExpressionNode parseReturn() throws ParseException {
         match(SymbolKind.RETURN);
@@ -20,4 +23,10 @@ public class ReturnNode extends ExpressionNode {
         return new ReturnNode(value);
     }
 
+    @Override
+    public String toString() {
+        return "ReturnNode{" +
+                "value=" + value +
+                '}';
+    }
 }

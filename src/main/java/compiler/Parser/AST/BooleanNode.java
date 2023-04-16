@@ -8,13 +8,15 @@ import java.text.ParseException;
 public class BooleanNode extends ExpressionNode{
     public final boolean val;
 
-
     public BooleanNode(boolean val) {
         this.val = val;
     }
 
+    public boolean isVal() {
+        return val;
+    }
     public static BooleanNode parseBoolean() throws ParseException{
-        switch (Parser.lookahead.kind){
+        switch (Parser.lookahead.getKind()){
             case TRUE:
                 Parser.match(SymbolKind.TRUE);
                 return new BooleanNode(true);
@@ -24,5 +26,11 @@ public class BooleanNode extends ExpressionNode{
             default:
                 throw new ParseException("Error parsing Boolean",-1);
         }
+    }
+    @Override
+    public String toString() {
+        return "BooleanNode{" +
+                "val=" + val +
+                '}';
     }
 }

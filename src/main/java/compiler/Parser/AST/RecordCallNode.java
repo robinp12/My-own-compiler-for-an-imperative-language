@@ -19,14 +19,33 @@ public class RecordCallNode extends ExpressionNode {
         this.record = record;
         this.parameters = parameters;
     }
+    public String getIdentifier() {
+        return name;
+    }
+
+    public RecordNode getRecord() {
+        return record;
+    }
+
+    public ArrayList<ParamNode> getParameters() {
+        return parameters;
+    }
 
     public static RecordCallNode parseRecordCall() throws ParseException{
         // TODO
-        String name = match(SymbolKind.LITERAL).attribute;
+        String name = match(SymbolKind.LITERAL).getAttribute();
         match(SymbolKind.LPAR);
         ArrayList<ParamNode> params = ParamListNode.parseParams();
         match(SymbolKind.RPAR);
         return new RecordCallNode(name,null,params);
     }
 
+    @Override
+    public String toString() {
+        return "RecordCallNode{" +
+                "name='" + name + '\'' +
+                ", record=" + record +
+                ", parameters=" + parameters +
+                '}';
+    }
 }

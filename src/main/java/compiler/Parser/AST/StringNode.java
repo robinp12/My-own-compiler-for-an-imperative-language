@@ -8,14 +8,23 @@ import java.text.ParseException;
 import static compiler.Parser.Parser.lookahead;
 import static compiler.Parser.Parser.match;
 public class StringNode extends ExpressionNode {
-    public final String value;
+    private final String value;
 
     public StringNode(String value){
         this.value = value;
     }
-
-    public static StringNode parseStringExpression() throws ParseException {
-        return new StringNode(match(SymbolKind.STRING).attribute);
+    public String getValue() {
+        return value;
     }
 
+    public static StringNode parseStringExpression() throws ParseException {
+        return new StringNode(match(SymbolKind.STRING).getAttribute());
+    }
+
+    @Override
+    public String toString() {
+        return "StringNode{" +
+                "value='" + value + '\'' +
+                '}';
+    }
 }

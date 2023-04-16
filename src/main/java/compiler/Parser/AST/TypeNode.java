@@ -8,22 +8,24 @@ import static compiler.Parser.Parser.lookahead;
 import static compiler.Parser.Parser.match;
 
 public class TypeNode extends ExpressionNode {
-    private String typeSymbol = null;
+    private String typeSymbol;
+    private String name;
 
-    public TypeNode(String typeSymbol) {
+    public TypeNode(String typeSymbol, String name) {
         this.typeSymbol = typeSymbol;
+        this.name = name;
     }
 
     public static TypeNode parseType() throws ParseException {
-        switch (lookahead.kind){
+        switch (lookahead.getKind()){
             case DOUBLE:
-                return new TypeNode(match(SymbolKind.DOUBLE).attribute);
+                return new TypeNode(SymbolKind.DOUBLE.getName(),match(SymbolKind.DOUBLE).getAttribute());
             case INT:
-                return new TypeNode(match(SymbolKind.INT).attribute);
+                return new TypeNode(SymbolKind.INT.getName(),match(SymbolKind.INT).getAttribute());
             case STR:
-                return new TypeNode(match(SymbolKind.STR).attribute);
+                return new TypeNode(SymbolKind.STR.getName(),match(SymbolKind.STR).getAttribute());
             case BOOL:
-                return new TypeNode(match(SymbolKind.BOOL).attribute);
+                return new TypeNode(SymbolKind.BOOL.getName(),match(SymbolKind.BOOL).getAttribute());
             default:
                 throw new ParseException("Invalid Type",0);
         }
@@ -31,5 +33,12 @@ public class TypeNode extends ExpressionNode {
 
     public String getTypeSymbol() {
         return typeSymbol;
+    }
+
+    @Override
+    public String toString() {
+        return "TypeNode{" +
+                "typeSymbol='" + typeSymbol + '\'' +
+                '}';
     }
 }

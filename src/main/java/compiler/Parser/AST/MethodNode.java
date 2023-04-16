@@ -28,6 +28,12 @@ public class MethodNode extends ExpressionNode {
     public BlockNode getBody() {
         return body;
     }
+    public Symbol getIdentifier() {
+        return identifier;
+    }
+    public TypeNode getReturnType() {
+        return returnType;
+    }
 
     public static MethodNode parseMethod() throws ParseException{
         match(SymbolKind.PROC);
@@ -38,5 +44,15 @@ public class MethodNode extends ExpressionNode {
         TypeNode returnType = TypeNode.parseType();
         BlockNode body = BlockNode.parseBlock();
         return new MethodNode(name, returnType, params, body);
+    }
+
+    @Override
+    public String toString() {
+        return "MethodNode{" +
+                "identifier=" + identifier +
+                ", returnType=" + returnType +
+                ", parameters=" + parameters +
+                ", body=" + body +
+                '}';
     }
 }

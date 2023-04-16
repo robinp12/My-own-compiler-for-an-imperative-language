@@ -1,4 +1,5 @@
 import compiler.Lexer.Lexer;
+import compiler.Parser.AST.ExpressionNode;
 import org.junit.Test;
 
 import java.io.StringReader;
@@ -9,7 +10,7 @@ import compiler.Parser.Parser;
 public class TestParser {
         @Test
     public void testBasicVal() throws ParseException {
-        String input = "val a int = 3;";
+        String input = "val a boolean = 3;";
         StringReader reader = new StringReader(input);
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
@@ -79,7 +80,8 @@ public class TestParser {
         StringReader reader = new StringReader(input);
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
-        parser.getAST();
+        ExpressionNode x = parser.getAST();
+        System.out.println(x);
     }
 
     @Test
@@ -89,7 +91,8 @@ public class TestParser {
         StringReader reader = new StringReader(input);
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
-        parser.getAST();
+        ExpressionNode x = parser.getAST();
+        System.out.println(x);
     }
 
     @Test

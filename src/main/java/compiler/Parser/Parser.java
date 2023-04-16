@@ -22,13 +22,13 @@ public class Parser {
 
     /* Must return root of AST */
     public ExpressionNode getAST() throws ParseException {
-        return new ProgramNode(StatementNode.parseStatement().statements);
+        return new ProgramNode(StatementNode.parseStatement().getStatements());
     }
 
     public static Symbol match(SymbolKind token) throws ParseException {
         if(lookahead == null) return null;
-        if(lookahead.kind != token){
-            throw new ParseException("No match, following is " + lookahead.kind + " but match is token " + token,0);
+        if(lookahead.getKind() != token){
+            throw new ParseException("No match, following is " + lookahead.getKind() + " but match is token " + token,0);
         }
         else {
             System.out.println("(Optional message) Matching Symbol " + token);
