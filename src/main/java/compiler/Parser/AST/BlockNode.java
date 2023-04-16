@@ -5,7 +5,6 @@ import compiler.Lexer.SymbolKind;
 import java.text.ParseException;
 import java.util.ArrayList;
 
-import static compiler.Parser.AST.StatementListNode.parseStatements;
 import static compiler.Parser.Parser.lookahead;
 import static compiler.Parser.Parser.match;
 
@@ -22,8 +21,11 @@ public class BlockNode extends ExpressionNode{
     }
     public static BlockNode parseBlock() throws ParseException {
         match(SymbolKind.LBRACE);
+        if (lookahead.kind == SymbolKind.RBRACE){
+            match(SymbolKind.RBRACE);
+            return new BlockNode(null);
+        }
         StatementNode statements = StatementNode.parseStatement();
-        match(SymbolKind.RBRACE);
         return new BlockNode(statements);
     }
 }

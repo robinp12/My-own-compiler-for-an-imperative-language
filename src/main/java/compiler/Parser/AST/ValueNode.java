@@ -1,8 +1,11 @@
 package compiler.Parser.AST;
 
+import compiler.Lexer.SymbolKind;
+
 import java.text.ParseException;
 
 import static compiler.Parser.Parser.lookahead;
+import static compiler.Parser.Parser.match;
 
 public class ValueNode<T> extends ExpressionNode {
     private final T value;
@@ -16,9 +19,8 @@ public class ValueNode<T> extends ExpressionNode {
         switch (lookahead.kind){
             case NUM: case DOUBLE:
                 return new ValueNode<>(ArithmeticExpressionNode.parseArithmeticExpression());
-
             case TRUE: case FALSE:
-                return new ValueNode<>(BinaryExpressionNode.parseConditionNode());
+                return new ValueNode<>(BooleanNode.parseBoolean());
             case STRING:
                 return new ValueNode<>(StringNode.parseStringExpression());
             default:

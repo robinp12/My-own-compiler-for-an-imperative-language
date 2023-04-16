@@ -49,6 +49,8 @@ public class StatementNode extends ExpressionNode{
                 case COMMENT:
                     match(SymbolKind.COMMENT);
                     break;
+                case RBRACE:
+                    return new StatementNode(statements);
                 default:
                     throw new ParseException("Error during parsing: illegal symbol" + lookahead,-1);
             }

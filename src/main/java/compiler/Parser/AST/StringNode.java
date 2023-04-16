@@ -1,9 +1,11 @@
 package compiler.Parser.AST;
 
+import compiler.Lexer.Symbol;
 import compiler.Lexer.SymbolKind;
 
 import java.text.ParseException;
 
+import static compiler.Parser.Parser.lookahead;
 import static compiler.Parser.Parser.match;
 public class StringNode extends ExpressionNode {
     public final String value;
