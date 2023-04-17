@@ -7,18 +7,18 @@ import java.text.ParseException;
 import static compiler.Parser.Parser.match;
 
 public class ReturnNode extends ExpressionNode {
-    private ValueNode value;
+    private ExpressionNode value;
 
-    public ReturnNode(ValueNode value){
+    public ReturnNode(ExpressionNode value){
         this.value = value;
     }
-    public ValueNode getValue() {
+    public ExpressionNode getValue() {
         return value;
     }
 
     public static ExpressionNode parseReturn() throws ParseException {
         match(SymbolKind.RETURN);
-        ValueNode<ExpressionNode> value = ValueNode.parseValue();
+        ExpressionNode value = BinaryExpressionNode.parseBinaryExpressionNode(null);
         match(SymbolKind.SEMI);
         return new ReturnNode(value);
     }

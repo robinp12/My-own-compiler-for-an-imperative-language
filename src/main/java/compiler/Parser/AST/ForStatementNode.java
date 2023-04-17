@@ -43,7 +43,7 @@ public class ForStatementNode extends ExpressionNode{
 
     public static ExpressionNode parseForStatement() throws ParseException {
         match(SymbolKind.FOR);
-        AssignmentNode assignmentNode = AssignmentNode.parseAssignment();
+        AssignmentNode assignmentNode = AssignmentNode.parseForLoopAssignment();
         String variable = assignmentNode.getIdentifier();
         ExpressionNode start = assignmentNode.getValue();
 

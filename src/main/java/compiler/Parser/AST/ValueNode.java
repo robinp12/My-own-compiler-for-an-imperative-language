@@ -19,12 +19,12 @@ public class ValueNode<T> extends ExpressionNode {
 
     public static ValueNode<ExpressionNode> parseValue() throws ParseException{
         switch (lookahead.getKind()){
-            case NUM: case DOUBLE:
-                return new ValueNode<>(ArithmeticExpressionNode.parseArithmeticExpression());
+            case NUM:
+                return new ValueNode<>(NumberNode.parseNumber());
             case TRUE: case FALSE:
                 return new ValueNode<>(BooleanNode.parseBoolean());
             case STRING:
-                return new ValueNode<>(StringNode.parseStringExpression());
+                return new ValueNode<>(StringNode.parseString());
             default:
                 throw new ParseException("Error during value parsing",-1);
         }

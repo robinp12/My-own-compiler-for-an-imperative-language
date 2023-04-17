@@ -25,32 +25,96 @@ public class BinaryExpressionNode extends ExpressionNode {
         this.right = right;
     }
 
-    public static ExpressionNode parseConditionNode() throws ParseException {
+    public static ExpressionNode parseBinaryExpressionNode(ExpressionNode l) throws ParseException {
+        ExpressionNode left = l;
         Symbol operator = null;
-        //TODO (big big job)
-        String left = match(SymbolKind.LITERAL).getAttribute();
-        switch (lookahead.getKind()){
-            case EQEQ:
-                operator = match(SymbolKind.EQEQ);
+
+        while (true) {
+
+            if (left == null){
+                left = getExpressionValueNode();
+            }
+            if (!isBinaryOperator(lookahead)) {
                 break;
-            case LESSEQ:
-                operator = match(SymbolKind.LESSEQ);
-                break;
-            case MOREEQ:
-                operator = match(SymbolKind.MOREEQ);
-                break;
-            case NOTEQ:
-                operator = match(SymbolKind.NOTEQ);
-                break;
-            case LESS:
-                operator = match(SymbolKind.LESS);
-                break;
-            case MORE:
-                operator = match(SymbolKind.MORE);
-                break;
+            }
+
+
+            switch (lookahead.getKind()) {
+                case EQEQ:
+                    operator = match(SymbolKind.EQEQ);
+                    break;
+                case LESSEQ:
+                    operator = match(SymbolKind.LESSEQ);
+                    break;
+                case MOREEQ:
+                    operator = match(SymbolKind.MOREEQ);
+                    break;
+                case DIFF:
+                    operator = match(SymbolKind.DIFF);
+                    break;
+                case LESS:
+                    operator = match(SymbolKind.LESS);
+                    break;
+                case MORE:
+                    operator = match(SymbolKind.MORE);
+                    break;
+                case PLUS:
+                    operator = match(SymbolKind.PLUS);
+                    break;
+                case MINUS:
+                    operator = match(SymbolKind.MINUS);
+                    break;
+                case STAR:
+                    operator = match(SymbolKind.STAR);
+                    break;
+                case SLASH:
+                    operator = match(SymbolKind.SLASH);
+                    break;
+                case PERC:
+                    operator = match(SymbolKind.PERC);
+                    break;
+                case AND:
+                    operator = match(SymbolKind.AND);
+                    break;
+                case OR:
+                    operator = match(SymbolKind.OR);
+                    break;
+            }
+
+            ExpressionNode right;
+            right = getExpressionValueNode();
+            while (isBinaryOperator(lookahead)) {
+                right = parseBinaryExpressionNode(right);
+            }
+
+            left = new BinaryExpressionNode(left,operator,right);
         }
-        String right = match(SymbolKind.NUM).getAttribute();
-        return new BinaryExpressionNode(null, operator, null);
+        return left;
+    }
+
+    private static ExpressionNode getExpressionValueNode() throws ParseException {
+        ExpressionNode node = null;
+        switch (lookahead.getKind()) {
+            case NUM:
+            case TRUE:
+            case FALSE:
+            case STRING:
+                return ValueNode.parseValue();
+            case LITERAL:
+                return LiteralNode.parseLiteral();
+            default:
+                throw new ParseException("Error parsing Value in Binary Expression"+lookahead,-2);
+        }
+    }
+
+    public static boolean isBinaryOperator(Symbol s){
+        switch (s.getKind()){
+            case EQEQ: case LESSEQ: case MOREEQ: case DIFF:
+            case LESS: case MORE: case PLUS: case MINUS: case STAR:
+            case SLASH: case PERC: case AND: case OR:
+                return true;
+            default: return false;
+        }
     }
 
     public ExpressionNode getLeft() {

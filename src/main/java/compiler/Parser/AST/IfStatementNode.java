@@ -3,7 +3,6 @@ package compiler.Parser.AST;
 import compiler.Lexer.SymbolKind;
 
 import java.text.ParseException;
-import java.util.ArrayList;
 
 import static compiler.Parser.Parser.lookahead;
 import static compiler.Parser.Parser.match;
@@ -32,7 +31,7 @@ public class IfStatementNode extends ExpressionNode{
     }
     public static ExpressionNode parseIfStatement() throws ParseException {
         match(SymbolKind.IF);
-        ExpressionNode condition =  BinaryExpressionNode.parseConditionNode();
+        ExpressionNode condition =  BinaryExpressionNode.parseBinaryExpressionNode(null);
         BlockNode thenBlock = BlockNode.parseBlock();
 
         if(lookahead.getKind() != SymbolKind.ELSE){

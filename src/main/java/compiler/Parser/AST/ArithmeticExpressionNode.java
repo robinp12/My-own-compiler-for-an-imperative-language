@@ -50,16 +50,14 @@ public class ArithmeticExpressionNode extends ExpressionNode {
     // Règle pour un facteur (un nombre ou une expression parenthésée)
     public static ExpressionNode factor() throws ParseException {
         if (lookahead.getKind() == SymbolKind.LITERAL){
-            Symbol var = match(SymbolKind.LITERAL);
+            return LiteralNode.parseLiteral();
         }
         if (lookahead.getKind() == SymbolKind.NUM) {
-            Symbol number = match(SymbolKind.NUM); // match le prochain jeton attendu (NUMBER)
             // Créer un nouveau nœud d'expression pour représenter le nombre
-            return new NumberExpressionNode(number.getAttribute());
+            return NumberNode.parseNumber();
         } else if (lookahead.getKind() == SymbolKind.DOUBLE) {
-                Symbol number = match(SymbolKind.DOUBLE); // match le prochain jeton attendu (NUMBER)
-                // Créer un nouveau nœud d'expression pour représenter le nombre
-                return new NumberExpressionNode(number.getAttribute());
+            // Créer un nouveau nœud d'expression pour représenter le nombre
+            return NumberNode.parseNumber();
         } else if (lookahead.getKind() == SymbolKind.LPAR) {
             match(SymbolKind.LPAR); // match le prochain jeton attendu (LEFT_PAREN)
             ExpressionNode expression = parseArithmeticExpression(); // analyser l'expression à l'intérieur des parenthèses

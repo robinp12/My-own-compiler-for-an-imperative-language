@@ -17,7 +17,7 @@ public class StringNode extends ExpressionNode {
         return value;
     }
 
-    public static StringNode parseStringExpression() throws ParseException {
+    public static StringNode parseString() throws ParseException {
         return new StringNode(match(SymbolKind.STRING).getAttribute());
     }
 

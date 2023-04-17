@@ -47,6 +47,15 @@ public class AssignmentNode extends ExpressionNode{
         return new AssignmentNode(identifier, type, value);
     }
 
+    public static AssignmentNode parseForLoopAssignment() throws ParseException{
+        String identifier = match(SymbolKind.LITERAL).getAttribute();
+        TypeNode type = new TypeNode("int", identifier);
+        match(SymbolKind.EQUALS);
+        ExpressionNode value = ValueNode.parseValue();
+
+        return new AssignmentNode(identifier, type, value);
+    }
+
     @Override
     public String toString() {
         return "AssignmentNode{" +
