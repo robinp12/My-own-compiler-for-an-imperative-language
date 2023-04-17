@@ -41,7 +41,7 @@ public class AssignmentArrayNode extends ExpressionNode{
                 match(SymbolKind.LBRACK);
                 match(SymbolKind.RBRACK);
                 match(SymbolKind.LPAR);
-                size = ValueNode.parseValue();
+                size = BinaryExpressionNode.parseBinaryExpressionNode(null);
                 match(SymbolKind.RPAR);
             }
         }
