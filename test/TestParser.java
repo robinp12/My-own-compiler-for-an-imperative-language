@@ -1,5 +1,6 @@
 import compiler.Lexer.Lexer;
 import compiler.Parser.AST.ExpressionNode;
+import compiler.Parser.AST.ProgramNode;
 import org.junit.Test;
 
 import java.io.StringReader;

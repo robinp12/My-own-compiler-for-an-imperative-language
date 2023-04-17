@@ -23,6 +23,5 @@ public class TestSemantic {
         Parser parser = new Parser(lexer);
         ExpressionNode x = parser.getAST();
         System.out.println(x);
-        SymbolTable st = new SymbolTable(null);
     }
 }

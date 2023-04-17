@@ -18,7 +18,7 @@ public class AssignmentNode extends ExpressionNode{
     private ExpressionNode value;
 
     public AssignmentNode(String identifier, TypeNode type, ExpressionNode value) {
-        super(type.getTypeSymbol());
+        super(type!=null?type.getTypeSymbol():null);
         this.identifier = identifier;
         this.type = type;
         this.value = value;
@@ -79,7 +79,7 @@ public class AssignmentNode extends ExpressionNode{
     }
 
     public static AssignmentNode parseForLoopAssignment() throws ParseException{
-        String identifier = match(SymbolKind.LITERAL).getAttribute();
+        String identifier = LiteralNode.parseLiteral().getLiteral();
         TypeNode type = new TypeNode("int", identifier);
         match(SymbolKind.EQUALS);
         ExpressionNode value = BinaryExpressionNode.parseBinaryExpressionNode(null);

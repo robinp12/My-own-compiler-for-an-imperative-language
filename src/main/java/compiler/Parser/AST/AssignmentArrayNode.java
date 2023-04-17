@@ -13,7 +13,7 @@ public class AssignmentArrayNode extends ExpressionNode{
     private TypeNode type;
 
     public AssignmentArrayNode(ExpressionNode size, TypeNode type){
-        super(type.getTypeSymbol());
+        super(type!=null?type.getTypeSymbol():null);
         this.size = size;
         this.type = type;
     }
