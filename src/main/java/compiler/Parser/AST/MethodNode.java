@@ -17,6 +17,7 @@ public class MethodNode extends ExpressionNode {
     private BlockNode body;
 
     public MethodNode(Symbol identifier, TypeNode returnType, ArrayList<ParamNode> parameters, BlockNode body) {
+        super(returnType.getTypeSymbol());
         this.identifier = identifier;
         this.returnType = returnType;
         this.parameters = parameters;

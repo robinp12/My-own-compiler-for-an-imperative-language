@@ -13,6 +13,7 @@ public class IfStatementNode extends ExpressionNode{
     private BlockNode thenStatements;
     private BlockNode elseStatements;
     public IfStatementNode(ExpressionNode condition, BlockNode thenStatements, BlockNode elseStatements){
+        super("If");
         this.condition = condition;
         this.thenStatements = thenStatements;
         this.elseStatements = elseStatements;

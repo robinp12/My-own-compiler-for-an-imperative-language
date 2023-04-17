@@ -19,6 +19,7 @@ public class ArithmeticExpressionNode extends ExpressionNode {
      */
 
     public ArithmeticExpressionNode(ExpressionNode leftOperand, Symbol operator, ExpressionNode rightOperand){
+        super("arithmeticExp");
         this.leftOperand = leftOperand;
         this.operator = operator;
         this.rightOperand = rightOperand;

@@ -18,6 +18,7 @@ public class AssignmentNode extends ExpressionNode{
     private ExpressionNode value;
 
     public AssignmentNode(String identifier, TypeNode type, ExpressionNode value) {
+        super(type.getTypeSymbol());
         this.identifier = identifier;
         this.type = type;
         this.value = value;
@@ -51,7 +52,7 @@ public class AssignmentNode extends ExpressionNode{
         String identifier = match(SymbolKind.LITERAL).getAttribute();
         TypeNode type = new TypeNode("int", identifier);
         match(SymbolKind.EQUALS);
-        ExpressionNode value = ValueNode.parseValue();
+        ExpressionNode value = BinaryExpressionNode.parseBinaryExpressionNode(null);
 
         return new AssignmentNode(identifier, type, value);
     }

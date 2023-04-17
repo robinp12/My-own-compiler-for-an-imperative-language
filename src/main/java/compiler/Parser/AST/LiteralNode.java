@@ -9,6 +9,7 @@ public class LiteralNode extends ExpressionNode {
     private final String literal;
 
     public LiteralNode(String literal) {
+        super("str");
         this.literal = literal;
     }
 

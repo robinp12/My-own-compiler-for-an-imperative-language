@@ -20,6 +20,7 @@ public class BinaryExpressionNode extends ExpressionNode {
     private ExpressionNode right;
 
     public BinaryExpressionNode(ExpressionNode left, Symbol operator, ExpressionNode right) {
+        super("binaryExp");
         this.left = left;
         this.operator = operator;
         this.right = right;

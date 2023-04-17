@@ -15,6 +15,7 @@ public class RecordCallNode extends ExpressionNode {
     private ArrayList<ParamNode> parameters;
 
     public RecordCallNode(String name, RecordNode record, ArrayList<ParamNode> parameters) {
+        super("record_call");
         this.name = name;
         this.record = record;
         this.parameters = parameters;

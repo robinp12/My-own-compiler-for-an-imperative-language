@@ -9,9 +9,12 @@ public class BooleanNode extends ExpressionNode{
     public final boolean val;
 
     public BooleanNode(boolean val) {
+        super("bool");
         this.val = val;
     }
-
+    public String getType(){
+        return type;
+    }
     public boolean isVal() {
         return val;
     }

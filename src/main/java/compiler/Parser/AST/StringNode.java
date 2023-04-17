@@ -11,6 +11,7 @@ public class StringNode extends ExpressionNode {
     private final String value;
 
     public StringNode(String value){
+        super("str");
         this.value = value;
     }
     public String getValue() {

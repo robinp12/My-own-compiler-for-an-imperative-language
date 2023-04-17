@@ -12,6 +12,7 @@ public class ParamNode extends ExpressionNode {
     private String identifier;
 
     public ParamNode(TypeNode type, String name) {
+        super(type.getTypeStr());
         this.identifier = name;
         this.type = type;
     }

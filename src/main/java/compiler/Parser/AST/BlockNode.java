@@ -13,6 +13,7 @@ public class BlockNode extends ExpressionNode{
     private StatementNode statements;
 
     public BlockNode(StatementNode stmts) {
+        super("block");
         this.statements = stmts;
     }
 

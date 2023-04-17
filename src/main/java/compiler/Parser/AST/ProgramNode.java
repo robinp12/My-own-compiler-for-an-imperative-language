@@ -7,6 +7,7 @@ public class ProgramNode extends ExpressionNode {
     private final List<ExpressionNode> expressions;
 
     public ProgramNode(List<ExpressionNode> expressions) {
+        super("root");
         this.expressions = expressions;
     }
 

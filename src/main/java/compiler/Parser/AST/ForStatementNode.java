@@ -15,6 +15,7 @@ public class ForStatementNode extends ExpressionNode{
     private ExpressionNode step;
     private BlockNode block;
     public ForStatementNode(String variable, ExpressionNode start, ExpressionNode end, ExpressionNode step, BlockNode block){
+        super("ForLoop");
         this.variable = variable;
         this.start = start;
         this.end = end;

@@ -14,6 +14,7 @@ public class MethodCallNode extends ExpressionNode {
     private ArrayList<ParamNode> parameters;
 
     public MethodCallNode(String name, RecordNode record, ArrayList<ParamNode> parameters) {
+        super("todo");
         this.identifier = name;
         this.record = record;
         this.parameters = parameters;

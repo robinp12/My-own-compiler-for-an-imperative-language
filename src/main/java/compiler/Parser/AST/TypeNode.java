@@ -12,6 +12,7 @@ public class TypeNode extends ExpressionNode {
     private String name;
 
     public TypeNode(String typeSymbol, String name) {
+        super(typeSymbol);
         this.typeSymbol = typeSymbol;
         this.name = name;
     }

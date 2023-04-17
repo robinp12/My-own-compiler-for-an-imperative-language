@@ -10,6 +10,10 @@ import static compiler.Parser.Parser.match;
 
 public class ParamListNode extends ExpressionNode {
 
+    public ParamListNode(String type) {
+        super(type);
+    }
+
     public static ArrayList<ParamNode> parseParams() throws ParseException{
         ArrayList<ParamNode> parameters = new ArrayList<>();
         if(lookahead.getKind() != SymbolKind.RPAR){

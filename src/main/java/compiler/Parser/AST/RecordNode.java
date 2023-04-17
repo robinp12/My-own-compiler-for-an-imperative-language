@@ -14,12 +14,14 @@ public class RecordNode extends ExpressionNode {
     private ArrayList<ParamNode> fields;
 
     public RecordNode(String identifier, ArrayList<ParamNode> fields) {
+        super("record");
         this.identifier = identifier;
         this.fields = fields;
     }
     public String getIdentifier() {
         return identifier;
     }
+    public String getType(){return type;}
 
     public ArrayList<ParamNode> getFields() {
         return fields;

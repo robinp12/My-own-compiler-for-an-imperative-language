@@ -13,6 +13,7 @@ public class AssignmentArrayNode extends ExpressionNode{
     private TypeNode type;
 
     public AssignmentArrayNode(ExpressionNode size, TypeNode type){
+        super(type.getTypeSymbol());
         this.size = size;
         this.type = type;
     }
@@ -23,6 +24,7 @@ public class AssignmentArrayNode extends ExpressionNode{
     public TypeNode getType() {
         return type;
     }
+
 
     public static AssignmentArrayNode parseArrayDeclaration() throws ParseException {
         ExpressionNode size = null;

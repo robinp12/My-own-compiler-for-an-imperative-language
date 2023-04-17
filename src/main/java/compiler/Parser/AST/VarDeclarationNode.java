@@ -9,6 +9,7 @@ import static compiler.Parser.Parser.match;
 public class VarDeclarationNode extends ExpressionNode {
     private ExpressionNode assignment;
     public VarDeclarationNode(ExpressionNode assignment) {
+        super(assignment.getTypeStr());
         this.assignment = assignment;
     }
     public ExpressionNode getAssignment() {

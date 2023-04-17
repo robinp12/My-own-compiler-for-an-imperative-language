@@ -12,6 +12,7 @@ import static compiler.Parser.Parser.match;
 public class StatementNode extends ExpressionNode{
     private ArrayList<ExpressionNode> statements;
     public StatementNode(ArrayList<ExpressionNode> statements) {
+        super("statement");
         this.statements = statements;
     }
     public ArrayList<ExpressionNode> getStatements() {

@@ -10,6 +10,7 @@ public class ConstantDeclarationNode extends ExpressionNode {
 
     private ExpressionNode assignment;
     public ConstantDeclarationNode(ExpressionNode assignment) {
+        super(assignment.getTypeStr());
         this.assignment = assignment;
     }
 

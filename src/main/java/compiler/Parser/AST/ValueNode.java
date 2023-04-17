@@ -11,13 +11,14 @@ public class ValueNode<T> extends ExpressionNode {
     private final T value;
 
     public ValueNode(T value) {
+        super(null);
         this.value = value;
     }
     public T getValue() {
         return value;
     }
 
-    public static ValueNode<ExpressionNode> parseValue() throws ParseException{
+    public static ExpressionNode parseValue() throws ParseException{
         switch (lookahead.getKind()){
             case NUM:
                 return new ValueNode<>(NumberNode.parseNumber());

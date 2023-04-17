@@ -10,6 +10,7 @@ public class ValDeclarationNode extends ExpressionNode {
     private ExpressionNode assignment;
 
     public ValDeclarationNode(ExpressionNode assignment) {
+        super(assignment.getTypeStr());
         this.assignment = assignment;
     }
     public ExpressionNode getAssignment() {

@@ -10,6 +10,7 @@ public class ReturnNode extends ExpressionNode {
     private ExpressionNode value;
 
     public ReturnNode(ExpressionNode value){
+        super(value.getTypeStr());
         this.value = value;
     }
     public ExpressionNode getValue() {

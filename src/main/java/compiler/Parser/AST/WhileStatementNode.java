@@ -10,6 +10,7 @@ public class WhileStatementNode extends ExpressionNode{
     private ExpressionNode condition;
     private BlockNode block;
     public WhileStatementNode(ExpressionNode condition, BlockNode block){
+        super("whileLoop");
         this.condition = condition;
         this.block = block;
     }
