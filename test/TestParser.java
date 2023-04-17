@@ -26,7 +26,7 @@ public class TestParser {
     }
     @Test
     public void testBasicConst() throws ParseException {
-        String input = "const a int = \"test\";";
+        String input = "const a int = \"test\"+1;";
         StringReader reader = new StringReader(input);
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
@@ -96,12 +96,40 @@ public class TestParser {
     }
 
     @Test
-    public void testBasicAccessArray() throws ParseException {
+    public void testBasicArrayAssignment() throws ParseException {
         String input = "c[2] = 1;";
         StringReader reader = new StringReader(input);
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
         parser.getAST();
+    }
+        
+    @Test
+    public void testBasicAssignment() throws ParseException {
+        String input = "caov = \"true\";";
+        StringReader reader = new StringReader(input);
+        Lexer lexer = new Lexer(reader);
+        Parser parser = new Parser(lexer);
+        parser.getAST();
+    }
+
+    @Test
+    public void testBasicComplete() throws ParseException {
+        String input = "var i int = 0;\n" +
+                "var j int = 0;\n" +
+                "var k int = 0;\n" +
+                "//Comment\n" +
+                "\n" +
+                "for i=1+false to 10+true by 1 {\n" +
+                "        for k=3+1+1 to 30 by 7.3 {\n" +
+                "            val a string = 3;\n" +
+                "        }\n" +
+                "}";
+        StringReader reader = new StringReader(input);
+        Lexer lexer = new Lexer(reader);
+        Parser parser = new Parser(lexer);
+        ProgramNode x = parser.getAST();
+        System.out.println(x);
     }
 
 }
