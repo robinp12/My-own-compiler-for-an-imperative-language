@@ -126,11 +126,6 @@ public class Lexer {
                 case '*' : i++; return new Symbol(SymbolKind.STAR);
                 case '-' : i++; return new Symbol(SymbolKind.MINUS);
                 case '+' : i++; return new Symbol(SymbolKind.PLUS);
-                case '!' :
-                    if (get_char(++i) == '='){
-                        i++;
-                        return new Symbol(SymbolKind.NOTEQ);
-                    }
                 case '=' :
                     if (get_char(++i) == '='){
                         i++;
