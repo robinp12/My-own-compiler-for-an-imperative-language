@@ -50,6 +50,9 @@ public class StatementNode extends ExpressionNode{
                 case RETURN:
                     statements.add(ReturnNode.parseReturn());
                     break;
+                case LITERAL:
+                    statements.add(AssignmentNode.parseAssignment());
+                    break;
                 case COMMENT:
                     match(SymbolKind.COMMENT);
                     break;
