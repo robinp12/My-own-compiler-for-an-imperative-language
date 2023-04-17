@@ -29,7 +29,7 @@ public class RecordNode extends ExpressionNode {
 
     public static RecordNode parseRecord() throws ParseException{
         match(SymbolKind.RECORD);
-        String identifier = match(SymbolKind.LITERAL).getAttribute();
+        String identifier = LiteralNode.parseLiteral().getLiteral();
         match(SymbolKind.LBRACE);
         ArrayList<ParamNode> fields = new ArrayList<>();
         while (lookahead.getKind() == SymbolKind.LITERAL) {
