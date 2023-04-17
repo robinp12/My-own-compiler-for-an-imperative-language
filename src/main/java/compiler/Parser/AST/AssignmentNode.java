@@ -36,16 +36,46 @@ public class AssignmentNode extends ExpressionNode{
     }
 
     public static AssignmentNode parseAssignment() throws ParseException{
-        String identifier = match(SymbolKind.LITERAL).getAttribute();
-        TypeNode type = TypeNode.parseType();
+       String identifier = LiteralNode.parseLiteral().getLiteral();
         ExpressionNode value = null;
-        if (lookahead.getKind() == SymbolKind.EQUALS){
-            match(SymbolKind.EQUALS);
-            value = ValueNode.parseValue();
-        } else if (lookahead.getKind() == SymbolKind.LBRACK) { // in case of array
-            value = AssignmentArrayNode.parseArrayDeclaration();
+
+        switch (lookahead.getKind()){
+            case EQUALS:
+                match(SymbolKind.EQUALS);
+                value = BinaryExpressionNode.parseBinaryExpressionNode(null);
+                match(SymbolKind.SEMI);
+                return new AssignmentNode(identifier,null,value);
+            case LBRACK: // Assignment of value to existing array
+                AssignmentArrayNode values = parseArrayAssignment();
+                return new AssignmentNode(identifier,null,values);
         }
-        return new AssignmentNode(identifier, type, value);
+
+        // Declaration variable
+        TypeNode type = TypeNode.parseType();
+        switch (lookahead.getKind()){
+            case LBRACK: // in case of array
+                value = AssignmentArrayNode.parseArrayDeclaration();
+                return new AssignmentNode(identifier, type, value);
+
+            case EQUALS: // Assign value to variable
+                match(SymbolKind.EQUALS);
+                value = BinaryExpressionNode.parseBinaryExpressionNode(null);
+                return new AssignmentNode(identifier, type, value);
+
+            default:
+                return new AssignmentNode(identifier,type,null);
+        }
+    }
+    
+    public static AssignmentArrayNode parseArrayAssignment() throws ParseException {
+        match(SymbolKind.LBRACK);
+        ExpressionNode index = BinaryExpressionNode.parseBinaryExpressionNode(null);
+        match(SymbolKind.RBRACK);
+
+        match(SymbolKind.EQUALS);
+        ExpressionNode value = BinaryExpressionNode.parseBinaryExpressionNode(null);
+        match(SymbolKind.SEMI);
+        return new AssignmentArrayNode(null,null);
     }
 
     public static AssignmentNode parseForLoopAssignment() throws ParseException{
