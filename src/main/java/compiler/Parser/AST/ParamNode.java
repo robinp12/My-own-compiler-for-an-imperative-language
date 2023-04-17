@@ -25,9 +25,9 @@ public class ParamNode extends ExpressionNode {
     }
 
     public static ParamNode parseParam() throws ParseException{
-        Symbol identifier = match(SymbolKind.LITERAL);
+        String identifier = LiteralNode.parseLiteral().getLiteral();
         TypeNode type = TypeNode.parseType();
-        return new ParamNode(type,identifier.getAttribute());
+        return new ParamNode(type,identifier);
     }
 
     @Override
