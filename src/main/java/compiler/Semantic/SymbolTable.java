@@ -4,13 +4,28 @@ import compiler.Parser.AST.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
-public class SymbolTable {
-    SymbolTable previousTable;
-    HashMap<String, TypeNode> entries;
-    public SymbolTable(SymbolTable prev){
-        this.previousTable = prev;
+public class   SymbolTable {
+    //SymbolTable previousTable;
+    private static Map<String, TypeNode> symbolTable;
+    public SymbolTable(){
+        this.symbolTable = new HashMap<>();
     }
+
+    public static void insert(String name, TypeNode type) {
+        symbolTable.put(name, type);
+    }
+
+    public static TypeNode lookup(String name) {
+        return symbolTable.get(name);
+    }
+
+    public static boolean contains(String name) {
+        return symbolTable.containsKey(name);
+    }
+
+/*
     public void add(ArrayList<ParamNode> n){
         for (ParamNode paramNode : n) {
             String name = paramNode.getIdentifier();
@@ -18,6 +33,8 @@ public class SymbolTable {
             entries.put(name,type);
         }
     }
+
+
     public TypeNode getTypeOfExpression(ExpressionNode e){
         return new TypeNode(null,null);
     }
@@ -46,4 +63,6 @@ public class SymbolTable {
     public void checkTypes(AssignmentArrayNode array){
 
     }
+
+ */
 }
