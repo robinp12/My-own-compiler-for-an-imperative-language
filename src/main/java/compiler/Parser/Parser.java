@@ -21,7 +21,7 @@ public class Parser {
     }
 
     /* Must return root of AST */
-    public ExpressionNode getAST() throws ParseException {
+    public ProgramNode getAST() throws ParseException {
         return new ProgramNode(StatementNode.parseStatement().getStatements());
     }
 
