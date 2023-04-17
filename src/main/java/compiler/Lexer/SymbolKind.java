@@ -3,7 +3,7 @@ package compiler.Lexer;
 public enum SymbolKind {
 
     INT("int"),
-    DOUBLE("double"),
+    DOUBLE("real"),
     NUM("number"),
     CONST("const"),
     RECORD("record"),
@@ -42,11 +42,11 @@ public enum SymbolKind {
     SEMI(";"),
     COMA(","),
     LITERAL("literal"),
-    STR("string type"),
+    STR("str"),
     STRING("string"),
     TRUE("true"),
     FALSE("false"),
-    BOOL("boolean");
+    BOOL("bool");
 
 
 
