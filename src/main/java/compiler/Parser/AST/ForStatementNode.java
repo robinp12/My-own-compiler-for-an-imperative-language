@@ -49,10 +49,10 @@ public class ForStatementNode extends ExpressionNode{
         ExpressionNode start = assignmentNode.getValue();
 
         match(SymbolKind.TO);
-        ExpressionNode end = ValueNode.parseValue();
+        ExpressionNode end = BinaryExpressionNode.parseBinaryExpressionNode(null);
         if(lookahead.getKind() == SymbolKind.BY){
             match(SymbolKind.BY);
-            ExpressionNode step = ValueNode.parseValue();
+            ExpressionNode step = BinaryExpressionNode.parseBinaryExpressionNode(null);
             BlockNode block = BlockNode.parseBlock();
             return new ForStatementNode(variable,start,end,step,block);
         }
