@@ -25,7 +25,7 @@ public interface ASTVisitor {
     void visit(ReturnNode node);
     void visit(StatementNode node);
     void visit(StringNode node);
-    void visit(ValDeclarationNode node);
+    void visit(ValDeclarationNode node) throws Exception;
     void visit(WhileStatementNode node);
     void visit(ValueNode node);
     void visit(VarDeclarationNode node);

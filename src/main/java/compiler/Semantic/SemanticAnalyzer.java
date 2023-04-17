@@ -3,6 +3,8 @@ package compiler.Semantic;
 import compiler.Parser.AST.*;
 import compiler.Parser.Parser;
 
+import java.util.List;
+
 public class SemanticAnalyzer implements ASTVisitor{
     private static Parser parser;
 
@@ -23,10 +25,15 @@ public class SemanticAnalyzer implements ASTVisitor{
 
     @Override
     public void visit(AssignmentNode node) throws Exception {
+        System.out.println(node);
         // Get the name of the variable being assigned to
         String varName = node.getIdentifier();
         String varType = node.getType().getTypeSymbol();
-        String valType = node.getValue().getTypeStr();
+        System.out.println(varType);
+        System.out.println(node.getValue());
+        //String valType = node.getValue().getTypeStr();
+        //System.out.println(valType);
+
 
         // Check if the variable has already been declared in this scope
         if (!SymbolTable.contains(varName)) {
@@ -56,7 +63,8 @@ public class SemanticAnalyzer implements ASTVisitor{
 
     @Override
     public void visit(BlockNode node) {
-
+        System.out.println("block");
+        visit(node.getStatements());
     }
 
     @Override
@@ -71,12 +79,16 @@ public class SemanticAnalyzer implements ASTVisitor{
 
     @Override
     public void visit(ExpressionNode node) {
-
+        System.out.println("expression");
+        visit((ForStatementNode) node);
     }
 
     @Override
     public void visit(ForStatementNode node) {
-
+        System.out.println("for");
+        if(node.getTypeStr()=="ForLoop"){
+            visit(node.getBlock());
+        };
     }
 
     @Override
@@ -131,7 +143,13 @@ public class SemanticAnalyzer implements ASTVisitor{
 
     @Override
     public void visit(StatementNode node) {
-
+        System.out.println("statements");
+        for (ExpressionNode statement : node.getStatements()) {
+            if(statement.getTypeStr()=="str"){
+                visit((ValDeclarationNode) statement);
+            }
+            visit((ForStatementNode) statement);
+        }
     }
 
     @Override
@@ -141,7 +159,12 @@ public class SemanticAnalyzer implements ASTVisitor{
 
     @Override
     public void visit(ValDeclarationNode node) {
-
+        System.out.println("val");
+        try {
+            visit((AssignmentNode) node.getAssignment());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
@@ -156,11 +179,17 @@ public class SemanticAnalyzer implements ASTVisitor{
 
     @Override
     public void visit(VarDeclarationNode node) {
-
+        System.out.println("var");
     }
 
     @Override
     public void visit(TypeNode node) {
 
+    }
+
+    public void visit(List<ExpressionNode> a) {
+        for (ExpressionNode expressionNode : a) {
+            visit(expressionNode);
+        }
     }
 }

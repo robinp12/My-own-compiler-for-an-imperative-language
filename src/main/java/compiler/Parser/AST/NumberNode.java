@@ -14,9 +14,6 @@ public class NumberNode extends ExpressionNode{
         super(type);
         this.value = value;
     }
-    public String getType(){
-        return type;
-    }
 
     public String getValue() {
         return value;
@@ -42,7 +39,7 @@ public class NumberNode extends ExpressionNode{
 
     @Override
     public String toString() {
-        return "NumberExpressionNode{" +
+        return "NumberNode{" +
                 "value='" + value + '\'' +
                 '}';
     }

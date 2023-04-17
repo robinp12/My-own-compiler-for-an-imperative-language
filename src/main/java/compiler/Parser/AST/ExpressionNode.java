@@ -3,7 +3,7 @@ package compiler.Parser.AST;
 import compiler.Semantic.SemanticAnalyzer;
 
 public class ExpressionNode{
-    public String type;
+    private String type;
     // Define common methods for all AST node classes here
     public ExpressionNode(String type){
         this.type = type;

@@ -31,7 +31,7 @@ public class Parser {
             throw new ParseException("No match, following is " + lookahead.getKind() + " but match is token " + token,0);
         }
         else {
-            System.out.println("(Optional message) Matching Symbol " + token);
+            //System.out.println("(Optional message) Matching Symbol " + token);
             Symbol matchingSymbol = lookahead;
             lookahead = lexer.getNextSymbol();
             return matchingSymbol;

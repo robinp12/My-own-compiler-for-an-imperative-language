@@ -21,7 +21,6 @@ public class RecordNode extends ExpressionNode {
     public String getIdentifier() {
         return identifier;
     }
-    public String getType(){return type;}
 
     public ArrayList<ParamNode> getFields() {
         return fields;

@@ -11,11 +11,15 @@ public class AssignmentArrayNode extends ExpressionNode{
 
     private ExpressionNode size;
     private TypeNode type;
+    private ExpressionNode value;
+    private ExpressionNode index;
 
-    public AssignmentArrayNode(ExpressionNode size, TypeNode type){
-        super(type!=null?type.getTypeSymbol():null);
+    public AssignmentArrayNode(ExpressionNode size, TypeNode type, ExpressionNode value, ExpressionNode index){
+        super(type.getTypeSymbol());
         this.size = size;
         this.type = type;
+        this.value = value;
+        this.index = index;
     }
     public ExpressionNode getSize() {
         return size;
@@ -46,7 +50,7 @@ public class AssignmentArrayNode extends ExpressionNode{
             }
         }
 
-        return new AssignmentArrayNode(size, type);
+        return new AssignmentArrayNode(size, type, null,null);
     }
 
     @Override
