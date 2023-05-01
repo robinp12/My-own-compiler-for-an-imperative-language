@@ -7,21 +7,20 @@ import java.text.ParseException;
 import static compiler.Parser.Parser.match;
 
 public class ConstantDeclarationNode extends ExpressionNode {
-
-    private ExpressionNode assignment;
-    public ConstantDeclarationNode(ExpressionNode assignment) {
+    private AssignmentNode assignment;
+    public ConstantDeclarationNode(AssignmentNode assignment) {
         super(assignment.getTypeStr());
         this.assignment = assignment;
     }
 
     public static ExpressionNode parseDeclarationConst() throws ParseException {
         match(SymbolKind.CONST);
-        ExpressionNode assignment = AssignmentNode.parseAssignment();
+        AssignmentNode assignment = AssignmentNode.parseAssignment();
         match(SymbolKind.SEMI);
         return new ConstantDeclarationNode(assignment);
     }
 
-    public ExpressionNode getAssignment() {
+    public AssignmentNode getAssignment() {
         return assignment;
     }
 

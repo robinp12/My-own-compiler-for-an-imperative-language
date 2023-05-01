@@ -13,7 +13,7 @@ public class ExpressionNode{
         return type;
     }
 
-    public void accept(SemanticAnalyzer analyzer) {
+    public void accept(SemanticAnalyzer analyzer) throws Exception {
         analyzer.visit(this);
     }
 

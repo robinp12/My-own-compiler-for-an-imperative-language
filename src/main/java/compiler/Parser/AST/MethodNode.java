@@ -9,8 +9,6 @@ import java.util.ArrayList;
 import static compiler.Parser.Parser.match;
 
 public class MethodNode extends ExpressionNode {
-    //TODO
-
     private String identifier;
     private TypeNode returnType;
     private ArrayList<ParamNode> parameters;

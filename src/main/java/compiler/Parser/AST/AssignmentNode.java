@@ -9,8 +9,6 @@ import static compiler.Parser.Parser.match;
 
 
 public class AssignmentNode extends ExpressionNode{
-    // TODO
-
     private String identifier;
     private TypeNode type;
     private ExpressionNode value;

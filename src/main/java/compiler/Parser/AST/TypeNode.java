@@ -28,7 +28,7 @@ public class TypeNode extends ExpressionNode {
             case BOOL:
                 return new TypeNode(SymbolKind.BOOL.getName(),match(SymbolKind.BOOL).getAttribute());
             default:
-                throw new ParseException("Invalid Type",0);
+                throw new ParseException("Invalid Type" + lookahead.getKind(),0);
         }
     }
 

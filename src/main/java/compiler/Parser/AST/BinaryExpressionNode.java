@@ -100,7 +100,7 @@ public class BinaryExpressionNode extends ExpressionNode {
             case TRUE:
             case FALSE:
             case STRING:
-                return ValueNode.parseValue();
+                return parseValue();
             case LITERAL:
                 return LiteralNode.parseLiteral();
             default:
@@ -108,7 +108,23 @@ public class BinaryExpressionNode extends ExpressionNode {
         }
     }
 
+    public static ExpressionNode parseValue() throws ParseException{
+        switch (lookahead.getKind()){
+            case NUM:
+                return NumberNode.parseNumber();
+            case TRUE: case FALSE:
+                return BooleanNode.parseBoolean();
+            case STRING:
+                return StringNode.parseString();
+            default:
+                throw new ParseException("Error during value parsing",-1);
+        }
+    }
+
     public static boolean isBinaryOperator(Symbol s){
+        if (s == null){
+            return false;
+        }
         switch (s.getKind()){
             case EQEQ: case LESSEQ: case MOREEQ: case DIFF:
             case LESS: case MORE: case PLUS: case MINUS: case STAR:

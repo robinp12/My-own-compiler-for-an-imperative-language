@@ -20,17 +20,16 @@ public class NumberNode extends ExpressionNode{
     }
     public static NumberNode parseNumber() throws ParseException {
         Symbol symbol = Parser.match(SymbolKind.NUM);
-        if (isFloat(symbol.getAttribute()))
-            return new NumberNode(symbol.getAttribute(),"real");
-        else {
+        if (isInt(symbol.getAttribute()))
             return new NumberNode(symbol.getAttribute(),"int");
+        else {
+            return new NumberNode(symbol.getAttribute(),"real");
         }
     }
 
-    public static boolean isFloat(String str) {
+    public static boolean isInt(String str) {
         try {
-            Float.parseFloat(str);
-            return true;
+            return Float.parseFloat(str) % 1 == 0;
         } catch (NumberFormatException e) {
             return false;
         }

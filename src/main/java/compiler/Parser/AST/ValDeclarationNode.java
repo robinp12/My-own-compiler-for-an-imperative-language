@@ -7,19 +7,19 @@ import java.text.ParseException;
 import static compiler.Parser.Parser.match;
 
 public class ValDeclarationNode extends ExpressionNode {
-    private ExpressionNode assignment;
+    private AssignmentNode assignment;
 
-    public ValDeclarationNode(ExpressionNode assignment) {
+    public ValDeclarationNode(AssignmentNode assignment) {
         super(assignment.getTypeStr());
         this.assignment = assignment;
     }
-    public ExpressionNode getAssignment() {
+    public AssignmentNode getAssignment() {
         return assignment;
     }
 
-    public static ExpressionNode parseDeclarationVal() throws ParseException {
+    public static ValDeclarationNode parseDeclarationVal() throws ParseException {
         match(SymbolKind.VAL);
-        ExpressionNode assignment = AssignmentNode.parseAssignment();
+        AssignmentNode assignment = AssignmentNode.parseAssignment();
         match(SymbolKind.SEMI);
         return new ValDeclarationNode(assignment);
     }
