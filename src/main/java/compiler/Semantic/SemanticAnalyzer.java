@@ -8,6 +8,13 @@ import java.util.List;
 public class SemanticAnalyzer implements ASTVisitor{
     private static Parser parser;
 
+
+    public SemanticAnalyzer(List<ExpressionNode> expressionNodes){
+        for (ExpressionNode expression : expressionNodes) {
+            visit(expression);
+        }
+    }
+
     @Override
     public void visit(ProgramNode node) {
 
@@ -33,15 +40,15 @@ public class SemanticAnalyzer implements ASTVisitor{
         System.out.println(node.getValue());
         //String valType = node.getValue().getTypeStr();
         //System.out.println(valType);
-
+        return;
 
         // Check if the variable has already been declared in this scope
-        if (!SymbolTable.contains(varName)) {
-            if (!node.getValue().equals(null))
-                throw new Exception("Variable " + varName + " has not been declared.");
+        //if (!SymbolTable.contains(varName)) {
+          //  if (!node.getValue().equals(null))
+            //    throw new Exception("Variable " + varName + " has not been declared.");
 
-            SymbolTable.insert(varName,null);
-        }
+          //  SymbolTable.insert(varName,null);
+        //}
 
         // Get the type of the variable being assigned to
 
@@ -148,7 +155,7 @@ public class SemanticAnalyzer implements ASTVisitor{
             if(statement.getTypeStr()=="str"){
                 visit((ValDeclarationNode) statement);
             }
-            visit((ForStatementNode) statement);
+            //visit((ForStatementNode) statement);
         }
     }
 
