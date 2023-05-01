@@ -9,6 +9,7 @@ import java.util.Map;
 public class   SymbolTable {
     //SymbolTable previousTable;
     private static Map<String, TypeNode> symbolTable;
+
     public SymbolTable(){
         this.symbolTable = new HashMap<>();
     }
@@ -18,8 +19,7 @@ public class   SymbolTable {
     }
 
     public static TypeNode lookup(String name) {
-        return symbolTable.get(name);
-    }
+        return symbolTable.get(name);}
 
     public static boolean contains(String name) {
         return symbolTable.containsKey(name);
