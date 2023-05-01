@@ -259,7 +259,11 @@ public class Lexer {
                         return new Symbol(SymbolKind.LITERAL,get_literal());
 
                 case 'r' :
-                    if (get_char(i+1) == 'e' && get_char(i+2) == 't' && get_char(i+3) == 'u' && get_char(i+4) == 'r' && get_char(i+5) == 'n'){
+                    if (get_char(i+1) == 'e' && get_char(i+2) == 'a' && get_char(i+3) == 'l'){
+                        i+=4;
+                        return new Symbol(SymbolKind.DOUBLE);
+                    }
+                    else if (get_char(i+1) == 'e' && get_char(i+2) == 't' && get_char(i+3) == 'u' && get_char(i+4) == 'r' && get_char(i+5) == 'n'){
                         i+=6;
                         return new Symbol(SymbolKind.RETURN);
                     }
@@ -270,13 +274,6 @@ public class Lexer {
                     else
                         return new Symbol(SymbolKind.LITERAL,get_literal());
 
-                case 'd':
-                    if (get_char(i+1) == 'o' && get_char(i+2) == 'u' && get_char(i+3) == 'b' && get_char(i+4) == 'l' && get_char(i+5) == 'e'){
-                        i+=6;
-                        return new Symbol(SymbolKind.DOUBLE);
-                    }
-                    else
-                        return new Symbol(SymbolKind.LITERAL,get_literal());
                 case 's':
                     if (get_char(i+1) == 't' && get_char(i+2) == 'r' && get_char(i+3) == 'i' && get_char(i+4) == 'n' && get_char(i+5) == 'g'){
                         i+=6;
@@ -285,7 +282,7 @@ public class Lexer {
                     else
                         return new Symbol(SymbolKind.LITERAL,get_literal());
 
-                case 'g': case 'h': case 'j':
+                case 'g': case 'h': case 'j': case 'd':
                 case 'k': case 'l': case 'm': case 'n':
                 case 'q': case 'u': case 'x':
                 case 'y': case 'z': case '_':
