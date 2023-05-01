@@ -9,8 +9,8 @@ public class SemanticAnalyzer implements ASTVisitor{
     private static Parser parser;
 
 
-    public SemanticAnalyzer(List<ExpressionNode> expressionNodes){
-        for (ExpressionNode expression : expressionNodes) {
+    public SemanticAnalyzer(ProgramNode programNode){
+        for (ExpressionNode expression : programNode.getExpressions()) {
             visit(expression);
         }
     }

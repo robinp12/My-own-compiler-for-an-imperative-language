@@ -25,7 +25,7 @@ public class TestSemantic {
         StringReader reader = new StringReader(input);
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
-        List<ExpressionNode> x = parser.getAST().getExpressions();
+        ProgramNode x = parser.getAST();
         new SemanticAnalyzer(x);
     }
 }
