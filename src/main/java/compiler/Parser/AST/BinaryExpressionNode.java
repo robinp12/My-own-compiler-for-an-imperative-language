@@ -93,7 +93,7 @@ public class BinaryExpressionNode extends ExpressionNode {
         return left;
     }
 
-    private static ExpressionNode getExpressionValueNode() throws ParseException {
+    static ExpressionNode getExpressionValueNode() throws ParseException {
         ExpressionNode node = null;
         switch (lookahead.getKind()) {
             case NUM:

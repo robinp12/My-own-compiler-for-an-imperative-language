@@ -7,18 +7,18 @@ import java.text.ParseException;
 import static compiler.Parser.Parser.match;
 
 public class VarDeclarationNode extends ExpressionNode {
-    private ExpressionNode assignment;
-    public VarDeclarationNode(ExpressionNode assignment) {
+    private AssignmentNode assignment;
+    public VarDeclarationNode(AssignmentNode assignment) {
         super(assignment.getTypeStr());
         this.assignment = assignment;
     }
-    public ExpressionNode getAssignment() {
+    public AssignmentNode getAssignment() {
         return assignment;
     }
 
-    public static ExpressionNode parseDeclarationVar() throws ParseException {
+    public static VarDeclarationNode parseDeclarationVar() throws ParseException {
         match(SymbolKind.VAR);
-        ExpressionNode assignment = AssignmentNode.parseAssignment();
+        AssignmentNode assignment = AssignmentNode.parseAssignment();
         match(SymbolKind.SEMI);
         return new VarDeclarationNode(assignment);
     }
