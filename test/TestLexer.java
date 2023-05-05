@@ -40,7 +40,7 @@ public class TestLexer {
 
     @Test
     public void testDoubleAssignment() {
-        String input = "var x double = 2.00;";
+        String input = "var x real = 2.00;";
         StringReader reader = new StringReader(input);
         Lexer lexer = new Lexer(reader);
         Symbol symbol = lexer.getNextSymbol();
