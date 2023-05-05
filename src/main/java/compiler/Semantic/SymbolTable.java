@@ -8,21 +8,31 @@ import java.util.Map;
 
 public class   SymbolTable {
     //SymbolTable previousTable;
-    private static Map<String, TypeNode> symbolTable;
+    private static Map<String, TypeNode> mutablesymbolTable;
+    private static Map<String, TypeNode> immutablesymbolTable;
 
     public SymbolTable(){
-        this.symbolTable = new HashMap<>();
+        this.mutablesymbolTable = new HashMap<>();
+        this.immutablesymbolTable = new HashMap<>();
     }
 
-    public static void insert(String name, TypeNode type) {
-        symbolTable.put(name, type);
+    public static void insertmut(String name, TypeNode type) {
+        mutablesymbolTable.put(name, type);
+    }
+    public static void insertimmut(String name, TypeNode type) {
+        immutablesymbolTable.put(name, type);
     }
 
-    public static TypeNode lookup(String name) {
-        return symbolTable.get(name);}
+    public static TypeNode lookupmut(String name) {
+        return mutablesymbolTable.get(name);}
+    public static TypeNode lookupimmut(String name) {
+        return immutablesymbolTable.get(name);}
 
-    public static boolean contains(String name) {
-        return symbolTable.containsKey(name);
+    public static boolean containmut(String name) {
+        return mutablesymbolTable.containsKey(name);
+    }
+    public static boolean containimmut(String name) {
+        return immutablesymbolTable.containsKey(name);
     }
 
 /*
