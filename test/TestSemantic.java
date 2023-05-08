@@ -166,5 +166,226 @@ public class TestSemantic {
         new SemanticAnalyzer(x);
     }
 
+    @Test
+    public void testAssignmentConstIllegal() throws Exception {
+        String input =  "const x int; " +
+                "x = 10";
+        StringReader reader = new StringReader(input);
+        Lexer lexer = new Lexer(reader);
+        Parser parser = new Parser(lexer);
+        ProgramNode x = parser.getAST();
+        new SemanticAnalyzer(x);
+    }
+
+    @Test
+    public void testAssignmentVarIllegal() throws Exception {
+        String input =  "var x int; " +
+                "x = 10.5";
+        StringReader reader = new StringReader(input);
+        Lexer lexer = new Lexer(reader);
+        Parser parser = new Parser(lexer);
+        ProgramNode x = parser.getAST();
+        new SemanticAnalyzer(x);
+    }
+
+    @Test
+    public void testAssignmentValIllegal() throws Exception {
+        String input = "val x string = \"coucou\"; " +
+                "x = true ";
+        StringReader reader = new StringReader(input);
+        Lexer lexer = new Lexer(reader);
+        Parser parser = new Parser(lexer);
+        ProgramNode x = parser.getAST();
+        new SemanticAnalyzer(x);
+    }
+
+    @Test
+    public void testDeclarationBool() throws Exception {
+        String input = "var x boolean = (1==1); ";
+        StringReader reader = new StringReader(input);
+        Lexer lexer = new Lexer(reader);
+        Parser parser = new Parser(lexer);
+        ProgramNode x = parser.getAST();
+        new SemanticAnalyzer(x);
+    }
+
+    @Test
+    public void testAssignmentBool1() throws Exception {
+        String input = "var x boolean = true;" +
+                "x = (1+1==3); ";
+        StringReader reader = new StringReader(input);
+        Lexer lexer = new Lexer(reader);
+        Parser parser = new Parser(lexer);
+        ProgramNode x = parser.getAST();
+        new SemanticAnalyzer(x);
+    }
+
+    @Test
+    public void testProc() throws Exception {
+        String input =  "proc add(x int) int {" +
+                "return x + x;" +
+                "}";
+        StringReader reader = new StringReader(input);
+        Lexer lexer = new Lexer(reader);
+        Parser parser = new Parser(lexer);
+        ProgramNode x = parser.getAST();
+        new SemanticAnalyzer(x);
+    }
+
+    @Test
+    public void testProcIllegalType() throws Exception {
+        String input =  "proc add(x int) void {" +
+                "return x + x;" +
+                "}";
+        StringReader reader = new StringReader(input);
+        Lexer lexer = new Lexer(reader);
+        Parser parser = new Parser(lexer);
+        ProgramNode x = parser.getAST();
+        new SemanticAnalyzer(x);
+    }
+
+    @Test
+    public void testProcIllegalType1() throws Exception {
+        String input =  "proc add(x int) string {" +
+                "return x + x;" +
+                "}";
+        StringReader reader = new StringReader(input);
+        Lexer lexer = new Lexer(reader);
+        Parser parser = new Parser(lexer);
+        ProgramNode x = parser.getAST();
+        new SemanticAnalyzer(x);
+    }
+
+    @Test
+    public void testProcIllegalNoReturn() throws Exception {
+        String input =  "proc add(x int) boolean {" +
+                "x + x;" +
+                "}";
+        StringReader reader = new StringReader(input);
+        Lexer lexer = new Lexer(reader);
+        Parser parser = new Parser(lexer);
+        ProgramNode x = parser.getAST();
+        new SemanticAnalyzer(x);
+    }
+
+    @Test
+    public void testProcNoDeclVarIllegal() throws Exception {
+        String input =  "proc add() int {" +
+                "return x + x;" +
+                "}";
+        StringReader reader = new StringReader(input);
+        Lexer lexer = new Lexer(reader);
+        Parser parser = new Parser(lexer);
+        ProgramNode x = parser.getAST();
+        new SemanticAnalyzer(x);
+    }
+
+
+    @Test
+    public void testForLoop() throws Exception {
+        String input = """
+                var i int;
+                for i=1 to 100 by 2 {
+                        // ...
+                    }""";
+        StringReader reader = new StringReader(input);
+        Lexer lexer = new Lexer(reader);
+        Parser parser = new Parser(lexer);
+        ProgramNode x = parser.getAST();
+        new SemanticAnalyzer(x);
+    }
+
+    @Test
+    public void testForLoopNoDeclIllegal() throws Exception {
+        String input = """
+                for i=1 to 100 by 2 {
+                        // ...
+                    }""";
+        StringReader reader = new StringReader(input);
+        Lexer lexer = new Lexer(reader);
+        Parser parser = new Parser(lexer);
+        ProgramNode x = parser.getAST();
+        new SemanticAnalyzer(x);
+    }
+
+    @Test
+    public void testForLoopIllegal() throws Exception {
+        String input = """
+                var i int;
+                for i=1 to "100" by 2 {
+                        // ...
+                    }""";
+        StringReader reader = new StringReader(input);
+        Lexer lexer = new Lexer(reader);
+        Parser parser = new Parser(lexer);
+        ProgramNode x = parser.getAST();
+        new SemanticAnalyzer(x);
+    }
+
+    @Test
+    public void testRecord() throws Exception {
+        String input = """
+                record Point {
+                    x int;
+                    y int;
+                }""";
+        StringReader reader = new StringReader(input);
+        Lexer lexer = new Lexer(reader);
+        Parser parser = new Parser(lexer);
+        ProgramNode x = parser.getAST();
+        new SemanticAnalyzer(x);
+    }
+
+    @Test
+    public void testRecordIllegal() throws Exception {
+        String input = """
+                record Point {
+                    x Point;
+                    y Point;
+                }""";
+        StringReader reader = new StringReader(input);
+        Lexer lexer = new Lexer(reader);
+        Parser parser = new Parser(lexer);
+        ProgramNode x = parser.getAST();
+        new SemanticAnalyzer(x);
+    }
+
+    @Test
+    public void testIf() throws ParseException {
+        String input = """
+                const v int = 10;
+                if v == 10 {
+                    return true;
+                }""";
+        StringReader reader = new StringReader(input);
+        Lexer lexer = new Lexer(reader);
+        Parser parser = new Parser(lexer);
+        parser.getAST();
+    }
+
+    @Test
+    public void testIfIllegalType() throws ParseException {
+        String input = """
+                const v int = 3;
+                if v == "test" {
+                    return true;
+                }""";
+        StringReader reader = new StringReader(input);
+        Lexer lexer = new Lexer(reader);
+        Parser parser = new Parser(lexer);
+        parser.getAST();
+    }
+
+    @Test
+    public void testIfIllegalNoDecl() throws ParseException {
+        String input = """
+                if v == 10 {
+                    return true;
+                }""";
+        StringReader reader = new StringReader(input);
+        Lexer lexer = new Lexer(reader);
+        Parser parser = new Parser(lexer);
+        parser.getAST();
+    }
 
 }
