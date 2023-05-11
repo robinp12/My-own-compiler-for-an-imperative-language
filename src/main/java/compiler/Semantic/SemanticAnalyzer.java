@@ -5,18 +5,17 @@ import compiler.Parser.Parser;
 
 import java.util.List;
 
-public class SemanticAnalyzer implements ASTVisitor{
+public class SemanticAnalyzer implements ASTVisitor {
     private static Parser parser;
 
     private static SymbolTable symbolTable;
 
 
     public SemanticAnalyzer(ProgramNode programNode) throws Exception {
-        if(programNode.getTypeStr() == "root"){
+        if (programNode.getTypeStr() == "root") {
             symbolTable = new SymbolTable();
             visit(programNode);
-        }
-        else{
+        } else {
             throw new Exception("Semantic error ProgramNode");
         }
     }
@@ -49,14 +48,14 @@ public class SemanticAnalyzer implements ASTVisitor{
         String valType = node.getValue().getTypeStr();
 
         //Check variable and value type
-        if(!valType.equals(varType.getTypeSymbol())){
-            throw new Exception("Assignment error, value type " + valType+" does not match declared type "+varType.getTypeSymbol());
+        if (!valType.equals(varType.getTypeSymbol())) {
+            throw new Exception("Assignment error, value type " + valType + " does not match declared type " + varType.getTypeSymbol());
         }
 
         // Check if the variable has already been declared in this scope
         if (symbolTable.containmut(varName)) {
-            if (!symbolTable.lookupmut(varName).getTypeSymbol().equals(varType.getTypeSymbol())){
-                throw new Exception("Assignment error: this identifier " + varName+ " is already used and is of type " + symbolTable.lookupmut(varName).getTypeSymbol() +" and not "+ varType.getTypeSymbol() );
+            if (!symbolTable.lookupmut(varName).getTypeSymbol().equals(varType.getTypeSymbol())) {
+                throw new Exception("Assignment error: this identifier " + varName + " is already used and is of type " + symbolTable.lookupmut(varName).getTypeSymbol() + " and not " + varType.getTypeSymbol());
             }
         } else if (symbolTable.containimmut(varName)) {
             throw new Exception("Assignement exeption: you tried to modify a immuable val or const");
@@ -86,18 +85,17 @@ public class SemanticAnalyzer implements ASTVisitor{
     @Override
     public void visit(ConstantDeclarationNode node) throws Exception {
         System.out.println("const");
-        if (!symbolTable.containimmut(node.getAssignment().getIdentifier())){
+        if (!symbolTable.containimmut(node.getAssignment().getIdentifier())) {
             String varName = node.getAssignment().getIdentifier();
             TypeNode varType = node.getAssignment().getType();
             String valType = node.getAssignment().getValue().getTypeStr();
 
             //Check variable and value type
-            if(!valType.equals(varType.getTypeSymbol())){
-                throw new Exception("Assignment error, value type " + valType+" does not match declared type "+varType.getTypeSymbol());
+            if (!valType.equals(varType.getTypeSymbol())) {
+                throw new Exception("Assignment error, value type " + valType + " does not match declared type " + varType.getTypeSymbol());
             }
             symbolTable.insertimmut(varName, varType);
-        }
-        else{
+        } else {
             throw new Exception("Semantic error: duplicated const declaration");
         }
     }
@@ -105,32 +103,56 @@ public class SemanticAnalyzer implements ASTVisitor{
     @Override
     public void visit(ExpressionNode node) throws Exception {
         System.out.println("expression");
-        if (node instanceof VarDeclarationNode){visit((VarDeclarationNode) node);
-        } else if (node instanceof ValDeclarationNode) {visit((ValDeclarationNode) node);
-        } else if (node instanceof ConstantDeclarationNode) {visit((ConstantDeclarationNode) node);
-        } else if (node instanceof AssignmentNode) {visit((AssignmentNode) node);
-        } else if (node instanceof AssignmentArrayNode) {visit((AssignmentArrayNode) node);
-        } else if (node instanceof BinaryExpressionNode) {visit((BinaryExpressionNode) node);
-        } else if (node instanceof BlockNode) {visit((BlockNode) node);
-        } else if (node instanceof BooleanNode) {visit((BooleanNode) node);
-        } else if (node instanceof ConstantDeclarationNode) {visit((ConstantDeclarationNode) node);
-        } else if (node instanceof ForStatementNode) {visit((ForStatementNode) node);
-        } else if (node instanceof IfStatementNode) {visit((IfStatementNode) node);
-        } else if (node instanceof LiteralNode) {visit((LiteralNode) node);
-        } else if (node instanceof MethodCallNode) {visit((MethodCallNode) node);
-        } else if (node instanceof MethodNode) {visit((MethodNode) node);
-        } else if (node instanceof NumberNode) {visit((NumberNode) node);
-        } else if (node instanceof ParamListNode) {visit((ParamListNode) node);
-        } else if (node instanceof ParamNode) {visit((ParamNode) node);
-        } else if (node instanceof ProgramNode) {visit((ProgramNode) node);
-        } else if (node instanceof RecordCallNode) {visit((RecordCallNode) node);
-        } else if (node instanceof RecordNode) {visit((RecordNode) node);
-        } else if (node instanceof ReturnNode) {visit((ReturnNode) node);
-        } else if (node instanceof StatementNode) {visit((StatementNode) node);
-        } else if (node instanceof StringNode) {visit((StringNode) node);
-        } else if (node instanceof TypeNode) {visit((TypeNode) node);
-        } else if (node instanceof ValueNode<?>) {visit((ValueNode) node);
-        } else if (node instanceof WhileStatementNode) {visit((WhileStatementNode) node);
+        if (node instanceof VarDeclarationNode) {
+            visit((VarDeclarationNode) node);
+        } else if (node instanceof ValDeclarationNode) {
+            visit((ValDeclarationNode) node);
+        } else if (node instanceof ConstantDeclarationNode) {
+            visit((ConstantDeclarationNode) node);
+        } else if (node instanceof AssignmentNode) {
+            visit((AssignmentNode) node);
+        } else if (node instanceof AssignmentArrayNode) {
+            visit((AssignmentArrayNode) node);
+        } else if (node instanceof BinaryExpressionNode) {
+            visit((BinaryExpressionNode) node);
+        } else if (node instanceof BlockNode) {
+            visit((BlockNode) node);
+        } else if (node instanceof BooleanNode) {
+            visit((BooleanNode) node);
+        } else if (node instanceof ForStatementNode) {
+            visit((ForStatementNode) node);
+        } else if (node instanceof IfStatementNode) {
+            visit((IfStatementNode) node);
+        } else if (node instanceof LiteralNode) {
+            visit((LiteralNode) node);
+        } else if (node instanceof MethodCallNode) {
+            visit((MethodCallNode) node);
+        } else if (node instanceof MethodNode) {
+            visit((MethodNode) node);
+        } else if (node instanceof NumberNode) {
+            visit((NumberNode) node);
+        } else if (node instanceof ParamListNode) {
+            visit((ParamListNode) node);
+        } else if (node instanceof ParamNode) {
+            visit((ParamNode) node);
+        } else if (node instanceof ProgramNode) {
+            visit((ProgramNode) node);
+        } else if (node instanceof RecordCallNode) {
+            visit((RecordCallNode) node);
+        } else if (node instanceof RecordNode) {
+            visit((RecordNode) node);
+        } else if (node instanceof ReturnNode) {
+            visit((ReturnNode) node);
+        } else if (node instanceof StatementNode) {
+            visit((StatementNode) node);
+        } else if (node instanceof StringNode) {
+            visit((StringNode) node);
+        } else if (node instanceof TypeNode) {
+            visit((TypeNode) node);
+        } else if (node instanceof ValueNode<?>) {
+            visit((ValueNode) node);
+        } else if (node instanceof WhileStatementNode) {
+            visit((WhileStatementNode) node);
         }
 
     }
@@ -138,25 +160,25 @@ public class SemanticAnalyzer implements ASTVisitor{
     @Override
     public void visit(ForStatementNode node) throws Exception {
         System.out.println("for");
-        if(node.getTypeStr()=="ForLoop"){
+        if (node.getTypeStr() == "ForLoop") {
             visit(node.getBlock());
-        }
-        else{
+        } else {
             throw new Exception();
-        };
+        }
+        ;
     }
 
     @Override
     public void visit(IfStatementNode node) throws Exception {
         System.out.println("If");
-        if(node.getTypeStr()=="If"){
+        if (node.getTypeStr() == "If") {
             visit(node.getCondition());
             visit(node.getThenStatements());
             visit(node.getElseStatements());
-        }
-        else{
+        } else {
             throw new Exception();
-        };
+        }
+        ;
 
     }
 
@@ -209,7 +231,7 @@ public class SemanticAnalyzer implements ASTVisitor{
     public void visit(StatementNode node) throws Exception {
         System.out.println("statements");
         for (ExpressionNode statement : node.getStatements()) {
-            if(statement.getTypeStr()=="str"){
+            if (statement.getTypeStr() == "str") {
                 visit((ValDeclarationNode) statement);
             }
             //visit((ForStatementNode) statement);
@@ -224,18 +246,17 @@ public class SemanticAnalyzer implements ASTVisitor{
     @Override
     public void visit(ValDeclarationNode node) throws Exception {
         System.out.println("val");
-        if (!symbolTable.containimmut(node.getAssignment().getIdentifier())){
+        if (!symbolTable.containimmut(node.getAssignment().getIdentifier())) {
             String varName = node.getAssignment().getIdentifier();
             TypeNode varType = node.getAssignment().getType();
             String valType = node.getAssignment().getValue().getTypeStr();
 
             //Check variable and value type
-            if(!valType.equals(varType.getTypeSymbol())){
-                throw new Exception("Assignment error, value type " + valType+" does not match declared type "+varType.getTypeSymbol());
+            if (!valType.equals(varType.getTypeSymbol())) {
+                throw new Exception("Assignment error, value type " + valType + " does not match declared type " + varType.getTypeSymbol());
             }
             symbolTable.insertimmut(varName, varType);
-        }
-        else{
+        } else {
             throw new Exception("Semantic error: duplicated val declaration");
         }
     }
@@ -254,18 +275,17 @@ public class SemanticAnalyzer implements ASTVisitor{
     @Override
     public void visit(VarDeclarationNode node) throws Exception {
         System.out.println("var");
-        if (!symbolTable.containmut(node.getAssignment().getIdentifier())){
+        if (!symbolTable.containmut(node.getAssignment().getIdentifier())) {
             String varName = node.getAssignment().getIdentifier();
             TypeNode varType = node.getAssignment().getType();
             String valType = node.getAssignment().getValue().getTypeStr();
 
             //Check variable and value type
-            if(!valType.equals(varType.getTypeSymbol())){
-                throw new Exception("Assignment error, value type " + valType+" does not match declared type "+varType.getTypeSymbol());
+            if (!valType.equals(varType.getTypeSymbol())) {
+                throw new Exception("Assignment error, value type " + valType + " does not match declared type " + varType.getTypeSymbol());
             }
             symbolTable.insertmut(varName, varType);
-        }
-        else{
+        } else {
             throw new Exception("Semantic error: duplicated var declaration");
         }
     }
