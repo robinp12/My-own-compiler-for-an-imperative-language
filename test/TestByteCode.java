@@ -12,7 +12,48 @@ import java.util.Arrays;
 import static org.junit.Assert.assertThrows;
 
 public class TestByteCode {
-    
+
+    @Test
+    public void testBasicProc() throws Exception {
+        String input =  "proc add() int {" +
+                "return 10 + 1;" +
+                "}";
+        StringReader reader = new StringReader(input);
+        Lexer lexer = new Lexer(reader);
+        Parser parser = new Parser(lexer);
+        ProgramNode x = parser.getAST();
+        new SemanticAnalyzer(x);
+        BytecodeCompiler bc = new BytecodeCompiler(x);
+        bc.getRender();
+    }
+    @Test
+    public void testBasicProcString() throws Exception {
+        String input =  "proc add() string {" +
+                "return \"Hola\";" +
+                "}";
+        StringReader reader = new StringReader(input);
+        Lexer lexer = new Lexer(reader);
+        Parser parser = new Parser(lexer);
+        ProgramNode x = parser.getAST();
+        new SemanticAnalyzer(x);
+        BytecodeCompiler bc = new BytecodeCompiler(x);
+        bc.getRender();
+    }
+
+    @Test
+    public void testBasicProcParam() throws Exception {
+        String input =  "proc add(x boolean, a int, b string) int {" +
+                "return 10 + 1;" +
+                "}";
+        StringReader reader = new StringReader(input);
+        Lexer lexer = new Lexer(reader);
+        Parser parser = new Parser(lexer);
+        ProgramNode x = parser.getAST();
+        new SemanticAnalyzer(x);
+        BytecodeCompiler bc = new BytecodeCompiler(x);
+        bc.getRender();
+    }
+
     @Test
     public void testBasicString() throws Exception {
         String input =  "val a string = \"coucou\";";
@@ -27,7 +68,7 @@ public class TestByteCode {
 
     @Test
     public void testBasicInt() throws Exception {
-        String input =  "val a int = 3;";
+        String input =  "val a int = 42;";
         StringReader reader = new StringReader(input);
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
@@ -332,7 +373,7 @@ public class TestByteCode {
     @Test
     public void testForLoop() throws Exception {
         String input = """
-                var i int;
+                val i int;
                 for i=1 to 100 by 2 {
                         // ...
                     }""";
