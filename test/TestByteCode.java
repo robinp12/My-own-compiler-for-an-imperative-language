@@ -39,12 +39,9 @@ public class TestByteCode {
         BytecodeCompiler bc = new BytecodeCompiler(x);
         bc.getRender();
     }
-
     @Test
-    public void testBasicProcParam() throws Exception {
-        String input =  "proc add(x boolean, a int, b string) int {" +
-                "return 10 + 1;" +
-                "}";
+    public void testBasicConst() throws Exception {
+        String input =  "const a real = 1.1;";
         StringReader reader = new StringReader(input);
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
@@ -53,7 +50,17 @@ public class TestByteCode {
         BytecodeCompiler bc = new BytecodeCompiler(x);
         bc.getRender();
     }
-
+    @Test
+    public void testBasicDuplicatedConst() throws Exception {
+        String input =  "const a int = 2; const ab String = \"4\"; ";
+        StringReader reader = new StringReader(input);
+        Lexer lexer = new Lexer(reader);
+        Parser parser = new Parser(lexer);
+        ProgramNode x = parser.getAST();
+        new SemanticAnalyzer(x);
+        BytecodeCompiler bc = new BytecodeCompiler(x);
+        bc.getRender();
+    }
     @Test
     public void testBasicString() throws Exception {
         String input =  "val a string = \"coucou\";";
@@ -65,7 +72,6 @@ public class TestByteCode {
         BytecodeCompiler bc = new BytecodeCompiler(x);
         bc.getRender();
     }
-
     @Test
     public void testBasicInt() throws Exception {
         String input =  "val a int = 42;";
@@ -92,7 +98,7 @@ public class TestByteCode {
 
     @Test
     public void testBasicBool() throws Exception {
-        String input =  "val a boolean = True;";
+        String input =  "val a boolean = false;";
         StringReader reader = new StringReader(input);
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
@@ -113,10 +119,35 @@ public class TestByteCode {
         BytecodeCompiler bc = new BytecodeCompiler(x);
         bc.getRender();
     }
+    @Test
+    public void testBasicVar2() throws Exception {
+        String input =  "var a int = 3; " +
+                "       var aq boolean = true;";
+        StringReader reader = new StringReader(input);
+        Lexer lexer = new Lexer(reader);
+        Parser parser = new Parser(lexer);
+        ProgramNode x = parser.getAST();
+        new SemanticAnalyzer(x);
+        BytecodeCompiler bc = new BytecodeCompiler(x);
+        bc.getRender();
+    }
+    @Test
+    public void testBasicProcParam() throws Exception {
+        String input =  "proc add(x boolean, a int, b string) int {" +
+                "return 10 + 1;" +
+                "}";
+        StringReader reader = new StringReader(input);
+        Lexer lexer = new Lexer(reader);
+        Parser parser = new Parser(lexer);
+        ProgramNode x = parser.getAST();
+        new SemanticAnalyzer(x);
+        BytecodeCompiler bc = new BytecodeCompiler(x);
+        bc.getRender();
+    }
 
     @Test
     public void testBasicMixedTypes() throws Exception {
-        String input =  "var a real = 3.2; a = 4;";
+        String input =  "var a real = 3.2; val a int = 4;";
         StringReader reader = new StringReader(input);
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
@@ -128,7 +159,7 @@ public class TestByteCode {
 
     @Test
     public void testBasicVal() throws Exception {
-        String input =  "val a real = 3.2; a = 4.8;";
+        String input =  "val a real = 3.2; var ad real = 4.8;";
         StringReader reader = new StringReader(input);
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
@@ -140,7 +171,7 @@ public class TestByteCode {
 
     @Test
     public void testBasicDuplicatedVal() throws Exception {
-        String input =  "val a string = \"coucou\"; val a string = \"cc\"; ";
+        String input =  "val a string = \"coucou\"; val q string = \"cc\"; ";
         StringReader reader = new StringReader(input);
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
@@ -152,7 +183,7 @@ public class TestByteCode {
 
     @Test
     public void testBasicDuplicatedVar() throws Exception {
-        String input =  "var a int = 2; var a int = 4; ";
+        String input =  "var a int = 2; var ab int = 4; ";
         StringReader reader = new StringReader(input);
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
@@ -161,35 +192,12 @@ public class TestByteCode {
         BytecodeCompiler bc = new BytecodeCompiler(x);
         bc.getRender();
     }
-
-    @Test
-    public void testBasicConst() throws Exception {
-        String input =  "const a string = \"coucou\";";
-        StringReader reader = new StringReader(input);
-        Lexer lexer = new Lexer(reader);
-        Parser parser = new Parser(lexer);
-        ProgramNode x = parser.getAST();
-        new SemanticAnalyzer(x);
-        BytecodeCompiler bc = new BytecodeCompiler(x);
-        bc.getRender();
-    }
-
-    @Test
-    public void testBasicDuplicatedConst() throws Exception {
-        String input =  "const a int = 2; const a int = 4; ";
-        StringReader reader = new StringReader(input);
-        Lexer lexer = new Lexer(reader);
-        Parser parser = new Parser(lexer);
-        ProgramNode x = parser.getAST();
-        new SemanticAnalyzer(x);
-        BytecodeCompiler bc = new BytecodeCompiler(x);
-        bc.getRender();
-
-    }
-
     @Test
     public void testMultipleDeclaration() throws Exception {
-        String input =  "const a int = 2; const b real = 4.4; val c string = \"coucou\"; var d boolean = true; d = false; ";
+        String input =  "const a int = 2; " +
+                "const b real = 4.4; " +
+                "val c string = \"coucou\"; " +
+                "var d boolean = true; d = false; ";
         StringReader reader = new StringReader(input);
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
@@ -238,7 +246,7 @@ public class TestByteCode {
     @Test
     public void testAssignmentConstIllegal() throws Exception {
         String input =  "const x int; " +
-                "x = 10";
+                "const x boolean = true";
         StringReader reader = new StringReader(input);
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
@@ -251,7 +259,7 @@ public class TestByteCode {
     @Test
     public void testAssignmentVarIllegal() throws Exception {
         String input =  "var x int; " +
-                "x = 10.5";
+                "x = 10";
         StringReader reader = new StringReader(input);
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
@@ -262,9 +270,9 @@ public class TestByteCode {
     }
 
     @Test
-    public void testAssignmentValIllegal() throws Exception {
+    public void testAssignmentVal() throws Exception {
         String input = "val x string = \"coucou\"; " +
-                "x = true ";
+                "var xx boolean = true ";
         StringReader reader = new StringReader(input);
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
@@ -301,7 +309,7 @@ public class TestByteCode {
 
     @Test
     public void testProc() throws Exception {
-        String input =  "proc add(x int) int {" +
+        String input =  "proc double(x int) int {" +
                 "return x + x;" +
                 "}";
         StringReader reader = new StringReader(input);
@@ -453,8 +461,10 @@ public class TestByteCode {
     public void testIf() throws Exception {
         String input = """
                 const v int = 10;
-                if v == 10 {
+                if true {
                     return true;
+                }else {
+                    return false;
                 }""";
         StringReader reader = new StringReader(input);
         Lexer lexer = new Lexer(reader);

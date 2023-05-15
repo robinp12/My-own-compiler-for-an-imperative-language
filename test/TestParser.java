@@ -17,6 +17,17 @@ public class TestParser {
         Parser parser = new Parser(lexer);
         parser.getAST();
     }
+
+    @Test
+    public void testBasicString() throws ParseException {
+        String input = "var a string = \"test j'ai faim\";" +
+                "var a string = \"test j'ai faim\";" +
+                "var a string = \"test j'ai faim\";";
+        StringReader reader = new StringReader(input);
+        Lexer lexer = new Lexer(reader);
+        Parser parser = new Parser(lexer);
+        parser.getAST();
+    }
     @Test
     public void testBasicVar() throws ParseException {
         String input = "var a int = 3;";

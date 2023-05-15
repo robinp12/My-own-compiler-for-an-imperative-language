@@ -74,7 +74,6 @@ public class SemanticAnalyzer implements ASTVisitor {
     @Override
     public void visit(BlockNode node) throws Exception {
         System.out.println("block");
-        visit(node.getStatements());
     }
 
     @Override
@@ -231,8 +230,12 @@ public class SemanticAnalyzer implements ASTVisitor {
     public void visit(StatementNode node) throws Exception {
         System.out.println("statements");
         for (ExpressionNode statement : node.getStatements()) {
+            System.out.println(statement.getTypeStr());
             if (statement.getTypeStr() == "str") {
                 visit((ValDeclarationNode) statement);
+            }
+            if(statement.getTypeStr().equals("bool")){
+                visit((ReturnNode) statement);
             }
             //visit((ForStatementNode) statement);
         }
