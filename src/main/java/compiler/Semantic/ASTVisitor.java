@@ -7,7 +7,7 @@ public interface ASTVisitor {
     void visit(ArithmeticExpressionNode node);
     void visit(AssignmentArrayNode node);
     void visit(AssignmentNode node) throws Exception;
-    void visit(BinaryExpressionNode node);
+    String visit(BinaryExpressionNode node) throws Exception;
     void visit(BlockNode node) throws Exception;
     void visit(BooleanNode node);
     void visit(ConstantDeclarationNode node) throws Exception;
@@ -20,7 +20,7 @@ public interface ASTVisitor {
     void visit(NumberNode node);
     void visit(ParamListNode node);
     void visit(ParamNode node);
-    void visit(RecordNode node);
+    void visit(RecordNode node) throws Exception;
     void visit(RecordCallNode node);
     void visit(ReturnNode node);
     void visit(StatementNode node) throws Exception;
@@ -29,7 +29,7 @@ public interface ASTVisitor {
     void visit(WhileStatementNode node);
     void visit(ValueNode node);
     void visit(VarDeclarationNode node) throws Exception;
-    void visit(TypeNode node);
+    void visit(TypeNode node) throws Exception;
 
     // Add more visit methods for other node types
 }

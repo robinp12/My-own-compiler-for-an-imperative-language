@@ -1,8 +1,10 @@
 package compiler.Semantic;
 
+import compiler.Lexer.SymbolKind;
 import compiler.Parser.AST.*;
 import compiler.Parser.Parser;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class SemanticAnalyzer implements ASTVisitor {
@@ -44,18 +46,24 @@ public class SemanticAnalyzer implements ASTVisitor {
     public void visit(AssignmentNode node) throws Exception {
         System.out.println("assignment");
         String varName = node.getIdentifier();
-        TypeNode varType = node.getType();
+        String varType = node.getType().getTypeSymbol();
         String valType = node.getValue().getTypeStr();
 
+        if (valType.equals("binaryExp")){
+            valType = visit((BinaryExpressionNode) node.getValue());
+        }
+        if (varType.equals("binaryExp")){
+            varType = visit((BinaryExpressionNode) node.getValue());
+        }
         //Check variable and value type
-        if (!valType.equals(varType.getTypeSymbol())) {
-            throw new Exception("Assignment error, value type " + valType + " does not match declared type " + varType.getTypeSymbol());
+        if (!valType.equals(varType)) {
+            throw new Exception("Assignment error, value type " + valType + " does not match declared type " + varType);
         }
 
         // Check if the variable has already been declared in this scope
         if (symbolTable.containmut(varName)) {
-            if (!symbolTable.lookupmut(varName).getTypeSymbol().equals(varType.getTypeSymbol())) {
-                throw new Exception("Assignment error: this identifier " + varName + " is already used and is of type " + symbolTable.lookupmut(varName).getTypeSymbol() + " and not " + varType.getTypeSymbol());
+            if (!symbolTable.lookupmut(varName).getTypeSymbol().equals(varType)) {
+                throw new Exception("Assignment error: this identifier " + varName + " is already used and is of type " + symbolTable.lookupmut(varName).getTypeSymbol() + " and not " + varType);
             }
         } else if (symbolTable.containimmut(varName)) {
             throw new Exception("Assignement exeption: you tried to modify a immuable val or const");
@@ -66,14 +74,100 @@ public class SemanticAnalyzer implements ASTVisitor {
 
 
     @Override
-    public void visit(BinaryExpressionNode node) {
-        System.out.println("binary expression");
-        //TODO
+    public String visit(BinaryExpressionNode node) throws Exception {
+
+        // Get the types of the left and right operands
+        String leftType = node.getLeft().getTypeStr();
+        String rightType = node.getRight().getTypeStr();
+
+        if (leftType.equals("binaryExp")){
+            leftType = visit((BinaryExpressionNode) node.getLeft());
+        }
+        if (rightType.equals("binaryExp")){
+            rightType = visit((BinaryExpressionNode) node.getLeft());
+        }
+
+        // Determine the result type based on the operator
+        SymbolKind operatorKind = node.getOperator().getKind();
+        switch (operatorKind) {
+            case PLUS:
+                // Concatenation for strings
+                if (leftType.equals("str") && rightType.equals("str")) {
+                    node.setResultType("str");
+                }
+                // Addition for numeric types
+                else if ((leftType.equals("int") || leftType.equals("real")) && (rightType.equals("int") || rightType.equals("real"))) {
+                    // Promote int to real if necessary
+                    if (leftType.equals("int") && rightType.equals("real")) {
+                        node.setResultType("real");
+                    } else if (leftType.equals("real") && rightType.equals("int")) {
+                        node.setResultType("real");
+                    } else {
+                        // Same type, either int or real
+                        node.setResultType(leftType);
+                    }
+                } else {
+                    throw new Exception("Invalid operation: binary expression error type");
+                }
+                break;
+            case MINUS:
+            case STAR:
+            case SLASH:
+            case PERC:
+                // Arithmetic operations for numeric types
+                if ((leftType.equals("int") || leftType.equals("real")) && (rightType.equals("int") || rightType.equals("real"))) {
+                    // Promote int to real if necessary
+                    if (leftType.equals("int") && rightType.equals("real")) {
+                        node.setResultType("real");
+                    } else if (leftType.equals("real") && rightType.equals("int")) {
+                        node.setResultType("real");
+                    } else {
+                        // Same type, either int or real
+                        node.setResultType(leftType);
+                    }
+                } else {
+                    throw new Exception("Invalid operation: binary expression error type");
+                }
+                break;
+            case EQEQ:
+            case DIFF:
+                // Comparison operations for compatible types
+                if ((leftType.equals("int") && rightType.equals("real")) || (leftType.equals("real") && rightType.equals("int")) || leftType.equals(rightType)) {
+                    node.setResultType("bool");
+                } else {
+                    throw new Exception("Invalid operation: binary expression error type");
+                }
+                break;
+            case LESS:
+            case LESSEQ:
+            case MORE:
+            case MOREEQ:
+                // Comparison operations for numeric types
+                if ((leftType.equals("int") || leftType.equals("real")) && (rightType.equals("int") || rightType.equals("real"))) {
+                    node.setResultType("bool");
+                } else {
+                    throw new Exception("Invalid operation: binary expression error type");
+                }
+                break;
+            case AND:
+            case OR:
+                // Logical operations for boolean types
+                if (leftType.equals("bool") && rightType.equals("bool")) {
+                    node.setResultType(leftType);
+                } else {
+                    throw new Exception("Invalid operation: binary expression error type");
+                }
+                break;
+            default:
+                throw new Exception("Invalid operator: binary expression operator error");
+        }
+        return node.getResultType();
     }
 
     @Override
     public void visit(BlockNode node) throws Exception {
         System.out.println("block");
+        visit(node.getStatements());
     }
 
     @Override
@@ -88,7 +182,9 @@ public class SemanticAnalyzer implements ASTVisitor {
             String varName = node.getAssignment().getIdentifier();
             TypeNode varType = node.getAssignment().getType();
             String valType = node.getAssignment().getValue().getTypeStr();
-
+            if (valType.equals("binaryExp")){
+                valType = visit((BinaryExpressionNode) node.getAssignment().getValue());
+            }
             //Check variable and value type
             if (!valType.equals(varType.getTypeSymbol())) {
                 throw new Exception("Assignment error, value type " + valType + " does not match declared type " + varType.getTypeSymbol());
@@ -160,7 +256,14 @@ public class SemanticAnalyzer implements ASTVisitor {
     public void visit(ForStatementNode node) throws Exception {
         System.out.println("for");
         if (node.getTypeStr() == "ForLoop") {
-            visit(node.getBlock());
+            if (symbolTable.containmut(node.getVariable()))
+                if (node.getStart() instanceof NumberNode && node.getEnd() instanceof NumberNode && node.getStep() instanceof NumberNode){
+                    visit(node.getBlock());
+                } else {
+                    throw new Exception("Illegal type of start, stop or step");
+                }
+            else
+                throw new Exception("Error in the for loop, you must declare var before loop");
         } else {
             throw new Exception();
         }
@@ -212,13 +315,36 @@ public class SemanticAnalyzer implements ASTVisitor {
     }
 
     @Override
-    public void visit(RecordNode node) {
-        System.out.println("record");
+    public void visit(RecordNode node) throws Exception {
+        if (node.getTypeStr() == "record"){
+            // Check if the variable has already been declared in this scope
+            if (symbolTable.containmut(node.getIdentifier())) {
+                if (!symbolTable.lookupmut(node.getIdentifier()).getTypeSymbol().equals(node.getTypeStr())) {
+                    throw new Exception("Assignment error: this identifier " + node.getIdentifier() + " is already used and is of type " + symbolTable.lookupmut(node.getIdentifier()).getTypeSymbol() + " and not " + node.getTypeStr());
+                }
+            } else if (symbolTable.containimmut(node.getIdentifier())) {
+                throw new Exception("Assignement exeption: you tried to modify a immuable val or const");
+            } else {
+                List<String> record_entries = Arrays.asList();
+                for (ParamNode pn : node.getFields()){
+                    if (record_entries.contains(pn.getIdentifier())){
+                        throw new Exception("Illegal record declaration");
+                    }else{
+                        visit((ParamNode) pn);
+                        record_entries.add(pn.getIdentifier());
+                    }
+                }
+                symbolTable.insertmut(node.getIdentifier(), new TypeNode(node.getTypeStr(),node.getIdentifier()));
+            }
+            System.out.println("record");
+
+
+        }
     }
 
     @Override
     public void visit(RecordCallNode node) {
-
+        //Still usefull ??
     }
 
     @Override
@@ -230,12 +356,8 @@ public class SemanticAnalyzer implements ASTVisitor {
     public void visit(StatementNode node) throws Exception {
         System.out.println("statements");
         for (ExpressionNode statement : node.getStatements()) {
-            System.out.println(statement.getTypeStr());
             if (statement.getTypeStr() == "str") {
                 visit((ValDeclarationNode) statement);
-            }
-            if(statement.getTypeStr().equals("bool")){
-                visit((ReturnNode) statement);
             }
             //visit((ForStatementNode) statement);
         }
@@ -253,7 +375,9 @@ public class SemanticAnalyzer implements ASTVisitor {
             String varName = node.getAssignment().getIdentifier();
             TypeNode varType = node.getAssignment().getType();
             String valType = node.getAssignment().getValue().getTypeStr();
-
+            if (valType.equals("binaryExp")){
+                valType = visit((BinaryExpressionNode) node.getAssignment().getValue());
+            }
             //Check variable and value type
             if (!valType.equals(varType.getTypeSymbol())) {
                 throw new Exception("Assignment error, value type " + valType + " does not match declared type " + varType.getTypeSymbol());
@@ -281,12 +405,16 @@ public class SemanticAnalyzer implements ASTVisitor {
         if (!symbolTable.containmut(node.getAssignment().getIdentifier())) {
             String varName = node.getAssignment().getIdentifier();
             TypeNode varType = node.getAssignment().getType();
-            String valType = node.getAssignment().getValue().getTypeStr();
-
-            //Check variable and value type
-            if (!valType.equals(varType.getTypeSymbol())) {
-                throw new Exception("Assignment error, value type " + valType + " does not match declared type " + varType.getTypeSymbol());
+            if (node.getAssignment().getValue() != null) {
+                String valType = node.getAssignment().getValue().getTypeStr();
+                if (valType.equals("binaryExp")){
+                    valType = visit((BinaryExpressionNode) node.getAssignment().getValue());
+                }
+                if (!valType.equals(varType.getTypeSymbol())) {
+                    throw new Exception("Assignment error, value type " + valType + " does not match declared type " + varType.getTypeSymbol());
+                }
             }
+            //Check variable and value type
             symbolTable.insertmut(varName, varType);
         } else {
             throw new Exception("Semantic error: duplicated var declaration");
@@ -294,8 +422,13 @@ public class SemanticAnalyzer implements ASTVisitor {
     }
 
     @Override
-    public void visit(TypeNode node) {
-        System.out.println("type");
+    public void visit(TypeNode node) throws Exception {
+        List<String> validTypes = Arrays.asList("int", "str", "real", "bool", "record");
+        if (validTypes.contains(node.getTypeSymbol())) {
+            System.out.println("Valid type");
+        } else {
+            throw new Exception("Illegal type encountered");
+        }
     }
 
     public void visit(List<ExpressionNode> a) throws Exception {
