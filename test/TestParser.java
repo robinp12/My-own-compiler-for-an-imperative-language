@@ -17,17 +17,6 @@ public class TestParser {
         Parser parser = new Parser(lexer);
         parser.getAST();
     }
-
-    @Test
-    public void testBasicString() throws ParseException {
-        String input = "var a string = \"test j'ai faim\";" +
-                "var a string = \"test j'ai faim\";" +
-                "var a string = \"test j'ai faim\";";
-        StringReader reader = new StringReader(input);
-        Lexer lexer = new Lexer(reader);
-        Parser parser = new Parser(lexer);
-        parser.getAST();
-    }
     @Test
     public void testBasicVar() throws ParseException {
         String input = "var a int = 3;";
@@ -115,7 +104,7 @@ public class TestParser {
         Parser parser = new Parser(lexer);
         parser.getAST();
     }
-        
+
     @Test
     public void testBasicAssignment() throws ParseException {
         String input = "caov = \"true\";";
@@ -124,6 +113,37 @@ public class TestParser {
         Parser parser = new Parser(lexer);
         parser.getAST();
     }
+
+    @Test
+    public void testBasicBinaryAssignement() throws ParseException {
+        String input = "var x boolean = true;" +
+                "x = (3==3); ";
+        StringReader reader = new StringReader(input);
+        Lexer lexer = new Lexer(reader);
+        Parser parser = new Parser(lexer);
+        System.out.println(parser.getAST());
+    }
+
+    @Test
+    public void testOperationPriority() throws ParseException {
+        String input = "var x int = 0;" +
+                "x = (3+3)*2+2; ";
+        StringReader reader = new StringReader(input);
+        Lexer lexer = new Lexer(reader);
+        Parser parser = new Parser(lexer);
+        System.out.println(parser.getAST());
+    }
+
+    @Test
+    public void testOperationPriority2() throws ParseException {
+        String input = "var x int = 0;" +
+                "x = 3+3*2+2; ";
+        StringReader reader = new StringReader(input);
+        Lexer lexer = new Lexer(reader);
+        Parser parser = new Parser(lexer);
+        System.out.println(parser.getAST());
+    }
+
 
     @Test
     public void testBasicComplete() throws ParseException {

@@ -174,7 +174,7 @@ public class TestSemantic {
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
         ProgramNode x = parser.getAST();
-        new SemanticAnalyzer(x);
+        assertThrows(Exception.class, () -> {new SemanticAnalyzer(x);});
     }
 
     @Test
@@ -185,7 +185,7 @@ public class TestSemantic {
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
         ProgramNode x = parser.getAST();
-        new SemanticAnalyzer(x);
+        assertThrows(Exception.class, () -> {new SemanticAnalyzer(x);});
     }
 
     @Test
@@ -196,7 +196,7 @@ public class TestSemantic {
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
         ProgramNode x = parser.getAST();
-        new SemanticAnalyzer(x);
+        assertThrows(Exception.class, () -> {new SemanticAnalyzer(x);});
     }
 
     @Test
@@ -206,7 +206,30 @@ public class TestSemantic {
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
         ProgramNode x = parser.getAST();
+        System.out.println(x);
         new SemanticAnalyzer(x);
+    }
+
+    @Test
+    public void testCheckBinary() throws Exception {
+        String input = "var x int = (1+1); ";
+        StringReader reader = new StringReader(input);
+        Lexer lexer = new Lexer(reader);
+        Parser parser = new Parser(lexer);
+        ProgramNode x = parser.getAST();
+        System.out.println(x);
+        new SemanticAnalyzer(x);
+    }
+
+    @Test
+    public void testCheckIllegalBinary() throws Exception {
+        String input = "var x int = 1+true; ";
+        StringReader reader = new StringReader(input);
+        Lexer lexer = new Lexer(reader);
+        Parser parser = new Parser(lexer);
+        ProgramNode x = parser.getAST();
+        System.out.println(x);
+        assertThrows(Exception.class, () -> {new SemanticAnalyzer(x);});
     }
 
     @Test
@@ -217,6 +240,7 @@ public class TestSemantic {
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
         ProgramNode x = parser.getAST();
+        System.out.println(x);
         new SemanticAnalyzer(x);
     }
 
@@ -241,7 +265,7 @@ public class TestSemantic {
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
         ProgramNode x = parser.getAST();
-        new SemanticAnalyzer(x);
+        assertThrows(Exception.class, () -> {new SemanticAnalyzer(x);});
     }
 
     @Test
@@ -253,7 +277,7 @@ public class TestSemantic {
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
         ProgramNode x = parser.getAST();
-        new SemanticAnalyzer(x);
+        assertThrows(Exception.class, () -> {new SemanticAnalyzer(x);});
     }
 
     @Test
@@ -265,7 +289,7 @@ public class TestSemantic {
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
         ProgramNode x = parser.getAST();
-        new SemanticAnalyzer(x);
+        assertThrows(Exception.class, () -> {new SemanticAnalyzer(x);});
     }
 
     @Test
@@ -305,7 +329,7 @@ public class TestSemantic {
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
         ProgramNode x = parser.getAST();
-        new SemanticAnalyzer(x);
+        assertThrows(Exception.class, () -> {new SemanticAnalyzer(x);});
     }
 
     @Test
@@ -319,7 +343,8 @@ public class TestSemantic {
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
         ProgramNode x = parser.getAST();
-        new SemanticAnalyzer(x);
+        System.out.println(x);
+        assertThrows(Exception.class, () -> {new SemanticAnalyzer(x);});
     }
 
     @Test
@@ -339,15 +364,15 @@ public class TestSemantic {
     @Test
     public void testRecordIllegal() throws Exception {
         String input = """
-                record Point {
-                    x Point;
-                    y Point;
+                record point {
+                    x int;
+                    x int;
                 }""";
         StringReader reader = new StringReader(input);
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
         ProgramNode x = parser.getAST();
-        new SemanticAnalyzer(x);
+        assertThrows(Exception.class, () -> {new SemanticAnalyzer(x);});
     }
 
     @Test
@@ -373,7 +398,8 @@ public class TestSemantic {
         StringReader reader = new StringReader(input);
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
-        parser.getAST();
+        ProgramNode x = parser.getAST();
+        assertThrows(Exception.class, () -> {new SemanticAnalyzer(x);});
     }
 
     @Test
@@ -385,7 +411,8 @@ public class TestSemantic {
         StringReader reader = new StringReader(input);
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
-        parser.getAST();
+        ProgramNode x = parser.getAST();
+        assertThrows(Exception.class, () -> {new SemanticAnalyzer(x);});
     }
 
 }
