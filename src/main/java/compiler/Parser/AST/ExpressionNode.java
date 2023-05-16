@@ -1,7 +1,5 @@
 package compiler.Parser.AST;
 
-import compiler.Semantic.SemanticAnalyzer;
-
 public class ExpressionNode{
     private String type;
     // Define common methods for all AST node classes here
@@ -12,9 +10,4 @@ public class ExpressionNode{
     public String getTypeStr(){
         return type;
     }
-
-    public void accept(SemanticAnalyzer analyzer) throws Exception {
-        analyzer.visit(this);
-    }
-
 }

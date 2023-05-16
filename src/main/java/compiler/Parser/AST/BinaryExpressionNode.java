@@ -18,6 +18,7 @@ public class BinaryExpressionNode extends ExpressionNode {
     private ExpressionNode left;
     private Symbol operator;
     private ExpressionNode right;
+    private String type;
 
     public BinaryExpressionNode(ExpressionNode left, Symbol operator, ExpressionNode right) {
         super("binaryExp");
@@ -31,13 +32,19 @@ public class BinaryExpressionNode extends ExpressionNode {
         Symbol operator = null;
 
         while (true) {
-
+            if(lookahead.getKind() == SymbolKind.RPAR){
+                match(SymbolKind.RPAR);
+            }
+            if(lookahead.getKind() == SymbolKind.LPAR){
+                match(SymbolKind.LPAR);
+            }
             if (left == null){
                 left = getExpressionValueNode();
             }
             if (!isBinaryOperator(lookahead)) {
                 break;
             }
+
 
 
             switch (lookahead.getKind()) {
@@ -84,7 +91,7 @@ public class BinaryExpressionNode extends ExpressionNode {
 
             ExpressionNode right;
             right = getExpressionValueNode();
-            while (isBinaryOperator(lookahead)) {
+            while (isBinaryOperator(lookahead) && hasHigherPrecedence(lookahead, operator) ) {
                 right = parseBinaryExpressionNode(right);
             }
 
@@ -134,6 +141,43 @@ public class BinaryExpressionNode extends ExpressionNode {
         }
     }
 
+    public static boolean hasHigherPrecedence(Symbol nextSymbol, Symbol operator) {
+        SymbolKind nextSymbolKind = nextSymbol.getKind();
+        SymbolKind operatorKind = operator.getKind();
+
+        if (nextSymbolKind == SymbolKind.LPAR || nextSymbolKind == SymbolKind.DOT) {
+            // Function and constructor calls, and record field access have highest precedence
+            return true;
+        } else if (nextSymbolKind == SymbolKind.LBRACK) {
+            // Index operator has higher precedence than arithmetic operators
+            return operatorKind == SymbolKind.PLUS || operatorKind == SymbolKind.MINUS
+                    || operatorKind == SymbolKind.STAR || operatorKind == SymbolKind.SLASH
+                    || operatorKind == SymbolKind.PERC;
+        } else if (operatorKind == SymbolKind.PLUS || operatorKind == SymbolKind.MINUS) {
+            // Addition and subtraction have lower precedence than index operator
+            return nextSymbolKind == SymbolKind.STAR || nextSymbolKind == SymbolKind.SLASH
+                    || nextSymbolKind == SymbolKind.PERC;
+        } else if (operatorKind == SymbolKind.EQUALS || operatorKind == SymbolKind.DIFF
+                || operatorKind == SymbolKind.LESSEQ || operatorKind == SymbolKind.MOREEQ
+                || operatorKind == SymbolKind.LESS || operatorKind == SymbolKind.MORE) {
+            // Comparison operators have lower precedence than addition/subtraction, but higher than logical operators
+            return nextSymbolKind == SymbolKind.PLUS || nextSymbolKind == SymbolKind.MINUS
+                    || nextSymbolKind == SymbolKind.STAR || nextSymbolKind == SymbolKind.SLASH
+                    || nextSymbolKind == SymbolKind.PERC;
+        } else if (operatorKind == SymbolKind.AND || operatorKind == SymbolKind.OR) {
+            // Logical operators have lower precedence than comparison operators
+            return nextSymbolKind == SymbolKind.PLUS || nextSymbolKind == SymbolKind.MINUS
+                    || nextSymbolKind == SymbolKind.STAR || nextSymbolKind == SymbolKind.SLASH
+                    || nextSymbolKind == SymbolKind.PERC || nextSymbolKind == SymbolKind.EQUALS
+                    || nextSymbolKind == SymbolKind.DIFF || nextSymbolKind == SymbolKind.LESS
+                    || nextSymbolKind == SymbolKind.MORE || nextSymbolKind == SymbolKind.LESSEQ
+                    || nextSymbolKind == SymbolKind.MOREEQ;
+        }
+
+        return false;
+    }
+
+
     public ExpressionNode getLeft() {
         return left;
     }
@@ -153,5 +197,13 @@ public class BinaryExpressionNode extends ExpressionNode {
                 ", operator=" + operator +
                 ", right=" + right +
                 '}';
+    }
+
+    public void setResultType(String stringType) {
+        this.type = stringType;
+    }
+
+    public String getResultType(){
+        return this.type;
     }
 }
