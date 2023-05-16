@@ -293,7 +293,6 @@ public class Lexer {
                 case '8': case '9': return new Symbol(SymbolKind.NUM, get_number());
 
                 case '"':
-                    i++;
                     String str = get_string();
                     i++;
                     return new Symbol(SymbolKind.STRING, str);
