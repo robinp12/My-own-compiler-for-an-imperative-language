@@ -2,17 +2,19 @@ package compiler.Bytecode;
 
 import compiler.Lexer.Symbol;
 import compiler.Parser.AST.*;
-import compiler.Parser.AST.MethodNode;
-import compiler.Semantic.SymbolTable;
-import org.objectweb.asm.*;
-
-import static compiler.Lexer.SymbolKind.LESS;
-import static compiler.Lexer.SymbolKind.LESSEQ;
-import static org.objectweb.asm.Opcodes.*;
+import org.objectweb.asm.ClassWriter;
+import org.objectweb.asm.Label;
+import org.objectweb.asm.MethodVisitor;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+
+import static compiler.Bytecode.AsmUtils.invokeStatic;
+import static compiler.Lexer.SymbolKind.LESS;
+import static compiler.Lexer.SymbolKind.LESSEQ;
+import static org.objectweb.asm.Opcodes.*;
 
 
 public class BytecodeCompiler {
@@ -21,8 +23,13 @@ public class BytecodeCompiler {
     private MethodVisitor method;
     private int idx = 0;
 
+    private Map<String, Integer> valueTable;
+
+
     public BytecodeCompiler(ProgramNode ast) {
         System.out.println("------ BYTECODE ------");
+        this.valueTable = new HashMap<>();
+
         // Class
         container = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
         container.visit(V1_8, ACC_PUBLIC, "Main", null, "java/lang/Object", null);
@@ -32,7 +39,7 @@ public class BytecodeCompiler {
         method.visitVarInsn(ALOAD, 0);
         method.visitMethodInsn(INVOKESPECIAL, "java/lang/Object", "<init>", "()V", false);
         method.visitInsn(RETURN);
-        method.visitMaxs(1, 1);
+        method.visitMaxs(0, 0);
         method.visitEnd();
 
         // Others methods
@@ -43,14 +50,13 @@ public class BytecodeCompiler {
     public void getRender() {
         try (FileOutputStream fos = new FileOutputStream("Output.class")) {
             fos.write(getGeneration());
-            System.out.println("Le bytecode a ete enregistre dans MyClass.class.");
+            System.out.println("Le bytecode a ete enregistre dans Output.class.");
         } catch (IOException e) {
             System.out.println("Erreur lors de l'enregistrement du bytecode : " + e.getMessage());
         }
     }
 
     public byte[] getGeneration() {
-        System.out.println(Arrays.toString(container.toByteArray()));
         return container.toByteArray();
     }
 
@@ -65,7 +71,7 @@ public class BytecodeCompiler {
             }
         }
         method.visitInsn(RETURN);
-        method.visitMaxs(0, 0);
+        //method.visitMaxs(0, 0);
         method.visitEnd();
     }
 
@@ -124,6 +130,7 @@ public class BytecodeCompiler {
     }
 
     private void generateWhile(WhileStatementNode expression) {
+        System.out.println("while");
         BinaryExpressionNode exp = (BinaryExpressionNode) expression.getCondition();
 
         Label loopStart = new Label();
@@ -135,9 +142,6 @@ public class BytecodeCompiler {
         // Condition left >= right
         generateBinaryExpression(exp);
         method.visitJumpInsn(IFEQ, loopEnd);
-
-        SymbolTable st = new SymbolTable();
-        System.out.println(st);
 
         generateBlock(expression.getBlock());
 
@@ -202,12 +206,12 @@ public class BytecodeCompiler {
     }
 
     private void generateBlock(BlockNode block) {
+        System.out.println("Block");
         StatementNode stmt = block.getStatements();
         generateStatement(stmt);
     }
 
     private void generateStatement(StatementNode expression) {
-        System.out.println(expression);
         for (ExpressionNode statement : expression.getStatements()) {
             System.out.println("generate statement");
             generateExpression(statement);
@@ -215,7 +219,12 @@ public class BytecodeCompiler {
     }
 
     private void generateAssignment(AssignmentNode statement) {
-        System.out.println("pas encore");
+        System.out.println("pas encore : " + statement);
+        if (valueTable.containsKey(statement.getIdentifier())) {
+            int register = valueTable.get(statement.getIdentifier());
+            System.out.println("var in table at register :" + valueTable.get(statement.getIdentifier()));
+            method.visitVarInsn(ILOAD, register);
+        }
     }
 
     private void generateReturn(ReturnNode statement) {
@@ -266,14 +275,18 @@ public class BytecodeCompiler {
                 method.visitIntInsn(NEWARRAY, T_INT);
                 method.visitVarInsn(ASTORE, idx++);
             } else {
-                System.out.println(expression);
                 NumberNode val = (NumberNode) expression.getValue();
                 if (val != null) {
+                    System.out.println(expression);
+                    idx++;
+                    valueTable.put(expression.getIdentifier(), idx);
                     method.visitLdcInsn(Integer.parseInt(val.getValue()));
-                    method.visitVarInsn(ISTORE, idx++);
+                    method.visitVarInsn(ISTORE, idx);
                 } else {
+                    idx++;
+                    valueTable.put(expression.getIdentifier(), idx);
                     method.visitLdcInsn(0);
-                    method.visitVarInsn(ISTORE, idx++);
+                    method.visitVarInsn(ISTORE, idx);
                 }
             }
         }
@@ -317,46 +330,31 @@ public class BytecodeCompiler {
     }
 
     public void generateRecord(RecordNode record) {
-        String recordName = record.getIdentifier();
+        System.out.println("pas encore : " + record);
     }
 
     public void generateProc(MethodNode expression) {
         String name = expression.getIdentifier();
-        String returnTypeLetter = "";
+        String returnTypeLetter = switch (expression.getReturnType().getTypeSymbol()) {
+            case "str" -> "Ljava/lang/String;";
+            case "int" -> "I";
+            case "bool" -> "Z";
+            default -> "V";
+        };
         // Return type
-        switch (expression.getReturnType().getTypeSymbol()) {
-            case "str":
-                returnTypeLetter = "Ljava/lang/String;";
-                break;
-            case "int":
-                returnTypeLetter = "I";
-                break;
-            case "bool":
-                returnTypeLetter = "Z";
-                break;
-            default:
-                returnTypeLetter = "V";
-
-        }
 
         // Arguments type
         StringBuilder argLetter = new StringBuilder();
         for (ParamNode parameter : expression.getParameters()) {
             switch (parameter.getTypeStr()) {
-                case "str":
-                    argLetter.append("Ljava/lang/String;");
-                    break;
-                case "int":
-                    argLetter.append("I");
-                    break;
-                case "bool":
-                    argLetter.append("Z");
-                    break;
+                case "str" -> argLetter.append("Ljava/lang/String;");
+                case "int" -> argLetter.append("I");
+                case "bool" -> argLetter.append("Z");
             }
         }
         if (expression.getParameters().size() > 0) {
             for (ParamNode parameter : expression.getParameters()) {
-                //System.out.println(parameter.getValue);
+                System.out.println(parameter.getIdentifier());
                 //method.visitInsn(parameter.getValue); // Valeur pour les arguments
             }
         }
@@ -382,53 +380,33 @@ public class BytecodeCompiler {
 
 
     public void generateBinaryExpression(BinaryExpressionNode node) {
+        System.out.println("BinaryExpression");
+
         ExpressionNode left = node.getLeft();
         ExpressionNode right = node.getRight();
         switch (node.getOperator().getKind()) {
-            case PLUS:
+            case PLUS -> {
                 if (left.getTypeStr().equals("str")) {
                     String a = ((StringNode) left).getValue();
                     String b = ((StringNode) right).getValue();
                     System.out.println(a + b);
-                    //invokeStatic(method, RunTime.class, "concat", String.class, String.class);
+                    invokeStatic(method, RunTime.class, "concat", String.class, String.class);
                 } else if (right.getTypeStr().equals("str")) {
-                    //invokeStatic(method, RunTime.class, "concat", String.class, String.class);
+                    invokeStatic(method, RunTime.class, "concat", String.class, String.class);
                 } else {
                     numOperation(LADD, DADD, left, right);
                 }
-                break;
-            case STAR:
-                numOperation(LMUL, DMUL, left, right);
-                break;
-            case SLASH:
-                numOperation(LDIV, DDIV, left, right);
-                break;
-            case PERC:
-                numOperation(LREM, DREM, left, right);
-                break;
-            case MINUS:
-                numOperation(LSUB, DSUB, left, right);
-                break;
-
-
-            case EQEQ:
-                comparison(node.getOperator(), IFEQ, IF_ICMPEQ, IF_ACMPEQ, left, right);
-                break;
-            case DIFF:
-                comparison(node.getOperator(), IFNE, IF_ICMPNE, IF_ACMPNE, left, right);
-                break;
-            case MORE:
-                comparison(node.getOperator(), IFGT, -1, -1, left, right);
-                break;
-            case LESS:
-                comparison(node.getOperator(), IFLT, -1, -1, left, right);
-                break;
-            case MOREEQ:
-                comparison(node.getOperator(), IFGE, -1, -1, left, right);
-                break;
-            case LESSEQ:
-                comparison(node.getOperator(), IFLE, -1, -1, left, right);
-                break;
+            }
+            case STAR -> numOperation(LMUL, DMUL, left, right);
+            case SLASH -> numOperation(LDIV, DDIV, left, right);
+            case PERC -> numOperation(LREM, DREM, left, right);
+            case MINUS -> numOperation(LSUB, DSUB, left, right);
+            case EQEQ -> comparison(node.getOperator(), IFEQ, IF_ICMPEQ, IF_ACMPEQ, left, right);
+            case DIFF -> comparison(node.getOperator(), IFNE, IF_ICMPNE, IF_ACMPNE, left, right);
+            case MORE -> comparison(node.getOperator(), IFGT, -1, -1, left, right);
+            case LESS -> comparison(node.getOperator(), IFLT, -1, -1, left, right);
+            case MOREEQ -> comparison(node.getOperator(), IFGE, -1, -1, left, right);
+            case LESSEQ -> comparison(node.getOperator(), IFLE, -1, -1, left, right);
         }
     }
 
@@ -457,7 +435,6 @@ public class BytecodeCompiler {
                            ExpressionNode left, ExpressionNode right) {
         Label trueLabel = new Label();
         Label endLabel = new Label();
-
         if (left.getTypeStr().equals("int") && right.getTypeStr().equals("int")) {
             method.visitInsn(LCMP);
             method.visitJumpInsn(doubleWidthOpcode, trueLabel);
