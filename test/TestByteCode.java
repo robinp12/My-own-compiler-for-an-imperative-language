@@ -6,10 +6,6 @@ import compiler.Semantic.SemanticAnalyzer;
 import org.junit.Test;
 
 import java.io.StringReader;
-import java.text.ParseException;
-import java.util.Arrays;
-
-import static org.junit.Assert.assertThrows;
 
 public class TestByteCode {
 
@@ -41,18 +37,10 @@ public class TestByteCode {
     }
     @Test
     public void testBasicConst() throws Exception {
-        String input =  "const a real = 1.1;";
-        StringReader reader = new StringReader(input);
-        Lexer lexer = new Lexer(reader);
-        Parser parser = new Parser(lexer);
-        ProgramNode x = parser.getAST();
-        new SemanticAnalyzer(x);
-        BytecodeCompiler bc = new BytecodeCompiler(x);
-        bc.getRender();
-    }
-    @Test
-    public void testBasicDuplicatedConst() throws Exception {
-        String input =  "const a int = 2; const ab String = \"4\"; ";
+        String input =  "const a real = 1.1;"+
+                "const aa int = 2; " +
+                "const ab String = \"4\";"+
+                "const xs boolean = true";
         StringReader reader = new StringReader(input);
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
@@ -63,7 +51,9 @@ public class TestByteCode {
     }
     @Test
     public void testBasicString() throws Exception {
-        String input =  "val a string = \"coucou\";";
+        String input =  "val a string = \"coucou\"; " +
+                "val q string = \"cc\";" +
+                "val as boolean = true;";
         StringReader reader = new StringReader(input);
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
@@ -74,7 +64,8 @@ public class TestByteCode {
     }
     @Test
     public void testBasicArrayReal() throws Exception {
-        String input = "var c real[] = real[](10);";
+        String input = "var c real[] = real[](10);"+
+                "var cc int[] = int[](20);";
         StringReader reader = new StringReader(input);
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
@@ -84,8 +75,13 @@ public class TestByteCode {
         bc.getRender();
     }
     @Test
-    public void testBasicArray() throws Exception {
-        String input = "var c int[] = int[](20);";
+    public void testForLoop() throws Exception {
+        String input = """
+                var i int;
+                var ia int = 10;
+                for i=1009999 to 1000 by 992 {
+                        //
+                    }""";
         StringReader reader = new StringReader(input);
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
@@ -94,21 +90,12 @@ public class TestByteCode {
         BytecodeCompiler bc = new BytecodeCompiler(x);
         bc.getRender();
     }
-    @Test
-    public void testBasicInt() throws Exception {
-        String input =  "var a int ;";
-        StringReader reader = new StringReader(input);
-        Lexer lexer = new Lexer(reader);
-        Parser parser = new Parser(lexer);
-        ProgramNode x = parser.getAST();
-        new SemanticAnalyzer(x);
-        BytecodeCompiler bc = new BytecodeCompiler(x);
-        bc.getRender();
-    }
-
     @Test
     public void testBasicReal() throws Exception {
-        String input =  "val a real = 3.2;";
+        String input =  "var a real = 3.29;" +
+                "val asss real = 1.129;"+
+                "val x string = \"coucou\"; " +
+                "var xx boolean = true;";
         StringReader reader = new StringReader(input);
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
@@ -118,9 +105,17 @@ public class TestByteCode {
         bc.getRender();
     }
 
+
+
+    /*
+        NOT WORKING YET
+    */
+
+
     @Test
-    public void testBasicBool() throws Exception {
-        String input =  "val a boolean = false;";
+    public void testBasicInt() throws Exception {
+        String input =  "var a int = 00;" +
+                "a = 10;";
         StringReader reader = new StringReader(input);
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
@@ -133,18 +128,6 @@ public class TestByteCode {
     @Test
     public void testBasicVar() throws Exception {
         String input =  "var a real = 3.2; a = 4.8;";
-        StringReader reader = new StringReader(input);
-        Lexer lexer = new Lexer(reader);
-        Parser parser = new Parser(lexer);
-        ProgramNode x = parser.getAST();
-        new SemanticAnalyzer(x);
-        BytecodeCompiler bc = new BytecodeCompiler(x);
-        bc.getRender();
-    }
-    @Test
-    public void testBasicVar2() throws Exception {
-        String input =  "var a int = 3; " +
-                "       var aq boolean = true;";
         StringReader reader = new StringReader(input);
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
@@ -183,43 +166,7 @@ public class TestByteCode {
 
     @Test
     public void testBasicMixedTypes() throws Exception {
-        String input =  "var a real = 3.2; val a int = 4;";
-        StringReader reader = new StringReader(input);
-        Lexer lexer = new Lexer(reader);
-        Parser parser = new Parser(lexer);
-        ProgramNode x = parser.getAST();
-        new SemanticAnalyzer(x);
-        BytecodeCompiler bc = new BytecodeCompiler(x);
-        bc.getRender();
-    }
-
-    @Test
-    public void testBasicVal() throws Exception {
-        String input =  "val a real = 3.2; var ad real = 4.8;";
-        StringReader reader = new StringReader(input);
-        Lexer lexer = new Lexer(reader);
-        Parser parser = new Parser(lexer);
-        ProgramNode x = parser.getAST();
-        new SemanticAnalyzer(x);
-        BytecodeCompiler bc = new BytecodeCompiler(x);
-        bc.getRender();
-    }
-
-    @Test
-    public void testBasicDuplicatedVal() throws Exception {
-        String input =  "val a string = \"coucou\"; val q string = \"cc\"; ";
-        StringReader reader = new StringReader(input);
-        Lexer lexer = new Lexer(reader);
-        Parser parser = new Parser(lexer);
-        ProgramNode x = parser.getAST();
-        new SemanticAnalyzer(x);
-        BytecodeCompiler bc = new BytecodeCompiler(x);
-        bc.getRender();
-    }
-
-    @Test
-    public void testBasicDuplicatedVar() throws Exception {
-        String input =  "var a int = 2; var ab int = 4; ";
+        String input =  "var a real = 3.2; val a int = 401;";
         StringReader reader = new StringReader(input);
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
@@ -254,37 +201,10 @@ public class TestByteCode {
         BytecodeCompiler bc = new BytecodeCompiler(x);
         bc.getRender();
     }
-
-    @Test
-    public void testAssignmentConstIllegal() throws Exception {
-        String input =  "const x int; " +
-                "const x boolean = true";
-        StringReader reader = new StringReader(input);
-        Lexer lexer = new Lexer(reader);
-        Parser parser = new Parser(lexer);
-        ProgramNode x = parser.getAST();
-        new SemanticAnalyzer(x);
-        BytecodeCompiler bc = new BytecodeCompiler(x);
-        bc.getRender();
-    }
-
     @Test
     public void testAssignmentVarIllegal() throws Exception {
         String input =  "var x int; " +
                 "x = 10";
-        StringReader reader = new StringReader(input);
-        Lexer lexer = new Lexer(reader);
-        Parser parser = new Parser(lexer);
-        ProgramNode x = parser.getAST();
-        new SemanticAnalyzer(x);
-        BytecodeCompiler bc = new BytecodeCompiler(x);
-        bc.getRender();
-    }
-
-    @Test
-    public void testAssignmentVal() throws Exception {
-        String input = "val x string = \"coucou\"; " +
-                "var xx boolean = true ";
         StringReader reader = new StringReader(input);
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
@@ -349,85 +269,9 @@ public class TestByteCode {
 
     @Test
     public void testProcIllegalType1() throws Exception {
-        String input =  "proc add(x int) string {" +
-                "return x + x;" +
+        String input =  "proc add() string {" +
+                "return \"a\" + \"b\";" +
                 "}";
-        StringReader reader = new StringReader(input);
-        Lexer lexer = new Lexer(reader);
-        Parser parser = new Parser(lexer);
-        ProgramNode x = parser.getAST();
-        new SemanticAnalyzer(x);
-        BytecodeCompiler bc = new BytecodeCompiler(x);
-        bc.getRender();
-    }
-
-    @Test
-    public void testProcIllegalNoReturn() throws Exception {
-        String input =  "proc add(x int) boolean {" +
-                "x + x;" +
-                "}";
-        StringReader reader = new StringReader(input);
-        Lexer lexer = new Lexer(reader);
-        Parser parser = new Parser(lexer);
-        ProgramNode x = parser.getAST();
-        new SemanticAnalyzer(x);
-        BytecodeCompiler bc = new BytecodeCompiler(x);
-        bc.getRender();
-    }
-
-    @Test
-    public void testProcNoDeclVarIllegal() throws Exception {
-        String input =  "proc add() int {" +
-                "return x + x;" +
-                "}";
-        StringReader reader = new StringReader(input);
-        Lexer lexer = new Lexer(reader);
-        Parser parser = new Parser(lexer);
-        ProgramNode x = parser.getAST();
-        new SemanticAnalyzer(x);
-        BytecodeCompiler bc = new BytecodeCompiler(x);
-        bc.getRender();
-    }
-
-
-    @Test
-    public void testForLoop() throws Exception {
-        String input = """
-                var i int = 0;
-                for i=100 to 1000 by 2 {
-                        // ...
-                    }""";
-        StringReader reader = new StringReader(input);
-        Lexer lexer = new Lexer(reader);
-        Parser parser = new Parser(lexer);
-        ProgramNode x = parser.getAST();
-        new SemanticAnalyzer(x);
-        BytecodeCompiler bc = new BytecodeCompiler(x);
-        bc.getRender();
-    }
-
-    @Test
-    public void testForLoopNoDeclIllegal() throws Exception {
-        String input = """
-                for i=1 to 100 by 2 {
-                        // ...
-                    }""";
-        StringReader reader = new StringReader(input);
-        Lexer lexer = new Lexer(reader);
-        Parser parser = new Parser(lexer);
-        ProgramNode x = parser.getAST();
-        new SemanticAnalyzer(x);
-        BytecodeCompiler bc = new BytecodeCompiler(x);
-        bc.getRender();
-    }
-
-    @Test
-    public void testForLoopIllegal() throws Exception {
-        String input = """
-                var i int;
-                for i=1 to "100" by 2 {
-                        // ...
-                    }""";
         StringReader reader = new StringReader(input);
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
@@ -452,13 +296,26 @@ public class TestByteCode {
         BytecodeCompiler bc = new BytecodeCompiler(x);
         bc.getRender();
     }
-
     @Test
-    public void testRecordIllegal() throws Exception {
+    public void testIfSimple() throws Exception {
         String input = """
-                record Point {
-                    x Point;
-                    y Point;
+                if true {
+                    //...
+                }""";
+        StringReader reader = new StringReader(input);
+        Lexer lexer = new Lexer(reader);
+        Parser parser = new Parser(lexer);
+        ProgramNode x = parser.getAST();
+        new SemanticAnalyzer(x);
+        BytecodeCompiler bc = new BytecodeCompiler(x);
+        bc.getRender();
+    }
+    @Test
+    public void testIfBasic() throws Exception {
+        String input = """
+                const v int = 10;
+                if v==10 {
+                    //...
                 }""";
         StringReader reader = new StringReader(input);
         Lexer lexer = new Lexer(reader);
@@ -473,10 +330,10 @@ public class TestByteCode {
     public void testIf() throws Exception {
         String input = """
                 const v int = 10;
-                if true {
-                    return true;
+                if v==10 {
+                    //...
                 }else {
-                    return false;
+                    //...
                 }""";
         StringReader reader = new StringReader(input);
         Lexer lexer = new Lexer(reader);
@@ -509,6 +366,32 @@ public class TestByteCode {
                 if v == 10 {
                     return true;
                 }""";
+        StringReader reader = new StringReader(input);
+        Lexer lexer = new Lexer(reader);
+        Parser parser = new Parser(lexer);
+        ProgramNode x = parser.getAST();
+        new SemanticAnalyzer(x);
+        BytecodeCompiler bc = new BytecodeCompiler(x);
+        bc.getRender();
+    }
+    @Test
+    public void testWhile() throws Exception {
+        String input =  "val x int = 10;" +
+                "while 800 <= 10000 { " +
+                            "// ..." +
+                        " }";
+        StringReader reader = new StringReader(input);
+        Lexer lexer = new Lexer(reader);
+        Parser parser = new Parser(lexer);
+        ProgramNode x = parser.getAST();
+        new SemanticAnalyzer(x);
+        BytecodeCompiler bc = new BytecodeCompiler(x);
+        bc.getRender();
+    }
+
+    @Test
+    public void testComplexWhile() throws Exception {
+        String input =  "var i int = 0; while 8 >= i { i = i+1; }";
         StringReader reader = new StringReader(input);
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);

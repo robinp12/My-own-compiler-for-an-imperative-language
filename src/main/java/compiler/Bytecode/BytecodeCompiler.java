@@ -6,7 +6,6 @@ import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 
-import static compiler.Bytecode.AsmUtils.invokeStatic;
 import static org.objectweb.asm.Opcodes.*;
 
 import java.io.FileOutputStream;
@@ -18,6 +17,7 @@ public class BytecodeCompiler {
     private ClassWriter container;
     /* MethodVisitor for current method. */
     private MethodVisitor method;
+    private int idx = 0;
 
     public BytecodeCompiler(ProgramNode ast) {
         System.out.println("------ BYTECODE ------");
@@ -73,9 +73,9 @@ public class BytecodeCompiler {
 
     public void generateExpression(ExpressionNode expression) {
         if (expression instanceof VarDeclarationNode) {
-            generateVar((VarDeclarationNode) expression);
+            generateVar(((VarDeclarationNode) expression).getAssignment());
         } else if (expression instanceof ValDeclarationNode) {
-            generateVal((ValDeclarationNode) expression);
+            generateVar(((ValDeclarationNode) expression).getAssignment());
         } else if (expression instanceof ConstantDeclarationNode) {
             generateConst((ConstantDeclarationNode) expression);
         } else if (expression instanceof RecordNode) {
@@ -90,10 +90,12 @@ public class BytecodeCompiler {
             generateFor((ForStatementNode) expression);
         } else if (expression instanceof IfStatementNode) {
             generateIf((IfStatementNode) expression);
+        } else if (expression instanceof AssignmentNode) {
+            generateAssignment((AssignmentNode) expression);
+        }else if (expression instanceof WhileStatementNode) {
+            generateWhile((WhileStatementNode) expression);
         }
-       /* } else if (expression instanceof AssignmentNode) {
-            visit((AssignmentNode) expression);
-        } else if (expression instanceof AssignmentArrayNode) {
+        /*else if (expression instanceof AssignmentArrayNode) {
             visit((AssignmentArrayNode) expression);
         } else if (expression instanceof BooleanNode) {
             visit((BooleanNode) expression);
@@ -119,15 +121,36 @@ public class BytecodeCompiler {
             visit((TypeNode) expression);
         } else if (expression instanceof ValueNode<?>) {
             visit((ValueNode) expression);
-        } else if (expression instanceof WhileStatementNode) {
-            visit((WhileStatementNode) expression);
-        }*/
+        } */
 
+    }
+
+    private void generateWhile(WhileStatementNode expression) {
+        BinaryExpressionNode exp = (BinaryExpressionNode) expression.getCondition();
+        NumberNode left = (NumberNode) exp.getLeft();
+        NumberNode right = (NumberNode) exp.getRight();
+        Label loopStart = new Label();
+        Label loopEnd = new Label();
+        System.out.println(exp.getOperator());
+        generateBinaryExpression(exp);
+        // Boucle while
+        method.visitLabel(loopStart);
+
+        // Condition left >= right
+        method.visitLdcInsn(Integer.parseInt(left.getValue()));
+        method.visitLdcInsn(Integer.parseInt(right.getValue()));
+        method.visitJumpInsn(IF_ICMPLT, loopEnd);
+
+        generateBlock(expression.getBlock());
+
+        method.visitJumpInsn(GOTO, loopStart); // Revenir au début de la boucle
+
+        method.visitLabel(loopEnd);
     }
 
     private void generateIf(IfStatementNode expression) {
         BooleanNode valBool = (BooleanNode) expression.getCondition();
-
+        System.out.println(expression.getCondition());
         BinaryExpressionNode stmt = (BinaryExpressionNode) expression.getCondition();
         int valCond = 10;
         boolean hasElse = expression.getElseStatements() != null;
@@ -136,7 +159,7 @@ public class BytecodeCompiler {
 
         // Déclarer et initialiser la constante 'v'
         method.visitIntInsn(BIPUSH, 10);
-        method.visitVarInsn(ISTORE, 0);
+        method.visitVarInsn(ISTORE, idx++);
 
         // Charger la valeur de 'v' sur la pile
         method.visitVarInsn(ILOAD, 0);
@@ -165,8 +188,9 @@ public class BytecodeCompiler {
         int valStart = Integer.parseInt(start.getValue());
         int valStep = Integer.parseInt(step.getValue());
         int valEnd = Integer.parseInt(end.getValue());
-        // Declare and initialize the variable 'i' with the value 1
-        method.visitIntInsn(BIPUSH, valStart);
+
+        // Declare and initialize the variable 'i' with the value
+        method.visitLdcInsn(valStart);
         method.visitVarInsn(ISTORE, 0);
 
         // Label for the beginning of the loop
@@ -179,35 +203,34 @@ public class BytecodeCompiler {
 
         // Increment 'i'
         method.visitVarInsn(ILOAD, 0);
-        method.visitIntInsn(BIPUSH, valStep);
+        method.visitLdcInsn(valStep);
         method.visitInsn(IADD);
         method.visitVarInsn(ISTORE, 0);
+
         // Condition for continuing the loop
         method.visitVarInsn(ILOAD, 0);
-        method.visitIntInsn(BIPUSH, valEnd);
+        method.visitLdcInsn(valEnd);
         Label loopEnd = new Label();
         method.visitJumpInsn(IF_ICMPLE, loopStart);
 
         method.visitLabel(loopEnd);
         method.visitFrame(F_CHOP, 1, null, 0, null);
-
-        method.visitInsn(RETURN);
-
-        //method.visitMaxs(2, 1);
-
-        method.visitEnd();
     }
 
     private void generateBlock(BlockNode block) {
-
         StatementNode stmt = block.getStatements();
         generateStatement(stmt);
     }
 
     private void generateStatement(StatementNode expression) {
         for (ExpressionNode statement : expression.getStatements()) {
-            generateReturn((ReturnNode) statement);
+            System.out.println("generate statement");
+            generateExpression(statement);
         }
+    }
+
+    private void generateAssignment(AssignmentNode statement) {
+        System.out.println("pas encore");
     }
 
     private void generateReturn(ReturnNode statement) {
@@ -245,128 +268,66 @@ public class BytecodeCompiler {
         }
     }
 
-    static int a = 0;
-
-    public void generateVar(VarDeclarationNode expression) {
-        System.out.println("var byte");
-        String type = expression.getAssignment().getTypeStr();
-        System.out.println(type);
+    public void generateVar(AssignmentNode expression) {
+        System.out.println("var || val byte");
+        String type = expression.getTypeStr();
         method.visitCode();
         if (type.equals("int")) {
-            ExpressionNode valType = expression.getAssignment().getValue();
-            if(valType instanceof AssignmentArrayNode){
+            ExpressionNode valType = expression.getValue();
+            if (valType instanceof AssignmentArrayNode) {
                 // Case of array
-                AssignmentArrayNode val = (AssignmentArrayNode) expression.getAssignment().getValue();
+                AssignmentArrayNode val = (AssignmentArrayNode) expression.getValue();
                 NumberNode size = (NumberNode) val.getSize();
                 method.visitIntInsn(BIPUSH, Integer.parseInt(size.getValue()));
                 method.visitIntInsn(NEWARRAY, T_INT);
-                method.visitVarInsn(ASTORE, 1);
-            }else{
-                System.out.println(expression.getAssignment());
-                NumberNode val = (NumberNode) expression.getAssignment().getValue();
-                if(val!=null){
-                    method.visitIntInsn(BIPUSH, Integer.parseInt(val.getValue()));
+                method.visitVarInsn(ASTORE, idx++);
+            } else {
+                System.out.println(expression);
+                NumberNode val = (NumberNode) expression.getValue();
+                if (val != null) {
+                    method.visitLdcInsn(Integer.parseInt(val.getValue()));
+                    method.visitVarInsn(ISTORE, idx++);
+                } else {
+                    method.visitLdcInsn(0);
+                    method.visitVarInsn(ISTORE, idx++);
                 }
-                method.visitVarInsn(ISTORE, a++);
             }
         }
         if (type.equals("str")) {
-            StringNode val = (StringNode) expression.getAssignment().getValue();
+            StringNode val = (StringNode) expression.getValue();
             method.visitLdcInsn(val.getValue());
-            method.visitVarInsn(ASTORE, a++);
+            method.visitVarInsn(ASTORE, idx++);
         }
         if (type.equals("bool")) {
-            ExpressionNode valType = expression.getAssignment().getValue();
-            if(valType instanceof AssignmentArrayNode){
+            ExpressionNode valType = expression.getValue();
+            if (valType instanceof AssignmentArrayNode) {
                 // Case of array
-                AssignmentArrayNode val = (AssignmentArrayNode) expression.getAssignment().getValue();
+                AssignmentArrayNode val = (AssignmentArrayNode) expression.getValue();
                 NumberNode size = (NumberNode) val.getSize();
                 method.visitIntInsn(BIPUSH, Integer.parseInt(size.getValue()));
                 method.visitIntInsn(NEWARRAY, T_BOOLEAN);
-                method.visitVarInsn(ASTORE, 1);
-            }else {
-                BooleanNode val = (BooleanNode) expression.getAssignment().getValue();
+                method.visitVarInsn(ASTORE, idx++);
+            } else {
+                BooleanNode val = (BooleanNode) expression.getValue();
                 int isTrue = val.isVal() ? ICONST_1 : ICONST_0;
                 method.visitInsn(isTrue);
-                method.visitVarInsn(ISTORE, a++);
+                method.visitVarInsn(ISTORE, idx++);
             }
         }
         if (type.equals("real")) {
-            ExpressionNode valType = expression.getAssignment().getValue();
-            if(valType instanceof AssignmentArrayNode){
+            ExpressionNode valType = expression.getValue();
+            if (valType instanceof AssignmentArrayNode) {
                 // Case of array
-                AssignmentArrayNode val = (AssignmentArrayNode) expression.getAssignment().getValue();
+                AssignmentArrayNode val = (AssignmentArrayNode) expression.getValue();
                 NumberNode size = (NumberNode) val.getSize();
                 method.visitIntInsn(BIPUSH, Integer.parseInt(size.getValue()));
                 method.visitIntInsn(NEWARRAY, T_FLOAT);
-                method.visitVarInsn(ASTORE, 1);
-            }else{
-                NumberNode val = (NumberNode) expression.getAssignment().getValue();
+                method.visitVarInsn(ASTORE, idx++);
+            } else {
+                NumberNode val = (NumberNode) expression.getValue();
                 System.out.println(val.getValue());
-                //method.visitInsn(0);
-                method.visitVarInsn(ISTORE, a++);
-            }
-        }
-    }
-
-    public void generateVal(ValDeclarationNode expression) {
-        System.out.println("val byte");
-        String type = expression.getAssignment().getTypeStr();
-        System.out.println(type);
-        method.visitCode();
-        if (type.equals("int")) {
-            ExpressionNode valType = expression.getAssignment().getValue();
-            if(valType instanceof AssignmentArrayNode){
-                // Case of array
-                AssignmentArrayNode val = (AssignmentArrayNode) expression.getAssignment().getValue();
-                NumberNode size = (NumberNode) val.getSize();
-                method.visitIntInsn(BIPUSH, Integer.parseInt(size.getValue()));
-                method.visitIntInsn(NEWARRAY, T_INT);
-                method.visitVarInsn(ASTORE, 1);
-            }else{
-                System.out.println(expression.getAssignment());
-                NumberNode val = (NumberNode) expression.getAssignment().getValue();
-                if(val!=null){
-                    method.visitIntInsn(BIPUSH, Integer.parseInt(val.getValue()));
-                }
-                method.visitVarInsn(ISTORE, a++);
-            }
-        }
-        if (type.equals("str")) {
-            StringNode val = (StringNode) expression.getAssignment().getValue();
-            method.visitLdcInsn(val.getValue());
-            method.visitVarInsn(ASTORE, a++);
-        }
-        if (type.equals("bool")) {
-            ExpressionNode valType = expression.getAssignment().getValue();
-            if(valType instanceof AssignmentArrayNode){
-                // Case of array
-                AssignmentArrayNode val = (AssignmentArrayNode) expression.getAssignment().getValue();
-                NumberNode size = (NumberNode) val.getSize();
-                method.visitIntInsn(BIPUSH, Integer.parseInt(size.getValue()));
-                method.visitIntInsn(NEWARRAY, T_BOOLEAN);
-                method.visitVarInsn(ASTORE, 1);
-            }else {
-                BooleanNode val = (BooleanNode) expression.getAssignment().getValue();
-                int isTrue = val.isVal() ? ICONST_1 : ICONST_0;
-                method.visitInsn(isTrue);
-                method.visitVarInsn(ISTORE, a++);
-            }
-        }
-        if (type.equals("real")) {
-            ExpressionNode valType = expression.getAssignment().getValue();
-            if(valType instanceof AssignmentArrayNode){
-                // Case of array
-                AssignmentArrayNode val = (AssignmentArrayNode) expression.getAssignment().getValue();
-                NumberNode size = (NumberNode) val.getSize();
-                method.visitIntInsn(BIPUSH, Integer.parseInt(size.getValue()));
-                method.visitIntInsn(NEWARRAY, T_FLOAT);
-                method.visitVarInsn(ASTORE, 1);
-            }else{
-                NumberNode val = (NumberNode) expression.getAssignment().getValue();
-                System.out.println(val.getValue());
-                //method.visitInsn(0);
-                method.visitVarInsn(ISTORE, a++);
+                method.visitLdcInsn(Float.parseFloat(val.getValue()));
+                method.visitVarInsn(FSTORE, idx++);
             }
         }
     }
@@ -442,9 +403,12 @@ public class BytecodeCompiler {
         switch (node.getOperator().getKind()) {
             case PLUS:
                 if (left.getTypeStr().equals("str")) {
-                    invokeStatic(method, RunTime.class, "concat", String.class, String.class);
+                    String a = ((StringNode) left).getValue();
+                    String b = ((StringNode) right).getValue();
+                    System.out.println(a+b);
+                    //invokeStatic(method, RunTime.class, "concat", String.class, String.class);
                 } else if (right.getTypeStr().equals("str")) {
-                    invokeStatic(method, RunTime.class, "concat", String.class, String.class);
+                    //invokeStatic(method, RunTime.class, "concat", String.class, String.class);
                 } else {
                     numOperation(LADD, DADD, left, right);
                 }
@@ -500,7 +464,7 @@ public class BytecodeCompiler {
             // in this case, we've added a L2D instruction before the long operand beforehand
             method.visitInsn(doubleOpcode);
         } else {
-            throw new Error("unexpected numeric operation type combination: " + left + ", " + right);
+            throw new Error("Unexpected numeric operation type combination: " + left + ", " + right);
         }
         method.visitInsn(IRETURN);
     }

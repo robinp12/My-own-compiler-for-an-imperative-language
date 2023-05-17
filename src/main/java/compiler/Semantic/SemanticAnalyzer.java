@@ -207,6 +207,9 @@ public class SemanticAnalyzer implements ASTVisitor {
         if (!symbolTable.containimmut(node.getAssignment().getIdentifier())) {
             String varName = node.getAssignment().getIdentifier();
             TypeNode varType = node.getAssignment().getType();
+            if(node.getAssignment().getValue()==null){
+                throw new Exception("Semantic error: No value assigned to const");
+            }
             String valType = node.getAssignment().getValue().getTypeStr();
             if (valType.equals("binaryExp")){
                 valType = visit((BinaryExpressionNode) node.getAssignment().getValue());
@@ -302,7 +305,9 @@ public class SemanticAnalyzer implements ASTVisitor {
         if (node.getTypeStr() == "If") {
             visit(node.getCondition());
             visit(node.getThenStatements());
-            visit(node.getElseStatements());
+            if(node.getElseStatements()!=null){
+                visit(node.getElseStatements());
+            }
         } else {
             throw new Exception();
         }
