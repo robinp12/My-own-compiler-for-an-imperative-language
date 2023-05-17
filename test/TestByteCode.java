@@ -73,8 +73,30 @@ public class TestByteCode {
         bc.getRender();
     }
     @Test
+    public void testBasicArrayReal() throws Exception {
+        String input = "var c real[] = real[](10);";
+        StringReader reader = new StringReader(input);
+        Lexer lexer = new Lexer(reader);
+        Parser parser = new Parser(lexer);
+        ProgramNode x = parser.getAST();
+        new SemanticAnalyzer(x);
+        BytecodeCompiler bc = new BytecodeCompiler(x);
+        bc.getRender();
+    }
+    @Test
+    public void testBasicArray() throws Exception {
+        String input = "var c int[] = int[](20);";
+        StringReader reader = new StringReader(input);
+        Lexer lexer = new Lexer(reader);
+        Parser parser = new Parser(lexer);
+        ProgramNode x = parser.getAST();
+        new SemanticAnalyzer(x);
+        BytecodeCompiler bc = new BytecodeCompiler(x);
+        bc.getRender();
+    }
+    @Test
     public void testBasicInt() throws Exception {
-        String input =  "val a int = 42;";
+        String input =  "var a int ;";
         StringReader reader = new StringReader(input);
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
@@ -146,6 +168,20 @@ public class TestByteCode {
     }
 
     @Test
+    public void testBasicProcParamVar() throws Exception {
+        String input =  "proc add(x boolean, a int, b string) int {" +
+                "return x + x;" +
+                "}";
+        StringReader reader = new StringReader(input);
+        Lexer lexer = new Lexer(reader);
+        Parser parser = new Parser(lexer);
+        ProgramNode x = parser.getAST();
+        new SemanticAnalyzer(x);
+        BytecodeCompiler bc = new BytecodeCompiler(x);
+        bc.getRender();
+    }
+
+    @Test
     public void testBasicMixedTypes() throws Exception {
         String input =  "var a real = 3.2; val a int = 4;";
         StringReader reader = new StringReader(input);
@@ -198,30 +234,6 @@ public class TestByteCode {
                 "const b real = 4.4; " +
                 "val c string = \"coucou\"; " +
                 "var d boolean = true; d = false; ";
-        StringReader reader = new StringReader(input);
-        Lexer lexer = new Lexer(reader);
-        Parser parser = new Parser(lexer);
-        ProgramNode x = parser.getAST();
-        new SemanticAnalyzer(x);
-        BytecodeCompiler bc = new BytecodeCompiler(x);
-        bc.getRender();
-    }
-
-    @Test
-    public void testBasicArrayIllegal() throws Exception {
-        String input = "var c boolean[] = int[](10);";
-        StringReader reader = new StringReader(input);
-        Lexer lexer = new Lexer(reader);
-        Parser parser = new Parser(lexer);
-        ProgramNode x = parser.getAST();
-        new SemanticAnalyzer(x);
-        BytecodeCompiler bc = new BytecodeCompiler(x);
-        bc.getRender();
-    }
-
-    @Test
-    public void testBasicArray() throws Exception {
-        String input = "var c int[] = int[](10);";
         StringReader reader = new StringReader(input);
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
@@ -381,8 +393,8 @@ public class TestByteCode {
     @Test
     public void testForLoop() throws Exception {
         String input = """
-                val i int;
-                for i=1 to 100 by 2 {
+                var i int = 0;
+                for i=100 to 1000 by 2 {
                         // ...
                     }""";
         StringReader reader = new StringReader(input);
