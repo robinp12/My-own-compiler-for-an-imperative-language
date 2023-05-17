@@ -116,6 +116,36 @@ public class TestSemantic {
     }
 
     @Test
+    public void testBasicWhile() throws Exception {
+        String input =  "while 8 >= 3 { val x int; }";
+        StringReader reader = new StringReader(input);
+        Lexer lexer = new Lexer(reader);
+        Parser parser = new Parser(lexer);
+        ProgramNode x = parser.getAST();
+        new SemanticAnalyzer(x);
+    }
+
+    @Test
+    public void testComplexWhile() throws Exception {
+        String input =  "var i int = 0; while 8 >= i { i = i+1; }";
+        StringReader reader = new StringReader(input);
+        Lexer lexer = new Lexer(reader);
+        Parser parser = new Parser(lexer);
+        ProgramNode x = parser.getAST();
+        new SemanticAnalyzer(x);
+    }
+
+    @Test
+    public void testComplexWhileIllegal() throws Exception {
+        String input =  "var i boolean = true; while 8 >= i { i = i+1; }";
+        StringReader reader = new StringReader(input);
+        Lexer lexer = new Lexer(reader);
+        Parser parser = new Parser(lexer);
+        ProgramNode x = parser.getAST();
+        assertThrows(Exception.class, () -> {new SemanticAnalyzer(x);});
+    }
+
+    @Test
     public void testBasicDuplicatedConst() throws Exception {
         String input =  "const a int = 2; const a int = 4; ";
         StringReader reader = new StringReader(input);
@@ -350,7 +380,7 @@ public class TestSemantic {
     @Test
     public void testRecord() throws Exception {
         String input = """
-                record Point {
+                record point {
                     x int;
                     y int;
                 }""";
@@ -359,6 +389,57 @@ public class TestSemantic {
         Parser parser = new Parser(lexer);
         ProgramNode x = parser.getAST();
         new SemanticAnalyzer(x);
+    }
+
+    @Test
+    public void testRecordUsage() throws Exception {
+        String input = """
+                record point {
+                    x int;
+                    y int;
+                }
+                point.x = 1;
+                point.y = 4;
+                """;
+        StringReader reader = new StringReader(input);
+        Lexer lexer = new Lexer(reader);
+        Parser parser = new Parser(lexer);
+        ProgramNode x = parser.getAST();
+        new SemanticAnalyzer(x);
+    }
+
+    @Test
+    public void testRecordUsageIllegal1() throws Exception {
+        String input = """
+                record point {
+                    x int;
+                    y int;
+                }
+                point.x = 1;
+                point.z = 4;
+                """;
+        StringReader reader = new StringReader(input);
+        Lexer lexer = new Lexer(reader);
+        Parser parser = new Parser(lexer);
+        ProgramNode x = parser.getAST();
+        assertThrows(Exception.class, () -> {new SemanticAnalyzer(x);});
+    }
+
+    @Test
+    public void testRecordUsageIllegal2() throws Exception {
+        String input = """
+                record point {
+                    x int;
+                    y int;
+                }
+                point.x = 1;
+                point.y = true;
+                """;
+        StringReader reader = new StringReader(input);
+        Lexer lexer = new Lexer(reader);
+        Parser parser = new Parser(lexer);
+        ProgramNode x = parser.getAST();
+        assertThrows(Exception.class, () -> {new SemanticAnalyzer(x);});
     }
 
     @Test

@@ -56,6 +56,7 @@ public class TestParser {
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
         parser.getAST();
+
     }
     @Test
     public void testBasicWhile() throws ParseException {
@@ -65,6 +66,7 @@ public class TestParser {
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
         parser.getAST();
+
     }
     @Test
     public void testBasicFor() throws ParseException {
