@@ -4,6 +4,8 @@ import compiler.Lexer.SymbolKind;
 import compiler.Parser.AST.*;
 import compiler.Parser.Parser;
 
+import java.util.AbstractMap.SimpleEntry;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -67,7 +69,15 @@ public class SemanticAnalyzer implements ASTVisitor {
             }
         } else if (symbolTable.containimmut(varName)) {
             throw new Exception("Assignement exeption: you tried to modify a immuable val or const");
-        } else {
+        } else if (symbolTable.containrecord(varName)){
+            RecordCallNode rec = (RecordCallNode) node.getValue();
+            if(!containsIdentifier(symbolTable.lookuprecord(varName), rec.getfield())){
+                throw new Exception("Assignment error: bad field,"+ rec.getfield()+" not in record "+ varName);
+            }else {
+                visit((RecordCallNode) rec, varName);
+            }
+        }
+        else {
             throw new Exception("Assignement exeption: illegal assignement");
         }
     }
@@ -85,6 +95,22 @@ public class SemanticAnalyzer implements ASTVisitor {
         }
         if (rightType.equals("binaryExp")){
             rightType = visit((BinaryExpressionNode) node.getLeft());
+        }
+        if (leftType.equals("str")){
+            LiteralNode left = (LiteralNode) node.getLeft();
+            if (symbolTable.containmut(left.getLiteral())){
+                leftType = symbolTable.lookupmut(left.getLiteral()).getTypeStr();
+            } else if (symbolTable.containimmut(left.getLiteral())) {
+                leftType = symbolTable.lookupimmut(left.getLiteral()).getTypeStr();
+            }
+        }
+        if (rightType.equals("str")){
+            LiteralNode right = (LiteralNode) node.getRight();
+            if (symbolTable.containmut(right.getLiteral())){
+                rightType = symbolTable.lookupmut(right.getLiteral()).getTypeStr();
+            } else if (symbolTable.containimmut(right.getLiteral())) {
+                rightType = symbolTable.lookupimmut(right.getLiteral()).getTypeStr();
+            }
         }
 
         // Determine the result type based on the operator
@@ -146,7 +172,7 @@ public class SemanticAnalyzer implements ASTVisitor {
                 if ((leftType.equals("int") || leftType.equals("real")) && (rightType.equals("int") || rightType.equals("real"))) {
                     node.setResultType("bool");
                 } else {
-                    throw new Exception("Invalid operation: binary expression error type");
+                    throw new Exception("Invalid operation: binary expression error type: left type = "+ leftType+ " and right type = "+rightType);
                 }
                 break;
             case AND:
@@ -316,35 +342,59 @@ public class SemanticAnalyzer implements ASTVisitor {
 
     @Override
     public void visit(RecordNode node) throws Exception {
-        if (node.getTypeStr() == "record"){
+        if (node.getTypeStr().equals("record")) {
             // Check if the variable has already been declared in this scope
-            if (symbolTable.containmut(node.getIdentifier())) {
-                if (!symbolTable.lookupmut(node.getIdentifier()).getTypeSymbol().equals(node.getTypeStr())) {
-                    throw new Exception("Assignment error: this identifier " + node.getIdentifier() + " is already used and is of type " + symbolTable.lookupmut(node.getIdentifier()).getTypeSymbol() + " and not " + node.getTypeStr());
-                }
-            } else if (symbolTable.containimmut(node.getIdentifier())) {
-                throw new Exception("Assignement exeption: you tried to modify a immuable val or const");
+            if (symbolTable.containmut(node.getIdentifier()) || symbolTable.containimmut(node.getIdentifier()) || symbolTable.containrecord(node.getIdentifier())) {
+                throw new Exception("Assignment error: this identifier " + node.getIdentifier() + " is already used ");
             } else {
-                List<String> record_entries = Arrays.asList();
-                for (ParamNode pn : node.getFields()){
-                    if (record_entries.contains(pn.getIdentifier())){
-                        throw new Exception("Illegal record declaration");
-                    }else{
-                        visit((ParamNode) pn);
-                        record_entries.add(pn.getIdentifier());
+                List<SimpleEntry<String, String>> record_entries = new ArrayList<>();
+
+                for (ParamNode pn : node.getFields()) {
+                    if (containsIdentifier(record_entries, pn.getIdentifier())) {
+                        throw new Exception("Illegal record declaration: duplicate identifier");
+                    } else {
+                        visit(pn);
+                        record_entries.add(new SimpleEntry<>(pn.getIdentifier(), pn.getTypeStr()));
                     }
                 }
-                symbolTable.insertmut(node.getIdentifier(), new TypeNode(node.getTypeStr(),node.getIdentifier()));
+                symbolTable.insertrecord(node.getIdentifier(), record_entries);
             }
             System.out.println("record");
-
-
         }
     }
 
     @Override
     public void visit(RecordCallNode node) {
-        //Still usefull ??
+
+    }
+
+
+    private boolean containsIdentifier(List<SimpleEntry<String, String>> list, String identifier) {
+        for (SimpleEntry<String, String> entry : list) {
+            if (entry.getKey().equals(identifier)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private String getTypeId(List<SimpleEntry<String, String>> list, String identifier) throws Exception {
+        for (SimpleEntry<String, String> entry : list) {
+            if (entry.getKey().equals(identifier)) {
+                return entry.getValue();
+            }
+        }
+        throw new Exception("Record Error");
+    }
+
+
+    public void visit(RecordCallNode node, String identifier) throws Exception {
+        System.out.println(node);
+        String valtype = node.getvalue().getTypeStr();
+        String rectype = getTypeId(symbolTable.lookuprecord(identifier), node.getfield());
+        if(!rectype.equals(valtype)){
+            throw new Exception("Record error: Bad type, value type "+valtype+ " does not match record type:"+rectype);
+        }
     }
 
     @Override
@@ -389,8 +439,10 @@ public class SemanticAnalyzer implements ASTVisitor {
     }
 
     @Override
-    public void visit(WhileStatementNode node) {
+    public void visit(WhileStatementNode node) throws Exception {
         System.out.println("while");
+        visit((BinaryExpressionNode) node.getCondition());
+        visit(node.getBlock());
 
     }
 

@@ -2,18 +2,18 @@ package compiler.Semantic;
 
 import compiler.Parser.AST.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class   SymbolTable {
     //SymbolTable previousTable;
     private static Map<String, TypeNode> mutablesymbolTable;
     private static Map<String, TypeNode> immutablesymbolTable;
+    private static Map<String, List<AbstractMap.SimpleEntry<String, String>>> recordsymbolTable;
 
     public SymbolTable(){
         this.mutablesymbolTable = new HashMap<>();
         this.immutablesymbolTable = new HashMap<>();
+        this.recordsymbolTable = new HashMap<>();
     }
 
     public static void insertmut(String name, TypeNode type) {
@@ -22,17 +22,26 @@ public class   SymbolTable {
     public static void insertimmut(String name, TypeNode type) {
         immutablesymbolTable.put(name, type);
     }
+    public static void insertrecord(String name, List<AbstractMap.SimpleEntry<String, String>> fields ){
+        recordsymbolTable.put(name, fields);
+    }
 
     public static TypeNode lookupmut(String name) {
         return mutablesymbolTable.get(name);}
     public static TypeNode lookupimmut(String name) {
         return immutablesymbolTable.get(name);}
+    public static List<AbstractMap.SimpleEntry<String, String>> lookuprecord(String name){
+        return recordsymbolTable.get(name);
+    }
 
     public static boolean containmut(String name) {
         return mutablesymbolTable.containsKey(name);
     }
     public static boolean containimmut(String name) {
         return immutablesymbolTable.containsKey(name);
+    }
+    public static boolean containrecord(String name){
+        return recordsymbolTable.containsKey(name);
     }
 
 /*
