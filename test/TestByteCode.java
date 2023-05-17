@@ -376,8 +376,8 @@ public class TestByteCode {
     }
     @Test
     public void testWhile() throws Exception {
-        String input =  "val x int = 10;" +
-                "while 800 <= 10000 { " +
+        String input =
+                "while 1 <= 4 { " +
                             "// ..." +
                         " }";
         StringReader reader = new StringReader(input);
@@ -391,7 +391,25 @@ public class TestByteCode {
 
     @Test
     public void testComplexWhile() throws Exception {
-        String input =  "var i int = 0; while 8 >= i { i = i+1; }";
+        String input =  "var i int = 0; while 8 >= 2 { i = i+1; }";
+        StringReader reader = new StringReader(input);
+        Lexer lexer = new Lexer(reader);
+        Parser parser = new Parser(lexer);
+        ProgramNode x = parser.getAST();
+        new SemanticAnalyzer(x);
+        BytecodeCompiler bc = new BytecodeCompiler(x);
+        bc.getRender();
+    }
+
+    @Test
+    public void test() throws Exception {
+        String input =
+        """
+            var i int = 0; 
+            while 8 >= 2 { 
+                var ai int = 1; 
+            }
+        """;
         StringReader reader = new StringReader(input);
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);

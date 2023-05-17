@@ -2,10 +2,12 @@ package compiler.Bytecode;
 
 import compiler.Lexer.Symbol;
 import compiler.Parser.AST.*;
-import org.objectweb.asm.ClassWriter;
-import org.objectweb.asm.Label;
-import org.objectweb.asm.MethodVisitor;
+import compiler.Parser.AST.MethodNode;
+import compiler.Semantic.SymbolTable;
+import org.objectweb.asm.*;
 
+import static compiler.Lexer.SymbolKind.LESS;
+import static compiler.Lexer.SymbolKind.LESSEQ;
 import static org.objectweb.asm.Opcodes.*;
 
 import java.io.FileOutputStream;
@@ -24,7 +26,6 @@ public class BytecodeCompiler {
         // Class
         container = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
         container.visit(V1_8, ACC_PUBLIC, "Main", null, "java/lang/Object", null);
-
         // Constructor
         method = container.visitMethod(ACC_PUBLIC, "<init>", "()V", null, null);
         method.visitCode();
@@ -54,8 +55,6 @@ public class BytecodeCompiler {
     }
 
     public void root(ProgramNode node) {
-        System.out.println("root byte");
-
         // Method main
         method = container.visitMethod(ACC_PUBLIC + ACC_STATIC, "main", "([Ljava/lang/String;)V", null, null);
         method.visitCode();
@@ -65,7 +64,6 @@ public class BytecodeCompiler {
                 generateExpression(expression);
             }
         }
-
         method.visitInsn(RETURN);
         method.visitMaxs(0, 0);
         method.visitEnd();
@@ -92,8 +90,10 @@ public class BytecodeCompiler {
             generateIf((IfStatementNode) expression);
         } else if (expression instanceof AssignmentNode) {
             generateAssignment((AssignmentNode) expression);
-        }else if (expression instanceof WhileStatementNode) {
+        } else if (expression instanceof WhileStatementNode) {
             generateWhile((WhileStatementNode) expression);
+        } else if (expression instanceof ReturnNode) {
+            generateReturn((ReturnNode) expression);
         }
         /*else if (expression instanceof AssignmentArrayNode) {
             visit((AssignmentArrayNode) expression);
@@ -113,9 +113,7 @@ public class BytecodeCompiler {
             visit((ProgramNode) expression);
         } else if (expression instanceof RecordCallNode) {
             visit((RecordCallNode) expression);
-        } else if (expression instanceof ReturnNode) {
-            visit((ReturnNode) expression);
-        } else if (expression instanceof StringNode) {
+        }  else if (expression instanceof StringNode) {
             visit((StringNode) expression);
         } else if (expression instanceof TypeNode) {
             visit((TypeNode) expression);
@@ -127,58 +125,44 @@ public class BytecodeCompiler {
 
     private void generateWhile(WhileStatementNode expression) {
         BinaryExpressionNode exp = (BinaryExpressionNode) expression.getCondition();
-        NumberNode left = (NumberNode) exp.getLeft();
-        NumberNode right = (NumberNode) exp.getRight();
+
         Label loopStart = new Label();
         Label loopEnd = new Label();
-        System.out.println(exp.getOperator());
-        generateBinaryExpression(exp);
+
         // Boucle while
         method.visitLabel(loopStart);
 
         // Condition left >= right
-        method.visitLdcInsn(Integer.parseInt(left.getValue()));
-        method.visitLdcInsn(Integer.parseInt(right.getValue()));
-        method.visitJumpInsn(IF_ICMPLT, loopEnd);
+        generateBinaryExpression(exp);
+        method.visitJumpInsn(IFEQ, loopEnd);
+
+        SymbolTable st = new SymbolTable();
+        System.out.println(st);
 
         generateBlock(expression.getBlock());
 
         method.visitJumpInsn(GOTO, loopStart); // Revenir au début de la boucle
-
         method.visitLabel(loopEnd);
     }
 
     private void generateIf(IfStatementNode expression) {
-        BooleanNode valBool = (BooleanNode) expression.getCondition();
+        //BooleanNode valBool = (BooleanNode) expression.getCondition();
         System.out.println(expression.getCondition());
         BinaryExpressionNode stmt = (BinaryExpressionNode) expression.getCondition();
-        int valCond = 10;
         boolean hasElse = expression.getElseStatements() != null;
         Label elseLabel = new Label();
         Label endLabel = new Label();
 
-        // Déclarer et initialiser la constante 'v'
-        method.visitIntInsn(BIPUSH, 10);
-        method.visitVarInsn(ISTORE, idx++);
+        generateBinaryExpression(stmt);
+        method.visitJumpInsn(IFEQ, hasElse ? elseLabel : endLabel);
+        generateBlock(expression.getThenStatements());
+        if (hasElse) {
+            method.visitJumpInsn(GOTO, endLabel);
+            method.visitLabel(elseLabel);
+            generateBlock(expression.getElseStatements());
+        }
+        method.visitLabel(endLabel);
 
-        // Charger la valeur de 'v' sur la pile
-        method.visitVarInsn(ILOAD, 0);
-
-        // Comparer la valeur avec 10
-        method.visitIntInsn(BIPUSH, valCond);
-        method.visitJumpInsn(IF_ICMPNE, elseLabel);
-
-        // Si la comparaison est vraie, mettre 'true' sur la pile et retourner
-        method.visitInsn(ICONST_1);
-        method.visitInsn(IRETURN);
-
-        // Sinon, mettre 'false' sur la pile et retourner
-        method.visitLabel(elseLabel);
-        method.visitInsn(ICONST_0);
-        method.visitInsn(IRETURN);
-
-        method.visitMaxs(2, 1);
-        method.visitEnd();
     }
 
     private void generateFor(ForStatementNode expression) {
@@ -223,6 +207,7 @@ public class BytecodeCompiler {
     }
 
     private void generateStatement(StatementNode expression) {
+        System.out.println(expression);
         for (ExpressionNode statement : expression.getStatements()) {
             System.out.println("generate statement");
             generateExpression(statement);
@@ -271,7 +256,6 @@ public class BytecodeCompiler {
     public void generateVar(AssignmentNode expression) {
         System.out.println("var || val byte");
         String type = expression.getTypeStr();
-        method.visitCode();
         if (type.equals("int")) {
             ExpressionNode valType = expression.getValue();
             if (valType instanceof AssignmentArrayNode) {
@@ -391,7 +375,7 @@ public class BytecodeCompiler {
         // Ajouter les instructions ici...
         generateBlock(expression.getBody());
 
-        method.visitMaxs(expression.getParameters().size(), expression.getParameters().size());
+        method.visitMaxs(0, 0);
         method.visitEnd();
 
     }
@@ -405,7 +389,7 @@ public class BytecodeCompiler {
                 if (left.getTypeStr().equals("str")) {
                     String a = ((StringNode) left).getValue();
                     String b = ((StringNode) right).getValue();
-                    System.out.println(a+b);
+                    System.out.println(a + b);
                     //invokeStatic(method, RunTime.class, "concat", String.class, String.class);
                 } else if (right.getTypeStr().equals("str")) {
                     //invokeStatic(method, RunTime.class, "concat", String.class, String.class);
@@ -471,9 +455,35 @@ public class BytecodeCompiler {
 
     public void comparison(Symbol op, int doubleWidthOpcode, int boolOpcode, int objOpcode,
                            ExpressionNode left, ExpressionNode right) {
+        Label trueLabel = new Label();
+        Label endLabel = new Label();
+
         if (left.getTypeStr().equals("int") && right.getTypeStr().equals("int")) {
             method.visitInsn(LCMP);
+            method.visitJumpInsn(doubleWidthOpcode, trueLabel);
+        } else if ((left.getTypeStr().equals("real") || left.getTypeStr().equals("int")) && right.getTypeStr().equals("real")) {
+            // If left is an Int, we've added a L2D instruction before the long operand beforehand
+            // Proper NaN handling: if NaN is involved, has to be false for all operations.
+            int opcode = op.getKind() == LESS || op.getKind() == LESSEQ ? DCMPG : DCMPL;
+            method.visitInsn(opcode);
+            method.visitJumpInsn(doubleWidthOpcode, trueLabel);
+        } else if (left.getTypeStr().equals("real") && right.getTypeStr().equals("int")) {
+            method.visitInsn(L2D);
+            // Proper NaN handling: if NaN is involved, has to be false for all operations.
+            int opcode = op.getKind() == LESS || op.getKind() == LESSEQ ? DCMPG : DCMPL;
+            method.visitInsn(opcode);
+            method.visitJumpInsn(doubleWidthOpcode, trueLabel);
+        } else if (left.getTypeStr().equals("bool") && right.getTypeStr().equals("bool")) {
+            method.visitJumpInsn(boolOpcode, trueLabel);
+        } else {
+            method.visitJumpInsn(objOpcode, trueLabel);
         }
+
+        method.visitInsn(ICONST_0);
+        method.visitJumpInsn(GOTO, endLabel);
+        method.visitLabel(trueLabel);
+        method.visitInsn(ICONST_1);
+        method.visitLabel(endLabel);
     }
 
 }

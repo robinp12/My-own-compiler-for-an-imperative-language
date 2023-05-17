@@ -15,8 +15,8 @@ public interface ASTVisitor {
     void visit(ForStatementNode node) throws Exception;
     void visit(IfStatementNode node) throws Exception;
     void visit(LiteralNode node);
-    void visit(MethodCallNode node);
-    void visit(MethodNode node);
+    void visit(MethodCallNode node) throws Exception;
+    void visit(MethodNode node) throws Exception;
     void visit(NumberNode node);
     void visit(ParamListNode node);
     void visit(ParamNode node);

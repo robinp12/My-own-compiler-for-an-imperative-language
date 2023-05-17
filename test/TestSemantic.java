@@ -1,3 +1,4 @@
+import compiler.Bytecode.BytecodeCompiler;
 import compiler.Lexer.Lexer;
 import compiler.Lexer.Symbol;
 import compiler.Lexer.SymbolKind;
@@ -489,6 +490,20 @@ public class TestSemantic {
                 if v == 10 {
                     return true;
                 }""";
+        StringReader reader = new StringReader(input);
+        Lexer lexer = new Lexer(reader);
+        Parser parser = new Parser(lexer);
+        ProgramNode x = parser.getAST();
+        assertThrows(Exception.class, () -> {new SemanticAnalyzer(x);});
+    }
+
+    @Test
+    public void testBuiltIn() throws ParseException {
+        String input = """
+                    proc readInt() int {
+                        return 10 + 1;
+                    }
+                """;
         StringReader reader = new StringReader(input);
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);

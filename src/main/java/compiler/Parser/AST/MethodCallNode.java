@@ -35,15 +35,6 @@ public class MethodCallNode extends ExpressionNode {
     public static MethodCallNode parseMethodCall() throws ParseException{
         // TODO
         String identifier = LiteralNode.parseLiteral().getLiteral();
-        switch (identifier){
-            case "readInt":
-            case "readReal":
-            case "readString":
-            case "writeInt":
-            case "writeReal":
-            case "write":
-            case "writeln":
-        }
         match(SymbolKind.LPAR);
         ArrayList<ParamNode> params = ParamListNode.parseParams();
         match(SymbolKind.RPAR);

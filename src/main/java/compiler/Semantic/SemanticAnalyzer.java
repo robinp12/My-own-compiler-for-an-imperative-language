@@ -1,5 +1,6 @@
 package compiler.Semantic;
 
+import com.google.common.collect.Lists;
 import compiler.Lexer.SymbolKind;
 import compiler.Parser.AST.*;
 import compiler.Parser.Parser;
@@ -14,9 +15,22 @@ public class SemanticAnalyzer implements ASTVisitor {
 
     private static SymbolTable symbolTable;
 
+    List<String> functions = Lists.newArrayList(
+            "not",
+            "chr",
+            "len",
+            "floor",
+            "readint",
+            "readreal",
+            "readstring",
+            "writeint",
+            "writereal",
+            "write",
+            "writeln"
+    );
 
     public SemanticAnalyzer(ProgramNode programNode) throws Exception {
-        if (programNode.getTypeStr() == "root") {
+        if (programNode.getTypeStr().equals("root")) {
             symbolTable = new SymbolTable();
             visit(programNode);
         } else {
@@ -51,10 +65,10 @@ public class SemanticAnalyzer implements ASTVisitor {
         String varType = node.getType().getTypeSymbol();
         String valType = node.getValue().getTypeStr();
 
-        if (valType.equals("binaryExp")){
+        if (valType.equals("binaryExp")) {
             valType = visit((BinaryExpressionNode) node.getValue());
         }
-        if (varType.equals("binaryExp")){
+        if (varType.equals("binaryExp")) {
             varType = visit((BinaryExpressionNode) node.getValue());
         }
         //Check variable and value type
@@ -69,15 +83,14 @@ public class SemanticAnalyzer implements ASTVisitor {
             }
         } else if (symbolTable.containimmut(varName)) {
             throw new Exception("Assignement exeption: you tried to modify a immuable val or const");
-        } else if (symbolTable.containrecord(varName)){
+        } else if (symbolTable.containrecord(varName)) {
             RecordCallNode rec = (RecordCallNode) node.getValue();
-            if(!containsIdentifier(symbolTable.lookuprecord(varName), rec.getfield())){
-                throw new Exception("Assignment error: bad field,"+ rec.getfield()+" not in record "+ varName);
-            }else {
+            if (!containsIdentifier(symbolTable.lookuprecord(varName), rec.getfield())) {
+                throw new Exception("Assignment error: bad field," + rec.getfield() + " not in record " + varName);
+            } else {
                 visit((RecordCallNode) rec, varName);
             }
-        }
-        else {
+        } else {
             throw new Exception("Assignement exeption: illegal assignement");
         }
     }
@@ -90,23 +103,23 @@ public class SemanticAnalyzer implements ASTVisitor {
         String leftType = node.getLeft().getTypeStr();
         String rightType = node.getRight().getTypeStr();
 
-        if (leftType.equals("binaryExp")){
+        if (leftType.equals("binaryExp")) {
             leftType = visit((BinaryExpressionNode) node.getLeft());
         }
-        if (rightType.equals("binaryExp")){
+        if (rightType.equals("binaryExp")) {
             rightType = visit((BinaryExpressionNode) node.getLeft());
         }
-        if (leftType.equals("str")){
+        if (leftType.equals("str")) {
             LiteralNode left = (LiteralNode) node.getLeft();
-            if (symbolTable.containmut(left.getLiteral())){
+            if (symbolTable.containmut(left.getLiteral())) {
                 leftType = symbolTable.lookupmut(left.getLiteral()).getTypeStr();
             } else if (symbolTable.containimmut(left.getLiteral())) {
                 leftType = symbolTable.lookupimmut(left.getLiteral()).getTypeStr();
             }
         }
-        if (rightType.equals("str")){
+        if (rightType.equals("str")) {
             LiteralNode right = (LiteralNode) node.getRight();
-            if (symbolTable.containmut(right.getLiteral())){
+            if (symbolTable.containmut(right.getLiteral())) {
                 rightType = symbolTable.lookupmut(right.getLiteral()).getTypeStr();
             } else if (symbolTable.containimmut(right.getLiteral())) {
                 rightType = symbolTable.lookupimmut(right.getLiteral()).getTypeStr();
@@ -172,7 +185,7 @@ public class SemanticAnalyzer implements ASTVisitor {
                 if ((leftType.equals("int") || leftType.equals("real")) && (rightType.equals("int") || rightType.equals("real"))) {
                     node.setResultType("bool");
                 } else {
-                    throw new Exception("Invalid operation: binary expression error type: left type = "+ leftType+ " and right type = "+rightType);
+                    throw new Exception("Invalid operation: binary expression error type: left type = " + leftType + " and right type = " + rightType);
                 }
                 break;
             case AND:
@@ -207,11 +220,11 @@ public class SemanticAnalyzer implements ASTVisitor {
         if (!symbolTable.containimmut(node.getAssignment().getIdentifier())) {
             String varName = node.getAssignment().getIdentifier();
             TypeNode varType = node.getAssignment().getType();
-            if(node.getAssignment().getValue()==null){
+            if (node.getAssignment().getValue() == null) {
                 throw new Exception("Semantic error: No value assigned to const");
             }
             String valType = node.getAssignment().getValue().getTypeStr();
-            if (valType.equals("binaryExp")){
+            if (valType.equals("binaryExp")) {
                 valType = visit((BinaryExpressionNode) node.getAssignment().getValue());
             }
             //Check variable and value type
@@ -286,7 +299,7 @@ public class SemanticAnalyzer implements ASTVisitor {
         System.out.println("for");
         if (node.getTypeStr() == "ForLoop") {
             if (symbolTable.containmut(node.getVariable()))
-                if (node.getStart() instanceof NumberNode && node.getEnd() instanceof NumberNode && node.getStep() instanceof NumberNode){
+                if (node.getStart() instanceof NumberNode && node.getEnd() instanceof NumberNode && node.getStep() instanceof NumberNode) {
                     visit(node.getBlock());
                 } else {
                     throw new Exception("Illegal type of start, stop or step");
@@ -305,7 +318,7 @@ public class SemanticAnalyzer implements ASTVisitor {
         if (node.getTypeStr() == "If") {
             visit(node.getCondition());
             visit(node.getThenStatements());
-            if(node.getElseStatements()!=null){
+            if (node.getElseStatements() != null) {
                 visit(node.getElseStatements());
             }
         } else {
@@ -321,13 +334,58 @@ public class SemanticAnalyzer implements ASTVisitor {
     }
 
     @Override
-    public void visit(MethodCallNode node) {
+    public void visit(MethodCallNode node) throws Exception {
+        switch (node.getIdentifier()) {
+            case "readint", "readreal","readstring" -> {
+                if (node.getParameters().size() != 0) {
+                    throw new Exception("Built-in function \"" + node.getIdentifier() + "\" need no argument");
+                }
+            }
+            case "write", "writeln" -> {
+
+            }
+        }
+
+        if (node.getParameters().size() != 1) {
+            throw new Exception("Built-in function \"" + node.getIdentifier() + "\" need exactly 1 argument");
+        }
+        ParamNode param = node.getParameters().get(0);
+        switch (node.getIdentifier()) {
+            case "writeint", "writereal" -> {
+                if (!param.getTypeStr().equals("str")) {
+                    throw new Exception("Built-in function \"" + node.getIdentifier() + "\" parameter type need to be \"str\"");
+                }
+            }
+            case "not" -> {
+                if (!param.getTypeStr().equals("bool")) {
+                    throw new Exception("Built-in function \"" + node.getIdentifier() + "\" parameter type need to be \"bool\"");
+                }
+            }
+            case "chr" -> {
+                if (!param.getTypeStr().equals("int")) {
+                    throw new Exception("Built-in function \"" + node.getIdentifier() + "\" parameter type need to be \"int\"");
+                }
+            }
+            case "len" -> {
+                if (!param.getTypeStr().equals("str") || !param.getTypeStr().equals("array")) { //TODO
+                    throw new Exception("Built-in function \"" + node.getIdentifier() + "\" parameter type need to be \"str\" or \"array\"");
+                }
+            }
+            case "floor" -> {
+                if (!param.getTypeStr().equals("real")) {
+                    throw new Exception("Built-in function \"" + node.getIdentifier() + "\" parameter type need to be \"real\"");
+                }
+            }
+        }
 
     }
 
     @Override
-    public void visit(MethodNode node) {
+    public void visit(MethodNode node) throws Exception {
         System.out.println("method");
+        if (functions.contains(node.getIdentifier())) {
+            throw new Exception("Reserved keyword : \"" + node.getIdentifier() + "\" is used for built-in function");
+        }
     }
 
     @Override
@@ -397,8 +455,8 @@ public class SemanticAnalyzer implements ASTVisitor {
         System.out.println(node);
         String valtype = node.getvalue().getTypeStr();
         String rectype = getTypeId(symbolTable.lookuprecord(identifier), node.getfield());
-        if(!rectype.equals(valtype)){
-            throw new Exception("Record error: Bad type, value type "+valtype+ " does not match record type:"+rectype);
+        if (!rectype.equals(valtype)) {
+            throw new Exception("Record error: Bad type, value type " + valtype + " does not match record type:" + rectype);
         }
     }
 
@@ -430,7 +488,7 @@ public class SemanticAnalyzer implements ASTVisitor {
             String varName = node.getAssignment().getIdentifier();
             TypeNode varType = node.getAssignment().getType();
             String valType = node.getAssignment().getValue().getTypeStr();
-            if (valType.equals("binaryExp")){
+            if (valType.equals("binaryExp")) {
                 valType = visit((BinaryExpressionNode) node.getAssignment().getValue());
             }
             //Check variable and value type
@@ -464,7 +522,7 @@ public class SemanticAnalyzer implements ASTVisitor {
             TypeNode varType = node.getAssignment().getType();
             if (node.getAssignment().getValue() != null) {
                 String valType = node.getAssignment().getValue().getTypeStr();
-                if (valType.equals("binaryExp")){
+                if (valType.equals("binaryExp")) {
                     valType = visit((BinaryExpressionNode) node.getAssignment().getValue());
                 }
                 if (!valType.equals(varType.getTypeSymbol())) {
