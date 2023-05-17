@@ -44,6 +44,8 @@ public class AssignmentNode extends ExpressionNode{
             case LBRACK: // Assignment of value to existing array
                 AssignmentArrayNode values = parseArrayAssignment();
                 return new AssignmentNode(identifier,values.getType(),values);
+            case DOT: //    Assignment of value to record
+                return new AssignmentNode(identifier,new TypeNode("record",identifier),RecordCallNode.parseRecordCall());
         }
 
         // Declaration variable
@@ -62,7 +64,7 @@ public class AssignmentNode extends ExpressionNode{
                 return new AssignmentNode(identifier,type,null);
         }
     }
-    
+
     public static AssignmentArrayNode parseArrayAssignment() throws ParseException {
         match(SymbolKind.LBRACK);
         ExpressionNode index = BinaryExpressionNode.parseBinaryExpressionNode(null);

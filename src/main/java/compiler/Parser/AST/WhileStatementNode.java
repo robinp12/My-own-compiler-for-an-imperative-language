@@ -22,7 +22,7 @@ public class WhileStatementNode extends ExpressionNode{
         return block;
     }
 
-    public static ExpressionNode parseWhileStatement() throws ParseException {
+    public static WhileStatementNode parseWhileStatement() throws ParseException {
         match(SymbolKind.WHILE);
         ExpressionNode condition = BinaryExpressionNode.parseBinaryExpressionNode(null);
         BlockNode block = BlockNode.parseBlock();
@@ -30,6 +30,6 @@ public class WhileStatementNode extends ExpressionNode{
     }
     @Override
     public String toString() {
-        return "while (" + condition + ") " + block;
+        return "WhileStatementNode(" + condition + ") " + block;
     }
 }

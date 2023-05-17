@@ -10,43 +10,38 @@ import static compiler.Parser.Parser.match;
 
 public class RecordCallNode extends ExpressionNode {
 
-    private String identifier;
-    private RecordNode record;
-    private ArrayList<ParamNode> parameters;
+    private ExpressionNode value;
+    private String field;
 
-    public RecordCallNode(String name, RecordNode record, ArrayList<ParamNode> parameters) {
-        super("record_call");
-        this.identifier = name;
-        this.record = record;
-        this.parameters = parameters;
-    }
-    public String getIdentifier() {
-        return identifier;
+    public RecordCallNode(String field, ExpressionNode value) {
+        super("record");
+        this.value = value;
+        this.field = field;
     }
 
-    public RecordNode getRecord() {
-        return record;
+    public static RecordCallNode parseRecordCall() throws ParseException {
+        match(SymbolKind.DOT);
+        String field = LiteralNode.parseLiteral().getLiteral();
+        match(SymbolKind.EQUALS);
+        ExpressionNode value = BinaryExpressionNode.parseBinaryExpressionNode(null);
+        match(SymbolKind.SEMI);
+        return new RecordCallNode(field,value);
     }
 
-    public ArrayList<ParamNode> getParameters() {
-        return parameters;
+    public String getfield() {
+        return field;
     }
 
-    public static RecordCallNode parseRecordCall() throws ParseException{
-        // TODO
-        String identifier = LiteralNode.parseLiteral().getLiteral();
-        match(SymbolKind.LPAR);
-        ArrayList<ParamNode> params = ParamListNode.parseParams();
-        match(SymbolKind.RPAR);
-        return new RecordCallNode(identifier,null,params);
+    public ExpressionNode getvalue() {
+        return value;
     }
+
 
     @Override
     public String toString() {
         return "RecordCallNode{" +
-                "name='" + identifier + '\'' +
-                ", record=" + record +
-                ", parameters=" + parameters +
+                "field='" + field + '\'' +
+                ", value=" + value +
                 '}';
     }
 }
