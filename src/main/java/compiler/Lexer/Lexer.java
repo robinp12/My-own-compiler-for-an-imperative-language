@@ -96,7 +96,9 @@ public class Lexer {
                     while (c == ' ' || c == '\t' || c == '\n');
                     break;
 
-                case EOI : return null;
+                case EOI :
+                    System.out.println("FIN DU FICHIER");
+                    return new Symbol(SymbolKind.ENDOFFILE);
 
                 //delimiters
                 case ',' : i++; return new Symbol(SymbolKind.COMA);
@@ -222,6 +224,10 @@ public class Lexer {
                     else if (get_char(i+1) == 'a' && get_char(i+2) == 'l'){
                         i+=3;
                         return new Symbol(SymbolKind.VAL);
+                    }
+                    else if (get_char(i) == 'v' && get_char(i+1) == 'o' && get_char(i+2) == 'i' && get_char(i+3) == 'd'){
+                        i+=4;
+                        return new Symbol(SymbolKind.VOID);
                     }
                     else
                         return new Symbol(SymbolKind.LITERAL,get_literal());

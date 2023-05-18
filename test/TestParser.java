@@ -35,7 +35,11 @@ public class TestParser {
     }
     @Test
     public void testBasicProc() throws ParseException {
-        String input = "proc square(v int) int {return 0+1;}";
+        String input =
+        """
+            proc square(v int) int {return 0+1;}
+            square(1,1);
+        """;
         StringReader reader = new StringReader(input);
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
@@ -138,8 +142,18 @@ public class TestParser {
 
     @Test
     public void testOperationPriority2() throws ParseException {
-        String input = "var x int = 0;" +
-                "x = 3+3*2+2; ";
+        String input =
+        """
+            proc aaaaa() int {
+                var x int = 0;
+                x = 3+3*2+2;
+            }
+            proc fun() void {
+                var x int = 0;
+                x = 3+3*2+2;
+            }
+            
+        """;
         StringReader reader = new StringReader(input);
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);

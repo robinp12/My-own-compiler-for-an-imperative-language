@@ -2,12 +2,14 @@ package compiler.Bytecode;
 
 import compiler.Lexer.Symbol;
 import compiler.Parser.AST.*;
+import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
-
+import org.objectweb.asm.util.CheckClassAdapter;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -50,10 +52,17 @@ public class BytecodeCompiler {
     public void getRender() {
         try (FileOutputStream fos = new FileOutputStream("Output.class")) {
             fos.write(getGeneration());
-            System.out.println("Le bytecode a ete enregistre dans Output.class.");
+            System.out.println("Le bytecode a ete enregistre dans Output.class.\n\n");
+            getState();
         } catch (IOException e) {
             System.out.println("Erreur lors de l'enregistrement du bytecode : " + e.getMessage());
         }
+    }
+
+    public void getState(){
+        ClassReader cr = new ClassReader(container.toByteArray());
+        CheckClassAdapter.verify(cr,true, new PrintWriter(System.out));
+        System.out.println("Verification terminee.");
     }
 
     public byte[] getGeneration() {
@@ -71,7 +80,7 @@ public class BytecodeCompiler {
             }
         }
         method.visitInsn(RETURN);
-        //method.visitMaxs(0, 0);
+        //method.visitMaxs(-1, -1);
         method.visitEnd();
     }
 
@@ -100,6 +109,8 @@ public class BytecodeCompiler {
             generateWhile((WhileStatementNode) expression);
         } else if (expression instanceof ReturnNode) {
             generateReturn((ReturnNode) expression);
+        } else if (expression instanceof MethodCallNode) {
+            generateProcCall((MethodCallNode) expression);
         }
         /*else if (expression instanceof AssignmentArrayNode) {
             visit((AssignmentArrayNode) expression);
@@ -107,9 +118,7 @@ public class BytecodeCompiler {
             visit((BooleanNode) expression);
         } else if (expression instanceof LiteralNode) {
             visit((LiteralNode) expression);
-        } else if (expression instanceof MethodCallNode) {
-            visit((MethodCallNode) expression);
-        } else if (expression instanceof NumberNode) {
+        }  else if (expression instanceof NumberNode) {
             visit((NumberNode) expression);
         } else if (expression instanceof ParamListNode) {
             visit((ParamListNode) expression);
@@ -127,6 +136,10 @@ public class BytecodeCompiler {
             visit((ValueNode) expression);
         } */
 
+    }
+
+    private void generateProcCall(MethodCallNode expression) {
+        System.out.println("methodCallNode");
     }
 
     private void generateWhile(WhileStatementNode expression) {
@@ -354,7 +367,6 @@ public class BytecodeCompiler {
         }
         if (expression.getParameters().size() > 0) {
             for (ParamNode parameter : expression.getParameters()) {
-                System.out.println(parameter.getIdentifier());
                 //method.visitInsn(parameter.getValue); // Valeur pour les arguments
             }
         }
@@ -363,8 +375,7 @@ public class BytecodeCompiler {
         method.visitMethodInsn(INVOKESTATIC, "Main", name, "(" + argLetter + ")" + returnTypeLetter, false);
         method.visitInsn(POP);
 
-        System.out.println("args : " + argLetter);
-        System.out.println("return : " + returnTypeLetter);
+        System.out.println("args : " + argLetter + " | return : " + returnTypeLetter);
         // Methode avec aucun argument
         method = container.visitMethod(ACC_PUBLIC | ACC_STATIC, name,
                 "(" + argLetter + ")" + returnTypeLetter, null, null);

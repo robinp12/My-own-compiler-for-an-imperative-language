@@ -38,7 +38,7 @@ public class MethodNode extends ExpressionNode {
         match(SymbolKind.PROC);
         String identifier = LiteralNode.parseLiteral().getLiteral();
         match(SymbolKind.LPAR);
-        ArrayList<ParamNode> params = ParamListNode.parseParams();
+        ArrayList<ParamNode> params = ParamListNode.parseParams(false);
         match(SymbolKind.RPAR);
         TypeNode returnType = TypeNode.parseType();
         BlockNode body = BlockNode.parseBlock();

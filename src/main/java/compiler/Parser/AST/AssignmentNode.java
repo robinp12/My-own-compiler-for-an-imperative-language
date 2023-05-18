@@ -31,8 +31,7 @@ public class AssignmentNode extends ExpressionNode{
         return value;
     }
 
-    public static AssignmentNode parseAssignment() throws ParseException{
-       String identifier = LiteralNode.parseLiteral().getLiteral();
+    public static AssignmentNode parseAssignment(String identifier) throws ParseException{
         ExpressionNode value = null;
 
         switch (lookahead.getKind()){

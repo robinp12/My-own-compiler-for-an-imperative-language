@@ -2,6 +2,7 @@ package compiler.Lexer;
 
 public enum SymbolKind {
 
+    VOID("void"),
     INT("int"),
     DOUBLE("real"),
     NUM("number"),
@@ -46,7 +47,8 @@ public enum SymbolKind {
     STRING("string"),
     TRUE("true"),
     FALSE("false"),
-    BOOL("bool");
+    BOOL("bool"),
+    ENDOFFILE("endOfFile");
 
 
 

@@ -32,13 +32,12 @@ public class MethodCallNode extends ExpressionNode {
         return parameters;
     }
 
-    public static MethodCallNode parseMethodCall() throws ParseException{
-        // TODO
-        String identifier = LiteralNode.parseLiteral().getLiteral();
+    public static MethodCallNode parseMethodCall(LiteralNode identifier) throws ParseException{
         match(SymbolKind.LPAR);
-        ArrayList<ParamNode> params = ParamListNode.parseParams();
+        ArrayList<ParamNode> params = ParamListNode.parseParams(true);
         match(SymbolKind.RPAR);
-        return new MethodCallNode(identifier,null,params);
+        match(SymbolKind.SEMI);
+        return new MethodCallNode(identifier.getLiteral(),null,params);
     }
 
     @Override

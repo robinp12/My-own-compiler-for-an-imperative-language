@@ -15,7 +15,8 @@ public class ConstantDeclarationNode extends ExpressionNode {
 
     public static ExpressionNode parseDeclarationConst() throws ParseException {
         match(SymbolKind.CONST);
-        AssignmentNode assignment = AssignmentNode.parseAssignment();
+        LiteralNode literal = LiteralNode.parseLiteral();
+        AssignmentNode assignment = AssignmentNode.parseAssignment(literal.getLiteral());
         match(SymbolKind.SEMI);
         return new ConstantDeclarationNode(assignment);
     }

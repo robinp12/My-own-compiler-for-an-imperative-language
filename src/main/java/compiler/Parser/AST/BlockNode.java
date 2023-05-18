@@ -27,6 +27,7 @@ public class BlockNode extends ExpressionNode{
             return new BlockNode(null);
         }
         StatementNode statements = StatementNode.parseStatement();
+        match(SymbolKind.RBRACE);
         return new BlockNode(statements);
     }
 

@@ -6,6 +6,7 @@ import compiler.Semantic.SemanticAnalyzer;
 import org.junit.Test;
 
 import java.io.StringReader;
+import java.text.ParseException;
 
 public class TestByteCode {
 
@@ -410,6 +411,54 @@ public class TestByteCode {
                 var ai int = 1; 
             }
         """;
+        StringReader reader = new StringReader(input);
+        Lexer lexer = new Lexer(reader);
+        Parser parser = new Parser(lexer);
+        ProgramNode x = parser.getAST();
+        new SemanticAnalyzer(x);
+        BytecodeCompiler bc = new BytecodeCompiler(x);
+        bc.getRender();
+    }
+
+    @Test
+    public void testBasicProcssx() throws Exception {
+        String input =
+                """
+                    proc square(v int) int {return 0+1;}
+                    proc sqsuare(v int) int {return 0+1;}
+                """;
+        StringReader reader = new StringReader(input);
+        Lexer lexer = new Lexer(reader);
+        Parser parser = new Parser(lexer);
+        ProgramNode x = parser.getAST();
+        new SemanticAnalyzer(x);
+        BytecodeCompiler bc = new BytecodeCompiler(x);
+        bc.getRender();
+    }
+    @Test
+    public void testBasicProcs() throws Exception {
+        String input =
+                """
+                    square(0.1);
+                    proc square(v int) int {return 0+1;}
+                    var i int = 0;
+                """;
+        StringReader reader = new StringReader(input);
+        Lexer lexer = new Lexer(reader);
+        Parser parser = new Parser(lexer);
+        ProgramNode x = parser.getAST();
+        new SemanticAnalyzer(x);
+        BytecodeCompiler bc = new BytecodeCompiler(x);
+        bc.getRender();
+    }
+    @Test
+    public void testBasicProcss() throws Exception {
+        String input =
+                """
+                    square = 1;
+                    proc square(v int) int {return 0+1;}
+                    var i int = 0;
+                """;
         StringReader reader = new StringReader(input);
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);

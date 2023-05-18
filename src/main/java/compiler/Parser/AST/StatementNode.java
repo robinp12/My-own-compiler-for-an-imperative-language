@@ -21,7 +21,7 @@ public class StatementNode extends ExpressionNode{
 
     public static StatementNode parseStatement() throws ParseException {
         ArrayList<ExpressionNode> statements = new ArrayList<>();
-        while (Parser.NotAtEnd()){
+        while (Parser.NotAtEnd() || lookahead != null){
             switch (lookahead.getKind()){
                 case CONST:
                     statements.add(ConstantDeclarationNode.parseDeclarationConst());
@@ -51,7 +51,12 @@ public class StatementNode extends ExpressionNode{
                     statements.add(ReturnNode.parseReturn());
                     break;
                 case LITERAL:
-                    statements.add(AssignmentNode.parseAssignment());
+                    LiteralNode literal = LiteralNode.parseLiteral();
+                    if(lookahead.getKind().equals(SymbolKind.LPAR)){
+                        statements.add(MethodCallNode.parseMethodCall(literal));
+                    }else{
+                        statements.add(AssignmentNode.parseAssignment(literal.getLiteral()));
+                    }
                     break;
                 case COMMENT:
                     match(SymbolKind.COMMENT);

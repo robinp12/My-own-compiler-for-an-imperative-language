@@ -18,7 +18,8 @@ public class VarDeclarationNode extends ExpressionNode {
 
     public static VarDeclarationNode parseDeclarationVar() throws ParseException {
         match(SymbolKind.VAR);
-        AssignmentNode assignment = AssignmentNode.parseAssignment();
+        LiteralNode literal = LiteralNode.parseLiteral();
+        AssignmentNode assignment = AssignmentNode.parseAssignment(literal.getLiteral());
         match(SymbolKind.SEMI);
         return new VarDeclarationNode(assignment);
     }

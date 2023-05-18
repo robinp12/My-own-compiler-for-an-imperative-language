@@ -19,7 +19,8 @@ public class ValDeclarationNode extends ExpressionNode {
 
     public static ValDeclarationNode parseDeclarationVal() throws ParseException {
         match(SymbolKind.VAL);
-        AssignmentNode assignment = AssignmentNode.parseAssignment();
+        LiteralNode literal = LiteralNode.parseLiteral();
+        AssignmentNode assignment = AssignmentNode.parseAssignment(literal.getLiteral());
         match(SymbolKind.SEMI);
         return new ValDeclarationNode(assignment);
     }

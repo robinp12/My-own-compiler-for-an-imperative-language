@@ -14,10 +14,14 @@ public class ParamListNode extends ExpressionNode {
         super(type);
     }
 
-    public static ArrayList<ParamNode> parseParams() throws ParseException{
+    public static ArrayList<ParamNode> parseParams(boolean isMethodCall) throws ParseException{
         ArrayList<ParamNode> parameters = new ArrayList<>();
         if(lookahead.getKind() != SymbolKind.RPAR){
-            parameters.add(ParamNode.parseParam());
+            if(isMethodCall){
+                parameters.add(ParamNode.parseCallParam());
+            }else {
+                parameters.add(ParamNode.parseParam());
+            }
             while (lookahead.getKind().equals(SymbolKind.COMA)){
                 match(SymbolKind.COMA);
                 parameters.add(ParamNode.parseParam());
