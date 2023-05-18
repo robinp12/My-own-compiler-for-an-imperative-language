@@ -5,10 +5,8 @@ import compiler.Lexer.SymbolKind;
 import compiler.Parser.AST.*;
 import compiler.Parser.Parser;
 
+import java.util.*;
 import java.util.AbstractMap.SimpleEntry;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 public class SemanticAnalyzer implements ASTVisitor {
     private static Parser parser;
@@ -28,8 +26,10 @@ public class SemanticAnalyzer implements ASTVisitor {
             "write",
             "writeln"
     );
+    private Map<String, ArrayList<ParamNode>> functionTable;
 
     public SemanticAnalyzer(ProgramNode programNode) throws Exception {
+        this.functionTable = new HashMap<>();
         if (programNode.getTypeStr().equals("root")) {
             symbolTable = new SymbolTable();
             visit(programNode);
@@ -390,14 +390,43 @@ public class SemanticAnalyzer implements ASTVisitor {
             }
         }
 
+        String identifier = node.getIdentifier();
+        ArrayList<ParamNode> function = functionTable.get(identifier);
+        if(function==null){
+            try {
+                throw new Exception("Function \"" + identifier + "\" is not implemented yet");
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
+        if (functionTable.containsKey(identifier)) {
+            if (function.size() != node.getParameters().size()) {
+                try {
+                    throw new Exception("Function \"" + identifier + "\" need " + function.size() + " argument(s)");
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            }
+            for (int i = 0; i < function.size(); i++) {
+                if(!function.get(i).getTypeStr().equals(node.getParameters().get(i).getTypeStr())){
+                    try {
+                        throw new Exception("In function \"" + identifier +"\", argument \""+ function.get(i).getIdentifier() +"\" need to be \"" + function.get(i).getTypeStr()+"\" type");
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            }
+        }
     }
 
     @Override
     public void visit(MethodNode node) throws Exception {
         System.out.println("method");
-        if (functions.contains(node.getIdentifier())) {
+        String name = node.getIdentifier();
+        if (functions.contains(name)) {
             throw new Exception("Reserved keyword : \"" + node.getIdentifier() + "\" is used for built-in function");
         }
+        functionTable.put(name, node.getParameters());
     }
 
     @Override

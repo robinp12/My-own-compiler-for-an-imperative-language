@@ -443,8 +443,9 @@ public class TestByteCode {
     public void testBasicProcs() throws Exception {
         String input =
                 """
-                    proc square(v int) int {return 0+1;}
-                    square(0.1);
+                    proc lens(v int) int {return 0+1;}
+                    lens(1);
+                    lens(2);
                     var i int = 0;
                 """;
         StringReader reader = new StringReader(input);

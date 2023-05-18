@@ -28,12 +28,10 @@ public class BytecodeCompiler {
     private int idx = 0;
 
     private Map<String, Integer> valueTable;
-    private Map<String, ArrayList<ParamNode>> functionTable;
 
     public BytecodeCompiler(ProgramNode ast) {
         System.out.println("------ BYTECODE ------");
         this.valueTable = new HashMap<>();
-        this.functionTable = new HashMap<>();
 
         // Class
         container = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
@@ -50,7 +48,6 @@ public class BytecodeCompiler {
         // Others methods
         root(ast);
         container.visitEnd();
-        System.out.println("Fonction Table : " + functionTable.toString());
         System.out.println("Variable Table : " + valueTable.toString());
     }
 
@@ -76,7 +73,6 @@ public class BytecodeCompiler {
 
     public void root(ProgramNode node) {
         // Method main
-        functionTable.put("main", new ArrayList<>());
         method = container.visitMethod(ACC_PUBLIC + ACC_STATIC, "main", "([Ljava/lang/String;)V", null, null);
         method.visitCode();
 
@@ -147,33 +143,7 @@ public class BytecodeCompiler {
     private void generateProcCall(MethodCallNode expression) {
         System.out.println("methodCallNode");
         String identifier = expression.getIdentifier();
-        ArrayList<ParamNode> function = functionTable.get(identifier);
-        if (functionTable.containsKey(identifier)) {
-            if (function.size() != expression.getParameters().size()) {
-                try {
-                    throw new Exception("Function " + identifier + " need " + function.size() + " argument(s)");
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
-            }
-            for (int i = 0; i < function.size(); i++) {
-                if(!function.get(i).getTypeStr().equals(expression.getParameters().get(i).getTypeStr())){
-                    try {
-                        throw new Exception("In function \"" + identifier +"\", argument \""+ function.get(i).getIdentifier() +"\" need to be \"" + function.get(i).getTypeStr()+"\" type");
-                    } catch (Exception e) {
-                        throw new RuntimeException(e);
-                    }
-                }else{
-                    valueTable.put(function.get(i).getIdentifier(),Integer.parseInt(expression.getParameters().get(i).getIdentifier()));
-                }
-            }
-        }
 
-        System.out.println(valueTable);
-        // Remove variable from the scope
-        for (ParamNode parameter : function) {
-            valueTable.remove(parameter.getIdentifier());
-        }
     }
 
     private void generateWhile(WhileStatementNode expression) {
@@ -413,7 +383,6 @@ public class BytecodeCompiler {
 
         System.out.println("args : " + argLetter + " | return : " + returnTypeLetter);
 
-        functionTable.put(name, expression.getParameters());
         method = container.visitMethod(ACC_PUBLIC | ACC_STATIC, name,
                 "(" + argLetter + ")" + returnTypeLetter, null, null);
         method.visitCode();
