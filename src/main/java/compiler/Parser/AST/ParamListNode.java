@@ -24,7 +24,11 @@ public class ParamListNode extends ExpressionNode {
             }
             while (lookahead.getKind().equals(SymbolKind.COMA)){
                 match(SymbolKind.COMA);
-                parameters.add(ParamNode.parseParam());
+                if(isMethodCall){
+                    parameters.add(ParamNode.parseCallParam());
+                }else {
+                    parameters.add(ParamNode.parseParam());
+                }
             }
         }
         return parameters;

@@ -19,10 +19,7 @@ public class ParamNode extends ExpressionNode {
         this.identifier = name;
         this.type = type;
     }
-    public ParamNode(ValueNode value) {
-        super("call_param");
-        this.value = value;
-    }
+
     public TypeNode getType() {
         return type;
     }
@@ -31,30 +28,30 @@ public class ParamNode extends ExpressionNode {
         return identifier;
     }
 
-    public static ParamNode parseParam() throws ParseException{
+    public static ParamNode parseParam() throws ParseException {
         String identifier = LiteralNode.parseLiteral().getLiteral();
         TypeNode type = TypeNode.parseType();
-        return new ParamNode(type,identifier);
+        return new ParamNode(type, identifier);
     }
 
-    public static ParamNode parseCallParam() throws ParseException{
-        if(lookahead.getKind().equals(SymbolKind.NUM)){
-            String value = NumberNode.parseNumber().getValue();
-            return new ParamNode(new ValueNode<>(value,"int"));
+    public static ParamNode parseCallParam() throws ParseException {
+        SymbolKind next = lookahead.getKind();
+        if (next.equals(SymbolKind.NUM)) {
+            NumberNode value = NumberNode.parseNumber();
+            return new ParamNode(new TypeNode(value.getTypeStr(), value.getValue()), value.getValue());
         }
-        if(lookahead.getKind().equals(SymbolKind.LITERAL)){
-            String value = LiteralNode.parseLiteral().getLiteral();
-            return new ParamNode(new ValueNode<>(value,"literal"));
+        if (next.equals(SymbolKind.LITERAL)) {
+            LiteralNode value = LiteralNode.parseLiteral();
+            return new ParamNode(new TypeNode(value.getTypeStr(), value.getLiteral()), value.getLiteral());
         }
-        if(lookahead.getKind().equals(SymbolKind.STRING)){
-            String value = StringNode.parseString().getValue();
-            return new ParamNode(new ValueNode<>(value,"str"));
+        if (next.equals(SymbolKind.STRING)) {
+            StringNode value = StringNode.parseString();
+            return new ParamNode(new TypeNode(value.getTypeStr(), value.getValue()), value.getValue());
         }
-        if(lookahead.getKind().equals(SymbolKind.TRUE) || lookahead.getKind().equals(SymbolKind.FALSE)){
-            boolean value = BooleanNode.parseBoolean().isVal();
-            return new ParamNode(new ValueNode<>(value,"bool"));
-        }
-        else {
+        if (next.equals(SymbolKind.TRUE) || next.equals(SymbolKind.FALSE)) {
+            BooleanNode value = BooleanNode.parseBoolean();
+            return new ParamNode(new TypeNode(value.getTypeStr(), next.getName()), next.getName());
+        } else {
             return null;
         }
     }

@@ -346,32 +346,44 @@ public class SemanticAnalyzer implements ASTVisitor {
             }
         }
 
-        if (node.getParameters().size() != 1) {
-            throw new Exception("Built-in function \"" + node.getIdentifier() + "\" need exactly 1 argument");
-        }
         ParamNode param = node.getParameters().get(0);
         switch (node.getIdentifier()) {
             case "writeint", "writereal" -> {
+                if (node.getParameters().size() != 1) {
+                    throw new Exception("Built-in function \"" + node.getIdentifier() + "\" need exactly 1 argument");
+                }
                 if (!param.getTypeStr().equals("str")) {
                     throw new Exception("Built-in function \"" + node.getIdentifier() + "\" parameter type need to be \"str\"");
                 }
             }
             case "not" -> {
+                if (node.getParameters().size() != 1) {
+                    throw new Exception("Built-in function \"" + node.getIdentifier() + "\" need exactly 1 argument");
+                }
                 if (!param.getTypeStr().equals("bool")) {
                     throw new Exception("Built-in function \"" + node.getIdentifier() + "\" parameter type need to be \"bool\"");
                 }
             }
             case "chr" -> {
+                if (node.getParameters().size() != 1) {
+                    throw new Exception("Built-in function \"" + node.getIdentifier() + "\" need exactly 1 argument");
+                }
                 if (!param.getTypeStr().equals("int")) {
                     throw new Exception("Built-in function \"" + node.getIdentifier() + "\" parameter type need to be \"int\"");
                 }
             }
             case "len" -> {
+                if (node.getParameters().size() != 1) {
+                    throw new Exception("Built-in function \"" + node.getIdentifier() + "\" need exactly 1 argument");
+                }
                 if (!param.getTypeStr().equals("str") || !param.getTypeStr().equals("array")) { //TODO
                     throw new Exception("Built-in function \"" + node.getIdentifier() + "\" parameter type need to be \"str\" or \"array\"");
                 }
             }
             case "floor" -> {
+                if (node.getParameters().size() != 1) {
+                    throw new Exception("Built-in function \"" + node.getIdentifier() + "\" need exactly 1 argument");
+                }
                 if (!param.getTypeStr().equals("real")) {
                     throw new Exception("Built-in function \"" + node.getIdentifier() + "\" parameter type need to be \"real\"");
                 }

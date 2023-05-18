@@ -7,9 +7,11 @@ import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.util.CheckClassAdapter;
+
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,11 +28,12 @@ public class BytecodeCompiler {
     private int idx = 0;
 
     private Map<String, Integer> valueTable;
-
+    private Map<String, ArrayList<ParamNode>> functionTable;
 
     public BytecodeCompiler(ProgramNode ast) {
         System.out.println("------ BYTECODE ------");
         this.valueTable = new HashMap<>();
+        this.functionTable = new HashMap<>();
 
         // Class
         container = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
@@ -47,6 +50,8 @@ public class BytecodeCompiler {
         // Others methods
         root(ast);
         container.visitEnd();
+        System.out.println("Fonction Table : " + functionTable.toString());
+        System.out.println("Variable Table : " + valueTable.toString());
     }
 
     public void getRender() {
@@ -59,9 +64,9 @@ public class BytecodeCompiler {
         }
     }
 
-    public void getState(){
+    public void getState() {
         ClassReader cr = new ClassReader(container.toByteArray());
-        CheckClassAdapter.verify(cr,true, new PrintWriter(System.out));
+        CheckClassAdapter.verify(cr, true, new PrintWriter(System.out));
         System.out.println("Verification terminee.");
     }
 
@@ -71,6 +76,7 @@ public class BytecodeCompiler {
 
     public void root(ProgramNode node) {
         // Method main
+        functionTable.put("main", new ArrayList<>());
         method = container.visitMethod(ACC_PUBLIC + ACC_STATIC, "main", "([Ljava/lang/String;)V", null, null);
         method.visitCode();
 
@@ -140,6 +146,34 @@ public class BytecodeCompiler {
 
     private void generateProcCall(MethodCallNode expression) {
         System.out.println("methodCallNode");
+        String identifier = expression.getIdentifier();
+        ArrayList<ParamNode> function = functionTable.get(identifier);
+        if (functionTable.containsKey(identifier)) {
+            if (function.size() != expression.getParameters().size()) {
+                try {
+                    throw new Exception("Function " + identifier + " need " + function.size() + " argument(s)");
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            }
+            for (int i = 0; i < function.size(); i++) {
+                if(!function.get(i).getTypeStr().equals(expression.getParameters().get(i).getTypeStr())){
+                    try {
+                        throw new Exception("In function \"" + identifier +"\", argument \""+ function.get(i).getIdentifier() +"\" need to be \"" + function.get(i).getTypeStr()+"\" type");
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                }else{
+                    valueTable.put(function.get(i).getIdentifier(),Integer.parseInt(expression.getParameters().get(i).getIdentifier()));
+                }
+            }
+        }
+
+        System.out.println(valueTable);
+        // Remove variable from the scope
+        for (ParamNode parameter : function) {
+            valueTable.remove(parameter.getIdentifier());
+        }
     }
 
     private void generateWhile(WhileStatementNode expression) {
@@ -359,6 +393,9 @@ public class BytecodeCompiler {
         // Arguments type
         StringBuilder argLetter = new StringBuilder();
         for (ParamNode parameter : expression.getParameters()) {
+            // Add variable in the scope
+            valueTable.put(parameter.getIdentifier(), 0);
+
             switch (parameter.getTypeStr()) {
                 case "str" -> argLetter.append("Ljava/lang/String;");
                 case "int" -> argLetter.append("I");
@@ -370,17 +407,16 @@ public class BytecodeCompiler {
                 //method.visitInsn(parameter.getValue); // Valeur pour les arguments
             }
         }
-
         // Appeler la methode dans main
         method.visitMethodInsn(INVOKESTATIC, "Main", name, "(" + argLetter + ")" + returnTypeLetter, false);
         method.visitInsn(POP);
 
         System.out.println("args : " + argLetter + " | return : " + returnTypeLetter);
-        // Methode avec aucun argument
+
+        functionTable.put(name, expression.getParameters());
         method = container.visitMethod(ACC_PUBLIC | ACC_STATIC, name,
                 "(" + argLetter + ")" + returnTypeLetter, null, null);
         method.visitCode();
-
         // Ajouter les instructions ici...
         generateBlock(expression.getBody());
 
@@ -398,10 +434,15 @@ public class BytecodeCompiler {
         switch (node.getOperator().getKind()) {
             case PLUS -> {
                 if (left.getTypeStr().equals("str")) {
-                    String a = ((StringNode) left).getValue();
-                    String b = ((StringNode) right).getValue();
-                    System.out.println(a + b);
-                    invokeStatic(method, RunTime.class, "concat", String.class, String.class);
+                    if (left instanceof LiteralNode) {
+
+                    } else if (left instanceof StringNode) {
+                        System.out.println(left.getTypeStr());
+                        String a = ((StringNode) left).getValue();
+                        String b = ((StringNode) right).getValue();
+                        System.out.println(a + b);
+                        invokeStatic(method, RunTime.class, "concat", String.class, String.class);
+                    }
                 } else if (right.getTypeStr().equals("str")) {
                     invokeStatic(method, RunTime.class, "concat", String.class, String.class);
                 } else {

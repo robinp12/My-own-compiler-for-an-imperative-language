@@ -256,9 +256,13 @@ public class TestByteCode {
 
     @Test
     public void testProcIllegalType() throws Exception {
-        String input =  "proc add(x int) void {" +
-                "return x + x;" +
-                "}";
+        String input =
+                """
+                proc add(x int, a int, aaa int) void {
+                    return x + x;
+                }
+                add(1,2,33);
+                """;
         StringReader reader = new StringReader(input);
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
@@ -439,8 +443,8 @@ public class TestByteCode {
     public void testBasicProcs() throws Exception {
         String input =
                 """
-                    square(0.1);
                     proc square(v int) int {return 0+1;}
+                    square(0.1);
                     var i int = 0;
                 """;
         StringReader reader = new StringReader(input);
