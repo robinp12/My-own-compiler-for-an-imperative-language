@@ -47,7 +47,36 @@ public class TestByteCode {
     public void testBasicProcString() throws Exception {
         String input =  "proc add() string {" +
                 "return \"Hola\";" +
-                "}";
+                "}" +
+                "add()";
+        StringReader reader = new StringReader(input);
+        Lexer lexer = new Lexer(reader);
+        Parser parser = new Parser(lexer);
+        ProgramNode x = parser.getAST();
+        new SemanticAnalyzer(x);
+        BytecodeCompiler bc = new BytecodeCompiler(x);
+        bc.getRender();
+    }
+    @Test
+    public void testComplexProcs() throws Exception {
+        String input =
+                """
+                    var square int = 1;
+                    proc square(v int) int {
+                        var b int = 111;
+                        var ddd int = 22;
+                        return 0+1;
+                    }
+                    var i int = 2;
+                    square(222);
+                    var dadd int = 3;
+                    proc newfun(v int) int {
+                        var b int = 111;
+                        var ddd int = 22;
+                        return 0+1;
+                    }
+                    newfun(100);
+                """;
         StringReader reader = new StringReader(input);
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
@@ -175,6 +204,48 @@ public class TestByteCode {
         BytecodeCompiler bc = new BytecodeCompiler(x);
         bc.getRender();
     }
+    @Test
+    public void testIfSimple() throws Exception {
+        String input = """
+                var a int = 10;
+                if true {
+                    a = 10;
+                }
+                else{
+                    a = 100;
+                }""";
+        StringReader reader = new StringReader(input);
+        Lexer lexer = new Lexer(reader);
+        Parser parser = new Parser(lexer);
+        ProgramNode x = parser.getAST();
+        new SemanticAnalyzer(x);
+        BytecodeCompiler bc = new BytecodeCompiler(x);
+        bc.getRender();
+    }
+    @Test
+    public void testIfSimple2() throws Exception {
+        String input = """
+                var a int = 10;
+                if true {
+                    a = 10;
+                }else{
+                    var b int;
+                }
+                if true {
+                    a = 100;
+                }else{
+                    var b int;
+                }""";
+        StringReader reader = new StringReader(input);
+        Lexer lexer = new Lexer(reader);
+        Parser parser = new Parser(lexer);
+        ProgramNode x = parser.getAST();
+        new SemanticAnalyzer(x);
+        BytecodeCompiler bc = new BytecodeCompiler(x);
+        bc.getRender();
+    }
+
+
     /*
         NOT WORKING YET
     */
@@ -250,9 +321,11 @@ public class TestByteCode {
 
     @Test
     public void testProc() throws Exception {
-        String input =  "proc double(x int) int {" +
-                "return x + x;" +
-                "}";
+        String input =  "proc double(x int, aaaa int) int {" +
+                "var r int = 10 + 1000;"+
+                "return x;" +
+                "}" +
+                "double(1,2);";
         StringReader reader = new StringReader(input);
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
@@ -310,10 +383,13 @@ public class TestByteCode {
         bc.getRender();
     }
     @Test
-    public void testIfSimple() throws Exception {
+    public void testIfSameVar() throws Exception {
         String input = """
+                var i int = 1;
                 if true {
-                    //...
+                    var i int = 1;
+                }else{
+                    var i int = 1;
                 }""";
         StringReader reader = new StringReader(input);
         Lexer lexer = new Lexer(reader);
@@ -326,9 +402,11 @@ public class TestByteCode {
     @Test
     public void testIfBasic() throws Exception {
         String input = """
-                const v int = 10;
-                if v==10 {
-                    //...
+                proc res() void {
+                    const v int = 10;
+                    if v==10 {
+                        //...
+                    }
                 }""";
         StringReader reader = new StringReader(input);
         Lexer lexer = new Lexer(reader);
@@ -439,8 +517,8 @@ public class TestByteCode {
     public void testBasicProcssx() throws Exception {
         String input =
                 """
+                    proc squared(v int, x int) int {return v+x;}
                     proc square(v int) int {return 0+1;}
-                    proc squared(v int, x int) int {return 0+1;}
                     squared(10,10);
                 """;
         StringReader reader = new StringReader(input);
@@ -471,13 +549,15 @@ public class TestByteCode {
         bc.getRender();
     }
     @Test
-    public void testBasicProcss() throws Exception {
-        String input =
-                """
-                    var square int = 1;
-                    proc square(v int) int {return 0+1;}
-                    var i int = 0;
-                """;
+    public void testForLoopinProc() throws Exception {
+        String input = """
+                var i int;
+                var ia int = 10;
+                proc loop() void {
+                    for i=999 to 1000 by 1 {
+                        //...
+                    }
+                }""";
         StringReader reader = new StringReader(input);
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
@@ -486,5 +566,22 @@ public class TestByteCode {
         BytecodeCompiler bc = new BytecodeCompiler(x);
         bc.getRender();
     }
-
+    @Test
+    public void testIfSimples() throws Exception {
+        String input = """
+                var a int = 10;
+                if true {
+                    var as int = 10;
+                }
+                else{
+                    var as int = 10;
+                }""";
+        StringReader reader = new StringReader(input);
+        Lexer lexer = new Lexer(reader);
+        Parser parser = new Parser(lexer);
+        ProgramNode x = parser.getAST();
+        new SemanticAnalyzer(x);
+        BytecodeCompiler bc = new BytecodeCompiler(x);
+        bc.getRender();
+    }
 }

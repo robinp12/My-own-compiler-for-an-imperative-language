@@ -1,5 +1,6 @@
 package compiler.Parser.AST;
 
+import compiler.Lexer.Symbol;
 import compiler.Lexer.SymbolKind;
 
 import java.text.ParseException;
@@ -34,8 +35,7 @@ public class IfStatementNode extends ExpressionNode{
         match(SymbolKind.IF);
         ExpressionNode condition =  BinaryExpressionNode.parseBinaryExpressionNode(null);
         BlockNode thenBlock = BlockNode.parseBlock();
-
-        if(lookahead.getKind() != SymbolKind.ELSE){
+        if(lookahead == null || !SymbolKind.ELSE.equals(lookahead.getKind())){
             return new IfStatementNode(condition,thenBlock,null);
         }
         match(SymbolKind.ELSE);
