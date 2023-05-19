@@ -30,7 +30,7 @@ public class TypeNode extends ExpressionNode {
             case VOID:
                 return new TypeNode(SymbolKind.VOID.getName(),match(SymbolKind.VOID).getAttribute());
             default:
-                throw new ParseException("Invalid Type" + lookahead.getKind(),0);
+                throw new ParseException("Invalid Type " + lookahead,0);
         }
     }
 

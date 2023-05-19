@@ -16,6 +16,7 @@ public class Parser {
         this.lexer = lexer;
         this.lookahead = lexer.getNextSymbol();
     }
+
     public static boolean NotAtEnd() {
         return lookahead != null;
     }
@@ -26,11 +27,11 @@ public class Parser {
     }
 
     public static Symbol match(SymbolKind token) throws ParseException {
-        if(lookahead == null) return null;
-        if(lookahead.getKind() != token){
-            throw new ParseException("No match, following is " + lookahead.getKind() + " but match is token " + token,0);
-        }
-        else {
+        if (lookahead == null) return null;
+        if (lookahead.getKind() != token) {
+            throw new ParseException("There is an error in parsing. " +
+                    token + " token was expected but was " + lookahead.getKind() + "\n", 0);
+        } else {
             //System.out.println("(Optional message) Matching Symbol " + token);
             Symbol matchingSymbol = lookahead;
             lookahead = lexer.getNextSymbol();

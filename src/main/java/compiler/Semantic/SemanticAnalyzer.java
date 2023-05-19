@@ -88,7 +88,7 @@ public class SemanticAnalyzer implements ASTVisitor {
                 visit(rec, varName);
             }
         } else {
-            throw new Exception("Assignment exception: illegal assignment");
+            throw new Exception("Assignment exception: Illegal assignment");
         }
     }
 

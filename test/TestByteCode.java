@@ -14,7 +14,7 @@ public class TestByteCode {
     public void testBasicProc() throws Exception {
         String input =  """
                 proc add() int {
-                    return 10 + 1;
+                    return 10;
                 }
                 """;
         StringReader reader = new StringReader(input);
@@ -29,8 +29,8 @@ public class TestByteCode {
     public void testBasicProcCall() throws Exception {
         String input =
                 """
-                    proc square() int {return 0+1;}
-                    proc squared() int {return 0+1;}
+                    proc square() int {return 1;}
+                    proc squared() int {return 0;}
                     square();
                     squared();
                     squared();

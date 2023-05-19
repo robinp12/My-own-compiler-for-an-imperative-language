@@ -64,7 +64,7 @@ public class StatementNode extends ExpressionNode{
                 case RBRACE:
                     return new StatementNode(statements);
                 default:
-                    throw new ParseException("Error during parsing: illegal symbol" + lookahead,-1);
+                    throw new ParseException("Error during parsing: Illegal " + lookahead,-1);
             }
         }
         return new StatementNode(statements);
