@@ -12,9 +12,29 @@ public class TestByteCode {
 
     @Test
     public void testBasicProc() throws Exception {
-        String input =  "proc add() int {" +
-                "return 10 + 1;" +
-                "}";
+        String input =  """
+                proc add() int {
+                    return 10 + 1;
+                }
+                """;
+        StringReader reader = new StringReader(input);
+        Lexer lexer = new Lexer(reader);
+        Parser parser = new Parser(lexer);
+        ProgramNode x = parser.getAST();
+        new SemanticAnalyzer(x);
+        BytecodeCompiler bc = new BytecodeCompiler(x);
+        bc.getRender();
+    }
+    @Test
+    public void testBasicProcCall() throws Exception {
+        String input =
+                """
+                    proc square() int {return 0+1;}
+                    proc squared() int {return 0+1;}
+                    square();
+                    squared();
+                    squared();
+                """;
         StringReader reader = new StringReader(input);
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
@@ -65,8 +85,11 @@ public class TestByteCode {
     }
     @Test
     public void testBasicArrayReal() throws Exception {
-        String input = "var c real[] = real[](10);"+
-                "var cc int[] = int[](20);";
+        String input =
+            """
+                var c real[] = real[](10);
+                var cc int[] = int[](20);
+            """;
         StringReader reader = new StringReader(input);
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
@@ -105,43 +128,66 @@ public class TestByteCode {
         BytecodeCompiler bc = new BytecodeCompiler(x);
         bc.getRender();
     }
-
-
-
+    @Test
+    public void testBasicVar() throws Exception {
+        String input = """ 
+                var a int;
+                var b real;
+                var c boolean;
+                var d string;
+                a = 4;
+                b = 1.1;
+                c = true;
+                d = \"yooo\";
+                """;
+        StringReader reader = new StringReader(input);
+        Lexer lexer = new Lexer(reader);
+        Parser parser = new Parser(lexer);
+        ProgramNode x = parser.getAST();
+        new SemanticAnalyzer(x);
+        BytecodeCompiler bc = new BytecodeCompiler(x);
+        bc.getRender();
+    }
+    @Test
+    public void testBasicInt() throws Exception {
+        String input =  "var a int;" +
+                "a = 102200;";
+        StringReader reader = new StringReader(input);
+        Lexer lexer = new Lexer(reader);
+        Parser parser = new Parser(lexer);
+        ProgramNode x = parser.getAST();
+        new SemanticAnalyzer(x);
+        BytecodeCompiler bc = new BytecodeCompiler(x);
+        bc.getRender();
+    }
+    @Test
+    public void testMultipleDeclaration() throws Exception {
+        String input =  "const a int = 2; " +
+                "const b real = 4.4; " +
+                "val c string = \"coucou\"; " +
+                "var d boolean = true; " +
+                "d = false; ";
+        StringReader reader = new StringReader(input);
+        Lexer lexer = new Lexer(reader);
+        Parser parser = new Parser(lexer);
+        ProgramNode x = parser.getAST();
+        new SemanticAnalyzer(x);
+        BytecodeCompiler bc = new BytecodeCompiler(x);
+        bc.getRender();
+    }
     /*
         NOT WORKING YET
     */
 
-
-    @Test
-    public void testBasicInt() throws Exception {
-        String input =  "var a int = 00;" +
-                "a = 10;";
-        StringReader reader = new StringReader(input);
-        Lexer lexer = new Lexer(reader);
-        Parser parser = new Parser(lexer);
-        ProgramNode x = parser.getAST();
-        new SemanticAnalyzer(x);
-        BytecodeCompiler bc = new BytecodeCompiler(x);
-        bc.getRender();
-    }
-
-    @Test
-    public void testBasicVar() throws Exception {
-        String input =  "var a real = 3.2; a = 4.8;";
-        StringReader reader = new StringReader(input);
-        Lexer lexer = new Lexer(reader);
-        Parser parser = new Parser(lexer);
-        ProgramNode x = parser.getAST();
-        new SemanticAnalyzer(x);
-        BytecodeCompiler bc = new BytecodeCompiler(x);
-        bc.getRender();
-    }
     @Test
     public void testBasicProcParam() throws Exception {
-        String input =  "proc add(x boolean, a int, b string) int {" +
-                "return 10 + 1;" +
-                "}";
+        String input =
+            """
+                proc add(x boolean, a int, b string) int {
+                    return 10 + 1;
+                }
+                add(true,1,"oui");
+            """;
         StringReader reader = new StringReader(input);
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
@@ -166,46 +212,8 @@ public class TestByteCode {
     }
 
     @Test
-    public void testBasicMixedTypes() throws Exception {
-        String input =  "var a real = 3.2; val a int = 401;";
-        StringReader reader = new StringReader(input);
-        Lexer lexer = new Lexer(reader);
-        Parser parser = new Parser(lexer);
-        ProgramNode x = parser.getAST();
-        new SemanticAnalyzer(x);
-        BytecodeCompiler bc = new BytecodeCompiler(x);
-        bc.getRender();
-    }
-    @Test
-    public void testMultipleDeclaration() throws Exception {
-        String input =  "const a int = 2; " +
-                "const b real = 4.4; " +
-                "val c string = \"coucou\"; " +
-                "var d boolean = true; d = false; ";
-        StringReader reader = new StringReader(input);
-        Lexer lexer = new Lexer(reader);
-        Parser parser = new Parser(lexer);
-        ProgramNode x = parser.getAST();
-        new SemanticAnalyzer(x);
-        BytecodeCompiler bc = new BytecodeCompiler(x);
-        bc.getRender();
-    }
-
-    @Test
     public void testBasicArray2() throws Exception {
         String input = "var c int[] = int[](10); c[3] = 100;";
-        StringReader reader = new StringReader(input);
-        Lexer lexer = new Lexer(reader);
-        Parser parser = new Parser(lexer);
-        ProgramNode x = parser.getAST();
-        new SemanticAnalyzer(x);
-        BytecodeCompiler bc = new BytecodeCompiler(x);
-        bc.getRender();
-    }
-    @Test
-    public void testAssignmentVarIllegal() throws Exception {
-        String input =  "var x int; " +
-                "x = 10";
         StringReader reader = new StringReader(input);
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
@@ -381,10 +389,13 @@ public class TestByteCode {
     }
     @Test
     public void testWhile() throws Exception {
-        String input =
-                "while 1 <= 4 { " +
-                            "// ..." +
-                        " }";
+        String input = """
+                proc add() void{
+                    while 1 <= 4 {
+                        //...
+                    }
+                }
+                """;
         StringReader reader = new StringReader(input);
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
@@ -429,7 +440,8 @@ public class TestByteCode {
         String input =
                 """
                     proc square(v int) int {return 0+1;}
-                    proc sqsuare(v int) int {return 0+1;}
+                    proc squared(v int, x int) int {return 0+1;}
+                    squared(10,10);
                 """;
         StringReader reader = new StringReader(input);
         Lexer lexer = new Lexer(reader);
@@ -443,9 +455,11 @@ public class TestByteCode {
     public void testBasicProcs() throws Exception {
         String input =
                 """
-                    proc lens(v int) int {return 0+1;}
-                    lens(1);
-                    lens(2);
+                    proc lens(v int, a int) int {return v+v;}
+                    proc lens1(a int) int {return v+v;}
+
+                    lens(20000,11);
+                    lens1(111);
                     var i int = 0;
                 """;
         StringReader reader = new StringReader(input);
@@ -460,7 +474,7 @@ public class TestByteCode {
     public void testBasicProcss() throws Exception {
         String input =
                 """
-                    square = 1;
+                    var square int = 1;
                     proc square(v int) int {return 0+1;}
                     var i int = 0;
                 """;

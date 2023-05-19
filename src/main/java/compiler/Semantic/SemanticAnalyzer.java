@@ -3,14 +3,11 @@ package compiler.Semantic;
 import com.google.common.collect.Lists;
 import compiler.Lexer.SymbolKind;
 import compiler.Parser.AST.*;
-import compiler.Parser.Parser;
 
 import java.util.*;
 import java.util.AbstractMap.SimpleEntry;
 
 public class SemanticAnalyzer implements ASTVisitor {
-    private static Parser parser;
-
     private static SymbolTable symbolTable;
 
     List<String> functions = Lists.newArrayList(
@@ -26,7 +23,7 @@ public class SemanticAnalyzer implements ASTVisitor {
             "write",
             "writeln"
     );
-    private Map<String, ArrayList<ParamNode>> functionTable;
+    private final Map<String, ArrayList<ParamNode>> functionTable;
 
     public SemanticAnalyzer(ProgramNode programNode) throws Exception {
         this.functionTable = new HashMap<>();
@@ -77,21 +74,21 @@ public class SemanticAnalyzer implements ASTVisitor {
         }
 
         // Check if the variable has already been declared in this scope
-        if (symbolTable.containmut(varName)) {
+        if (SymbolTable.containmut(varName)) {
             if (!symbolTable.lookupmut(varName).getTypeSymbol().equals(varType)) {
                 throw new Exception("Assignment error: this identifier " + varName + " is already used and is of type " + symbolTable.lookupmut(varName).getTypeSymbol() + " and not " + varType);
             }
-        } else if (symbolTable.containimmut(varName)) {
-            throw new Exception("Assignement exeption: you tried to modify a immuable val or const");
-        } else if (symbolTable.containrecord(varName)) {
+        } else if (SymbolTable.containimmut(varName)) {
+            throw new Exception("Assignment exception: you tried to modify a immutable val or const");
+        } else if (SymbolTable.containrecord(varName)) {
             RecordCallNode rec = (RecordCallNode) node.getValue();
-            if (!containsIdentifier(symbolTable.lookuprecord(varName), rec.getfield())) {
+            if (!containsIdentifier(SymbolTable.lookuprecord(varName), rec.getfield())) {
                 throw new Exception("Assignment error: bad field," + rec.getfield() + " not in record " + varName);
             } else {
-                visit((RecordCallNode) rec, varName);
+                visit(rec, varName);
             }
         } else {
-            throw new Exception("Assignement exeption: illegal assignement");
+            throw new Exception("Assignment exception: illegal assignment");
         }
     }
 
@@ -111,18 +108,18 @@ public class SemanticAnalyzer implements ASTVisitor {
         }
         if (leftType.equals("str")) {
             LiteralNode left = (LiteralNode) node.getLeft();
-            if (symbolTable.containmut(left.getLiteral())) {
-                leftType = symbolTable.lookupmut(left.getLiteral()).getTypeStr();
-            } else if (symbolTable.containimmut(left.getLiteral())) {
-                leftType = symbolTable.lookupimmut(left.getLiteral()).getTypeStr();
+            if (SymbolTable.containmut(left.getLiteral())) {
+                leftType = SymbolTable.lookupmut(left.getLiteral()).getTypeStr();
+            } else if (SymbolTable.containimmut(left.getLiteral())) {
+                leftType = SymbolTable.lookupimmut(left.getLiteral()).getTypeStr();
             }
         }
         if (rightType.equals("str")) {
             LiteralNode right = (LiteralNode) node.getRight();
-            if (symbolTable.containmut(right.getLiteral())) {
-                rightType = symbolTable.lookupmut(right.getLiteral()).getTypeStr();
-            } else if (symbolTable.containimmut(right.getLiteral())) {
-                rightType = symbolTable.lookupimmut(right.getLiteral()).getTypeStr();
+            if (SymbolTable.containmut(right.getLiteral())) {
+                rightType = SymbolTable.lookupmut(right.getLiteral()).getTypeStr();
+            } else if (SymbolTable.containimmut(right.getLiteral())) {
+                rightType = SymbolTable.lookupimmut(right.getLiteral()).getTypeStr();
             }
         }
 
@@ -217,7 +214,7 @@ public class SemanticAnalyzer implements ASTVisitor {
     @Override
     public void visit(ConstantDeclarationNode node) throws Exception {
         System.out.println("const");
-        if (!symbolTable.containimmut(node.getAssignment().getIdentifier())) {
+        if (!SymbolTable.containimmut(node.getAssignment().getIdentifier())) {
             String varName = node.getAssignment().getIdentifier();
             TypeNode varType = node.getAssignment().getType();
             if (node.getAssignment().getValue() == null) {
@@ -231,7 +228,7 @@ public class SemanticAnalyzer implements ASTVisitor {
             if (!valType.equals(varType.getTypeSymbol())) {
                 throw new Exception("Assignment error, value type " + valType + " does not match declared type " + varType.getTypeSymbol());
             }
-            symbolTable.insertimmut(varName, varType);
+            SymbolTable.insertimmut(varName, varType);
         } else {
             throw new Exception("Semantic error: duplicated const declaration");
         }
@@ -297,8 +294,8 @@ public class SemanticAnalyzer implements ASTVisitor {
     @Override
     public void visit(ForStatementNode node) throws Exception {
         System.out.println("for");
-        if (node.getTypeStr() == "ForLoop") {
-            if (symbolTable.containmut(node.getVariable()))
+        if (node.getTypeStr().equals("ForLoop")) {
+            if (SymbolTable.containmut(node.getVariable()))
                 if (node.getStart() instanceof NumberNode && node.getEnd() instanceof NumberNode && node.getStep() instanceof NumberNode) {
                     visit(node.getBlock());
                 } else {
@@ -309,13 +306,12 @@ public class SemanticAnalyzer implements ASTVisitor {
         } else {
             throw new Exception();
         }
-        ;
     }
 
     @Override
     public void visit(IfStatementNode node) throws Exception {
         System.out.println("If");
-        if (node.getTypeStr() == "If") {
+        if (node.getTypeStr().equals("If")) {
             visit(node.getCondition());
             visit(node.getThenStatements());
             if (node.getElseStatements() != null) {
@@ -324,7 +320,6 @@ public class SemanticAnalyzer implements ASTVisitor {
         } else {
             throw new Exception();
         }
-        ;
 
     }
 
@@ -345,51 +340,51 @@ public class SemanticAnalyzer implements ASTVisitor {
 
             }
         }
-
-        ParamNode param = node.getParameters().get(0);
-        switch (node.getIdentifier()) {
-            case "writeint", "writereal" -> {
-                if (node.getParameters().size() != 1) {
-                    throw new Exception("Built-in function \"" + node.getIdentifier() + "\" need exactly 1 argument");
+        if(node.getParameters().size()>0) {
+            ParamNode param = node.getParameters().get(0);
+            switch (node.getIdentifier()) {
+                case "writeint", "writereal" -> {
+                    if (node.getParameters().size() != 1) {
+                        throw new Exception("Built-in function \"" + node.getIdentifier() + "\" need exactly 1 argument");
+                    }
+                    if (!param.getTypeStr().equals("str")) {
+                        throw new Exception("Built-in function \"" + node.getIdentifier() + "\" parameter type need to be \"str\"");
+                    }
                 }
-                if (!param.getTypeStr().equals("str")) {
-                    throw new Exception("Built-in function \"" + node.getIdentifier() + "\" parameter type need to be \"str\"");
+                case "not" -> {
+                    if (node.getParameters().size() != 1) {
+                        throw new Exception("Built-in function \"" + node.getIdentifier() + "\" need exactly 1 argument");
+                    }
+                    if (!param.getTypeStr().equals("bool")) {
+                        throw new Exception("Built-in function \"" + node.getIdentifier() + "\" parameter type need to be \"bool\"");
+                    }
                 }
-            }
-            case "not" -> {
-                if (node.getParameters().size() != 1) {
-                    throw new Exception("Built-in function \"" + node.getIdentifier() + "\" need exactly 1 argument");
+                case "chr" -> {
+                    if (node.getParameters().size() != 1) {
+                        throw new Exception("Built-in function \"" + node.getIdentifier() + "\" need exactly 1 argument");
+                    }
+                    if (!param.getTypeStr().equals("int")) {
+                        throw new Exception("Built-in function \"" + node.getIdentifier() + "\" parameter type need to be \"int\"");
+                    }
                 }
-                if (!param.getTypeStr().equals("bool")) {
-                    throw new Exception("Built-in function \"" + node.getIdentifier() + "\" parameter type need to be \"bool\"");
+                case "len" -> {
+                    if (node.getParameters().size() != 1) {
+                        throw new Exception("Built-in function \"" + node.getIdentifier() + "\" need exactly 1 argument");
+                    }
+                    if (!param.getTypeStr().equals("str") || !param.getTypeStr().equals("array")) { //TODO
+                        throw new Exception("Built-in function \"" + node.getIdentifier() + "\" parameter type need to be \"str\" or \"array\"");
+                    }
                 }
-            }
-            case "chr" -> {
-                if (node.getParameters().size() != 1) {
-                    throw new Exception("Built-in function \"" + node.getIdentifier() + "\" need exactly 1 argument");
-                }
-                if (!param.getTypeStr().equals("int")) {
-                    throw new Exception("Built-in function \"" + node.getIdentifier() + "\" parameter type need to be \"int\"");
-                }
-            }
-            case "len" -> {
-                if (node.getParameters().size() != 1) {
-                    throw new Exception("Built-in function \"" + node.getIdentifier() + "\" need exactly 1 argument");
-                }
-                if (!param.getTypeStr().equals("str") || !param.getTypeStr().equals("array")) { //TODO
-                    throw new Exception("Built-in function \"" + node.getIdentifier() + "\" parameter type need to be \"str\" or \"array\"");
-                }
-            }
-            case "floor" -> {
-                if (node.getParameters().size() != 1) {
-                    throw new Exception("Built-in function \"" + node.getIdentifier() + "\" need exactly 1 argument");
-                }
-                if (!param.getTypeStr().equals("real")) {
-                    throw new Exception("Built-in function \"" + node.getIdentifier() + "\" parameter type need to be \"real\"");
+                case "floor" -> {
+                    if (node.getParameters().size() != 1) {
+                        throw new Exception("Built-in function \"" + node.getIdentifier() + "\" need exactly 1 argument");
+                    }
+                    if (!param.getTypeStr().equals("real")) {
+                        throw new Exception("Built-in function \"" + node.getIdentifier() + "\" parameter type need to be \"real\"");
+                    }
                 }
             }
         }
-
         String identifier = node.getIdentifier();
         ArrayList<ParamNode> function = functionTable.get(identifier);
         if(function==null){
@@ -426,6 +421,10 @@ public class SemanticAnalyzer implements ASTVisitor {
         if (functions.contains(name)) {
             throw new Exception("Reserved keyword : \"" + node.getIdentifier() + "\" is used for built-in function");
         }
+        if(functionTable.containsKey(name)){
+            throw new Exception("Function named \"" + node.getIdentifier() + "\" is already used");
+
+        }
         functionTable.put(name, node.getParameters());
     }
 
@@ -448,7 +447,7 @@ public class SemanticAnalyzer implements ASTVisitor {
     public void visit(RecordNode node) throws Exception {
         if (node.getTypeStr().equals("record")) {
             // Check if the variable has already been declared in this scope
-            if (symbolTable.containmut(node.getIdentifier()) || symbolTable.containimmut(node.getIdentifier()) || symbolTable.containrecord(node.getIdentifier())) {
+            if (SymbolTable.containmut(node.getIdentifier()) || SymbolTable.containimmut(node.getIdentifier()) || SymbolTable.containrecord(node.getIdentifier())) {
                 throw new Exception("Assignment error: this identifier " + node.getIdentifier() + " is already used ");
             } else {
                 List<SimpleEntry<String, String>> record_entries = new ArrayList<>();
@@ -461,7 +460,7 @@ public class SemanticAnalyzer implements ASTVisitor {
                         record_entries.add(new SimpleEntry<>(pn.getIdentifier(), pn.getTypeStr()));
                     }
                 }
-                symbolTable.insertrecord(node.getIdentifier(), record_entries);
+                SymbolTable.insertrecord(node.getIdentifier(), record_entries);
             }
             System.out.println("record");
         }
@@ -495,7 +494,7 @@ public class SemanticAnalyzer implements ASTVisitor {
     public void visit(RecordCallNode node, String identifier) throws Exception {
         System.out.println(node);
         String valtype = node.getvalue().getTypeStr();
-        String rectype = getTypeId(symbolTable.lookuprecord(identifier), node.getfield());
+        String rectype = getTypeId(SymbolTable.lookuprecord(identifier), node.getfield());
         if (!rectype.equals(valtype)) {
             throw new Exception("Record error: Bad type, value type " + valtype + " does not match record type:" + rectype);
         }
@@ -510,7 +509,7 @@ public class SemanticAnalyzer implements ASTVisitor {
     public void visit(StatementNode node) throws Exception {
         System.out.println("statements");
         for (ExpressionNode statement : node.getStatements()) {
-            if (statement.getTypeStr() == "str") {
+            if (statement.getTypeStr().equals("str")) {
                 visit((ValDeclarationNode) statement);
             }
             //visit((ForStatementNode) statement);
@@ -525,7 +524,7 @@ public class SemanticAnalyzer implements ASTVisitor {
     @Override
     public void visit(ValDeclarationNode node) throws Exception {
         System.out.println("val");
-        if (!symbolTable.containimmut(node.getAssignment().getIdentifier())) {
+        if (!SymbolTable.containimmut(node.getAssignment().getIdentifier())) {
             String varName = node.getAssignment().getIdentifier();
             TypeNode varType = node.getAssignment().getType();
             String valType = node.getAssignment().getValue().getTypeStr();
@@ -536,7 +535,7 @@ public class SemanticAnalyzer implements ASTVisitor {
             if (!valType.equals(varType.getTypeSymbol())) {
                 throw new Exception("Assignment error, value type " + valType + " does not match declared type " + varType.getTypeSymbol());
             }
-            symbolTable.insertimmut(varName, varType);
+            SymbolTable.insertimmut(varName, varType);
         } else {
             throw new Exception("Semantic error: duplicated val declaration");
         }
@@ -558,7 +557,7 @@ public class SemanticAnalyzer implements ASTVisitor {
     @Override
     public void visit(VarDeclarationNode node) throws Exception {
         System.out.println("var");
-        if (!symbolTable.containmut(node.getAssignment().getIdentifier())) {
+        if (!SymbolTable.containmut(node.getAssignment().getIdentifier())) {
             String varName = node.getAssignment().getIdentifier();
             TypeNode varType = node.getAssignment().getType();
             if (node.getAssignment().getValue() != null) {
@@ -571,7 +570,7 @@ public class SemanticAnalyzer implements ASTVisitor {
                 }
             }
             //Check variable and value type
-            symbolTable.insertmut(varName, varType);
+            SymbolTable.insertmut(varName, varType);
         } else {
             throw new Exception("Semantic error: duplicated var declaration");
         }
