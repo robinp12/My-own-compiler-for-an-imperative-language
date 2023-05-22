@@ -245,54 +245,49 @@ public class TestByteCode {
         bc.getRender();
     }
 
+    @Test
+    public void testArrayReassignment() throws Exception {
+        String input = "var ac boolean[] = boolean[](10); " +
+                "var c string[] = string[](10); " +
+                "var rc real[] = real[](10); " +
+                "var drc int[] = int[](10); " +
+                "ac[30] = true;" +
+                "c[30] = \"sc\";" +
+                "rc[30] = 1.1;" +
+                "drc[30] = 1;" +
+                "";
+        StringReader reader = new StringReader(input);
+        Lexer lexer = new Lexer(reader);
+        Parser parser = new Parser(lexer);
+        ProgramNode x = parser.getAST();
+        new SemanticAnalyzer(x);
+        BytecodeCompiler bc = new BytecodeCompiler(x);
+        bc.getRender();
+    }
+
+    @Test
+    public void testBasicProcParam() throws Exception {
+        String input =
+                """
+                    proc add(x boolean, a int, b string) int {
+                        return a;
+                    }
+                    add(true,1,"oui");
+                """;
+        StringReader reader = new StringReader(input);
+        Lexer lexer = new Lexer(reader);
+        Parser parser = new Parser(lexer);
+        ProgramNode x = parser.getAST();
+        new SemanticAnalyzer(x);
+        BytecodeCompiler bc = new BytecodeCompiler(x);
+        bc.getRender();
+    }
+
 
     /*
         NOT WORKING YET
     */
 
-    @Test
-    public void testBasicProcParam() throws Exception {
-        String input =
-            """
-                proc add(x boolean, a int, b string) int {
-                    return 10 + 1;
-                }
-                add(true,1,"oui");
-            """;
-        StringReader reader = new StringReader(input);
-        Lexer lexer = new Lexer(reader);
-        Parser parser = new Parser(lexer);
-        ProgramNode x = parser.getAST();
-        new SemanticAnalyzer(x);
-        BytecodeCompiler bc = new BytecodeCompiler(x);
-        bc.getRender();
-    }
-
-    @Test
-    public void testBasicProcParamVar() throws Exception {
-        String input =  "proc add(x boolean, a int, b string) int {" +
-                "return x + x;" +
-                "}";
-        StringReader reader = new StringReader(input);
-        Lexer lexer = new Lexer(reader);
-        Parser parser = new Parser(lexer);
-        ProgramNode x = parser.getAST();
-        new SemanticAnalyzer(x);
-        BytecodeCompiler bc = new BytecodeCompiler(x);
-        bc.getRender();
-    }
-
-    @Test
-    public void testBasicArray2() throws Exception {
-        String input = "var c int[] = int[](10); c[3] = 100;";
-        StringReader reader = new StringReader(input);
-        Lexer lexer = new Lexer(reader);
-        Parser parser = new Parser(lexer);
-        ProgramNode x = parser.getAST();
-        new SemanticAnalyzer(x);
-        BytecodeCompiler bc = new BytecodeCompiler(x);
-        bc.getRender();
-    }
 
     @Test
     public void testDeclarationBool() throws Exception {

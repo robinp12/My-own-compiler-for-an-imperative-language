@@ -6,6 +6,7 @@ import org.objectweb.asm.*;
 import org.objectweb.asm.tree.InnerClassNode;
 import org.objectweb.asm.util.CheckClassAdapter;
 
+import javax.naming.PartialResultException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -88,10 +89,11 @@ public class BytecodeCompiler {
     }
 
     public void generateExpression(ExpressionNode expression) {
+        System.out.println(expression);
         if (expression instanceof VarDeclarationNode) {
             generateVar(((VarDeclarationNode) expression).getAssignment(), (method == null) ? methodMain : method);
         } else if (expression instanceof ValDeclarationNode) {
-            generateVar(((ValDeclarationNode) expression).getAssignment(),(method == null) ? methodMain : method);
+            generateVar(((ValDeclarationNode) expression).getAssignment(), (method == null) ? methodMain : method);
         } else if (expression instanceof ConstantDeclarationNode) {
             generateConst((ConstantDeclarationNode) expression);
         } else if (expression instanceof RecordNode) {
@@ -144,7 +146,6 @@ public class BytecodeCompiler {
     private void generateProcCall(MethodCallNode expression) {
         System.out.println("methodCallNode");
         String name = expression.getIdentifier();
-
         for (ParamNode parameter : expression.getParameters()) {
             switch (parameter.getType().getTypeStr()) {
                 case "int" -> {
@@ -154,7 +155,7 @@ public class BytecodeCompiler {
                     methodMain.visitLdcInsn(parameter.getIdentifier());
                 }
                 case "bool" -> {
-                    System.out.println("pas fait");
+                    methodMain.visitInsn(parameter.getIdentifier().equals("true") ? ICONST_1 : ICONST_0);
                 }
                 case "real" -> {
                     methodMain.visitLdcInsn(Float.parseFloat(parameter.getIdentifier()));
@@ -272,25 +273,71 @@ public class BytecodeCompiler {
             System.out.println(statement.getType().getTypeStr());
             switch (statement.getType().getTypeStr()) {
                 case "real" -> {
-                    NumberNode value = (NumberNode) statement.getValue();
-                    method.visitLdcInsn(Float.parseFloat(value.getValue()));
-                    method.visitVarInsn(FSTORE, register);
+                    if(statement.getValue() instanceof AssignmentArrayNode){
+                        AssignmentArrayNode array = (AssignmentArrayNode) statement.getValue();
+                        NumberNode value = (NumberNode) array.getValue();
+                        NumberNode index = (NumberNode) array.getIndex();
+
+                        method.visitVarInsn(ALOAD, register);
+                        method.visitIntInsn(BIPUSH, Integer.parseInt(index.getValue()));
+                        method.visitLdcInsn(Float.parseFloat(value.getValue()));
+                        method.visitInsn(FASTORE);
+                    }else {
+                        NumberNode value = (NumberNode) statement.getValue();
+                        method.visitLdcInsn(Float.parseFloat(value.getValue()));
+                        method.visitVarInsn(FSTORE, register);
+                    }
                 }
                 case "int" -> {
-                    NumberNode value = (NumberNode) statement.getValue();
-                    method.visitLdcInsn(Integer.parseInt(value.getValue()));
-                    method.visitVarInsn(ISTORE, register);
+                    if(statement.getValue() instanceof AssignmentArrayNode){
+                        AssignmentArrayNode array = (AssignmentArrayNode) statement.getValue();
+                        NumberNode value = (NumberNode) array.getValue();
+                        NumberNode index = (NumberNode) array.getIndex();
+
+                        method.visitVarInsn(ALOAD, register);
+                        method.visitIntInsn(BIPUSH, Integer.parseInt(index.getValue()));
+                        method.visitLdcInsn(Integer.parseInt(value.getValue()));
+                        method.visitInsn(IASTORE);
+                    }else{
+                        NumberNode value = (NumberNode) statement.getValue();
+                        method.visitLdcInsn(Integer.parseInt(value.getValue()));
+                        method.visitVarInsn(ISTORE, register);
+                    }
                 }
                 case "bool" -> {
-                    BooleanNode value = (BooleanNode) statement.getValue();
-                    int isTrue = value.isVal() ? ICONST_1 : ICONST_0;
-                    method.visitInsn(isTrue);
-                    method.visitVarInsn(ISTORE, register);
+                    if(statement.getValue() instanceof AssignmentArrayNode){
+                        AssignmentArrayNode array = (AssignmentArrayNode) statement.getValue();
+                        BooleanNode value = (BooleanNode) array.getValue();
+                        NumberNode index = (NumberNode) array.getIndex();
+
+                        method.visitVarInsn(ALOAD, register);
+                        method.visitIntInsn(BIPUSH, Integer.parseInt(index.getValue()));
+                        int isTrue = value.isVal() ? ICONST_1 : ICONST_0;
+                        method.visitInsn(isTrue);
+                        method.visitInsn(IASTORE);
+                    }else {
+                        BooleanNode value = (BooleanNode) statement.getValue();
+                        int isTrue = value.isVal() ? ICONST_1 : ICONST_0;
+                        method.visitInsn(isTrue);
+                        method.visitVarInsn(ISTORE, register);
+                    }
                 }
                 case "str" -> {
-                    StringNode value = (StringNode) statement.getValue();
-                    method.visitLdcInsn(value.getValue());
-                    method.visitVarInsn(ASTORE, register);
+                    if(statement.getValue() instanceof AssignmentArrayNode){
+                        AssignmentArrayNode array = (AssignmentArrayNode) statement.getValue();
+                        System.out.println(array);
+                        NumberNode index = (NumberNode) array.getIndex();
+                        StringNode value = (StringNode) array.getValue();
+
+                        method.visitVarInsn(ALOAD, register);
+                        method.visitIntInsn(BIPUSH, Integer.parseInt(index.getValue()));
+                        method.visitLdcInsn(value.getValue());
+                        method.visitInsn(IASTORE);
+                    }else {
+                        StringNode value = (StringNode) statement.getValue();
+                        method.visitLdcInsn(value.getValue());
+                        method.visitVarInsn(ASTORE, register);
+                    }
                 }
                 case "binaryExp" -> {
                     BinaryExpressionNode node = (BinaryExpressionNode) statement.getValue();
@@ -302,8 +349,18 @@ public class BytecodeCompiler {
 
     private void generateReturn(ReturnNode statement) {
         ExpressionNode val = statement.getValue();
-        if (val instanceof LiteralNode) {
+        if(val instanceof NumberNode){
+            NumberNode value = (NumberNode) statement.getValue();
+            method.visitLdcInsn(Integer.parseInt(value.getValue()));
+            method.visitInsn(IRETURN);
+        }
+        else if (val instanceof LiteralNode) {
             System.out.println("return");
+            String leftId = ((LiteralNode) val).getLiteral();
+            System.out.println(leftId);
+            method.visitVarInsn(ILOAD, 2);
+
+
         } else if (val.getTypeStr().equals("str")) {
             StringNode value = (StringNode) statement.getValue();
             method.visitLdcInsn(value.getValue());
@@ -312,6 +369,8 @@ public class BytecodeCompiler {
             //generateBinaryExpression((BinaryExpressionNode) statement.getValue());
             ExpressionNode left = ((BinaryExpressionNode) val).getLeft();
             ExpressionNode right = ((BinaryExpressionNode) val).getRight();
+            System.out.println(left);
+            System.out.println(right);
             String leftId = ((LiteralNode) left).getLiteral();
             String rightId = ((LiteralNode) right).getLiteral();
             method.visitVarInsn(ILOAD, 1);
@@ -357,9 +416,11 @@ public class BytecodeCompiler {
                 // Case of array
                 AssignmentArrayNode val = (AssignmentArrayNode) expression.getValue();
                 NumberNode size = (NumberNode) val.getSize();
+                ++idx;
+                valueTable.put(expression.getIdentifier(), idx);
                 method.visitIntInsn(BIPUSH, Integer.parseInt(size.getValue()));
                 method.visitIntInsn(NEWARRAY, T_INT);
-                method.visitVarInsn(ASTORE, ++idx);
+                method.visitVarInsn(ASTORE, idx);
             } else {
                 System.out.println(expression);
                 NumberNode val = (NumberNode) expression.getValue();
@@ -375,9 +436,11 @@ public class BytecodeCompiler {
                 // Case of array
                 AssignmentArrayNode val = (AssignmentArrayNode) expression.getValue();
                 NumberNode size = (NumberNode) val.getSize();
+                ++idx;
+                valueTable.put(expression.getIdentifier(), idx);
                 method.visitIntInsn(BIPUSH, Integer.parseInt(size.getValue()));
-                method.visitIntInsn(NEWARRAY, T_CHAR);
-                method.visitVarInsn(ASTORE, ++idx);
+                method.visitTypeInsn(ANEWARRAY, "Ljava/lang/String;");
+                method.visitVarInsn(ASTORE, idx);
             } else {
                 StringNode val = (StringNode) expression.getValue();
                 ++idx;
@@ -392,9 +455,11 @@ public class BytecodeCompiler {
                 // Case of array
                 AssignmentArrayNode val = (AssignmentArrayNode) expression.getValue();
                 NumberNode size = (NumberNode) val.getSize();
+                ++idx;
+                valueTable.put(expression.getIdentifier(), idx);
                 method.visitIntInsn(BIPUSH, Integer.parseInt(size.getValue()));
                 method.visitIntInsn(NEWARRAY, T_BOOLEAN);
-                method.visitVarInsn(ASTORE, ++idx);
+                method.visitVarInsn(ASTORE, idx);
             } else {
                 BooleanNode val = (BooleanNode) expression.getValue();
                 ++idx;
@@ -414,9 +479,11 @@ public class BytecodeCompiler {
                 // Case of array
                 AssignmentArrayNode val = (AssignmentArrayNode) expression.getValue();
                 NumberNode size = (NumberNode) val.getSize();
+                ++idx;
+                valueTable.put(expression.getIdentifier(), idx);
                 method.visitIntInsn(BIPUSH, Integer.parseInt(size.getValue()));
                 method.visitIntInsn(NEWARRAY, T_FLOAT);
-                method.visitVarInsn(ASTORE, ++idx);
+                method.visitVarInsn(ASTORE, idx);
             } else {
                 NumberNode val = (NumberNode) expression.getValue();
                 ++idx;
@@ -460,16 +527,16 @@ public class BytecodeCompiler {
             }
         }
 
-        System.out.println("args : " + argLetter + " | return : " + returnTypeLetter);
+        //System.out.println("args : " + argLetter + " | return : " + returnTypeLetter);
 
         method = container.visitMethod(ACC_PUBLIC, name,
                 "(" + argLetter + ")" + returnTypeLetter, null, null);
         method.visitCode();
 
         //TODO LOAD ARGS FROM STACK
+
         // Ajouter les instructions ici...
         generateBlock(expression.getBody());
-
 
         switch (expression.getReturnType().getTypeSymbol()) {
             case "str" -> method.visitInsn(ARETURN);

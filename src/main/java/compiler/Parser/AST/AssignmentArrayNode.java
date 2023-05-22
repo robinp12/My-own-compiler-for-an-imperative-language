@@ -28,6 +28,12 @@ public class AssignmentArrayNode extends ExpressionNode{
     public TypeNode getType() {
         return type;
     }
+    public ExpressionNode getValue() {
+        return value;
+    }
+    public ExpressionNode getIndex() {
+        return index;
+    }
 
 
     public static AssignmentArrayNode parseArrayDeclaration() throws ParseException {
@@ -58,6 +64,8 @@ public class AssignmentArrayNode extends ExpressionNode{
         return "AssignmentArrayNode{" +
                 "size=" + size +
                 ", type=" + type +
+                ", value=" + value +
+                ", index=" + index +
                 '}';
     }
 }
