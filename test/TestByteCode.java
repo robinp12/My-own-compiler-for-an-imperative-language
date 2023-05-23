@@ -13,7 +13,7 @@ public class TestByteCode {
     public void testBasicProc() throws Exception {
         String input =  """
                 proc add() int {
-                    return 10;
+                    return 10+1;
                 }
                 """;
         StringReader reader = new StringReader(input);
@@ -272,6 +272,23 @@ public class TestByteCode {
                         return a;
                     }
                     add(true,1,"oui");
+                """;
+        StringReader reader = new StringReader(input);
+        Lexer lexer = new Lexer(reader);
+        Parser parser = new Parser(lexer);
+        ProgramNode x = parser.getAST();
+        new SemanticAnalyzer(x);
+        BytecodeCompiler bc = new BytecodeCompiler(x);
+        bc.getRender();
+    }
+    @Test
+    public void testBuiltIn() throws Exception {
+        String input = """
+                proc print() int {
+                    writeln("rovib");
+                    return 1;
+                }
+                print();
                 """;
         StringReader reader = new StringReader(input);
         Lexer lexer = new Lexer(reader);
@@ -570,6 +587,22 @@ public class TestByteCode {
                 else{
                     var as int = 10;
                 }""";
+        StringReader reader = new StringReader(input);
+        Lexer lexer = new Lexer(reader);
+        Parser parser = new Parser(lexer);
+        ProgramNode x = parser.getAST();
+        new SemanticAnalyzer(x);
+        BytecodeCompiler bc = new BytecodeCompiler(x);
+        bc.getRender();
+    }
+    @Test
+    public void testBuiltIn1() throws Exception {
+        String input = """
+                proc print() int {
+                    var i = len("65");
+                }
+                print();
+                """;
         StringReader reader = new StringReader(input);
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);

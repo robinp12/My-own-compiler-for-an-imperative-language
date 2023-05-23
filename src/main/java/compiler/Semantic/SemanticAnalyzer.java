@@ -1,6 +1,7 @@
 package compiler.Semantic;
 
 import com.google.common.collect.Lists;
+import compiler.Compiler;
 import compiler.Lexer.SymbolKind;
 import compiler.Parser.AST.*;
 
@@ -10,7 +11,7 @@ import java.util.AbstractMap.SimpleEntry;
 public class SemanticAnalyzer implements ASTVisitor {
     private static SymbolTable symbolTable;
 
-    List<String> functions = Lists.newArrayList(
+    public static List<String> functions = Lists.newArrayList(
             "not",
             "chr",
             "len",
@@ -232,30 +233,50 @@ public class SemanticAnalyzer implements ASTVisitor {
 
         switch (node.getResultType()) {
             case "str":
-                LiteralNode lstr = (LiteralNode) left;
-                LiteralNode rstr = (LiteralNode) right;
+                String lstr = null;
+                String rstr = null;
+                if (left instanceof BinaryExpressionNode){
+                    lstr = ((BinaryExpressionNode) left).getResult();
+                } else {
+                    lstr = ((LiteralNode)left).getLiteral();
+                }
+                if (right instanceof BinaryExpressionNode){
+                    rstr = ((BinaryExpressionNode) right).getResult();
+                } else {
+                    rstr = ((LiteralNode) left).getLiteral();
+                }
 
                 if (operatorKind.equals(SymbolKind.PLUS)) {
-                    node.setResult(lstr.getLiteral() + rstr.getLiteral());
+                    node.setResult(lstr + rstr);
                 } else {
                     throw new Exception("Invalid operation: binary expression error type");
                 }
                 break;
 
             case "int":
-                NumberNode lint = (NumberNode) left;
-                NumberNode rint = (NumberNode) right;
+                Integer lint = null;
+                Integer rint = null;
+                if (left instanceof BinaryExpressionNode){
+                    lint = Integer.valueOf(((BinaryExpressionNode) left).getResult());
+                } else {
+                    lint = Integer.valueOf(((NumberNode) left).getValue());
+                }
+                if (right instanceof BinaryExpressionNode){
+                    rint = Integer.valueOf(((BinaryExpressionNode) right).getResult());
+                } else {
+                    rint = Integer.valueOf(((NumberNode) right).getValue());
+                }
 
                 if (operatorKind.equals(SymbolKind.PLUS)) {
-                    node.setResult(String.valueOf(Integer.valueOf(lint.getValue()) + Integer.valueOf(rint.getValue())));
+                    node.setResult(String.valueOf(lint+ rint));
                 } else if (operatorKind.equals(SymbolKind.MINUS)) {
-                    node.setResult(String.valueOf(Integer.valueOf(lint.getValue()) - Integer.valueOf(rint.getValue())));
+                    node.setResult(String.valueOf(lint-rint));
                 } else if (operatorKind.equals(SymbolKind.STAR)) {
-                    node.setResult(String.valueOf(Integer.valueOf(lint.getValue()) * Integer.valueOf(rint.getValue())));
+                    node.setResult(String.valueOf(lint*rint));
                 } else if (operatorKind.equals(SymbolKind.SLASH)) {
-                    node.setResult(String.valueOf(Integer.valueOf(lint.getValue()) / Integer.valueOf(rint.getValue())));
+                    node.setResult(String.valueOf(lint/rint));
                 } else if (operatorKind.equals(SymbolKind.PERC)) {
-                    node.setResult(String.valueOf(Integer.valueOf(lint.getValue()) % Integer.valueOf(rint.getValue())));
+                    node.setResult(String.valueOf(lint%rint));
                 } else {
                     throw new Exception("Invalid operation: binary expression error type");
                 }
@@ -263,10 +284,18 @@ public class SemanticAnalyzer implements ASTVisitor {
 
 
             case "real":
-                NumberNode lcast = (NumberNode) left;
-                NumberNode rcast = (NumberNode) right;
-                Float lreal = Float.valueOf(lcast.getValue());
-                Float rreal = Float.valueOf(rcast.getValue());
+                Float lreal = null;
+                Float rreal = null;
+                if (left instanceof BinaryExpressionNode){
+                    lreal = Float.valueOf(((BinaryExpressionNode) left).getResult());
+                } else {
+                    lreal = Float.valueOf(((NumberNode) left).getValue());
+                }
+                if (right instanceof BinaryExpressionNode){
+                    rreal = Float.valueOf(((BinaryExpressionNode) right).getResult());
+                } else {
+                    rreal = Float.valueOf(((NumberNode) right).getValue());
+                }
 
                 if (operatorKind.equals(SymbolKind.PLUS)) {
                     node.setResult(String.valueOf(lreal + rreal));
@@ -281,39 +310,69 @@ public class SemanticAnalyzer implements ASTVisitor {
                 }
                 break;
 
-            case "boolean":
-                if (left.getTypeStr().equals("boolean")) {
-                    BooleanNode lb = (BooleanNode) left;
-                    BooleanNode rb = (BooleanNode) right;
+            case "bool":
+                if (left.getTypeStr().equals("bool")) {
+                    Boolean lb = null;
+                    Boolean rb = null;
+                    if (left instanceof BinaryExpressionNode) {
+                        lb = Boolean.valueOf(((BinaryExpressionNode) left).getResult());
+                    } else {
+                        lb = Boolean.valueOf(((NumberNode) left).getValue());
+                    }
+                    if (right instanceof BinaryExpressionNode) {
+                        rb = Boolean.valueOf(((BinaryExpressionNode) right).getResult());
+                    } else {
+                        rb = Boolean.valueOf(((NumberNode) right).getValue());
+                    }
                     if (operatorKind.equals(SymbolKind.EQEQ)) {
-                        node.setResult(String.valueOf(lb.isVal() == rb.isVal()));
+                        node.setResult(String.valueOf(lb == rb));
                     } else if (operatorKind.equals(SymbolKind.DIFF)) {
-                        node.setResult(String.valueOf(lb.isVal() != rb.isVal()));
+                        node.setResult(String.valueOf(lb != rb));
                     } else {
                         throw new Exception("Invalid operation: binary expression error type");
                     }
                     //TODO: AND et OR
                     break;
                 } else if (left.getTypeStr().equals("str")) {
-                    LiteralNode ls = (LiteralNode) left;
-                    LiteralNode rs = (LiteralNode) right;
+                    String ls = null;
+                    String rs = null;
+                    if (left instanceof BinaryExpressionNode){
+                        ls = ((BinaryExpressionNode) left).getResult();
+                    } else {
+                        ls = ((LiteralNode)left).getLiteral();
+                    }
+                    if (right instanceof BinaryExpressionNode){
+                        rs = ((BinaryExpressionNode) right).getResult();
+                    } else {
+                        rs = ((LiteralNode) left).getLiteral();
+                    }
                     if (operatorKind.equals(SymbolKind.EQEQ)) {
-                        node.setResult(String.valueOf(ls.getLiteral().equals(rs.getLiteral())));
+                        node.setResult(String.valueOf(ls.equals(rs)));
                     } else if (operatorKind.equals(SymbolKind.DIFF)) {
-                        node.setResult(String.valueOf(!ls.getLiteral().equals(rs.getLiteral())));
+                        node.setResult(String.valueOf(!ls.equals(rs)));
                     } else {
                         throw new Exception("Invalid operation: binary expression error type");
                     }
                 } else {
-                    NumberNode lcst = (NumberNode) left;
-                    NumberNode rcst = (NumberNode) right;
-                    Float lr = Float.valueOf(lcst.getValue());
-                    Float rr = Float.valueOf(rcst.getValue());
+                    Float lr = null;
+                    Float rr = null;
+                    if (left instanceof BinaryExpressionNode){
+                        lr = Float.valueOf(((BinaryExpressionNode) left).getResult());
+                    } else {
+                        lr = Float.valueOf(((NumberNode) left).getValue());
+                    }
+                    if (right instanceof BinaryExpressionNode){
+                        rr = Float.valueOf(((BinaryExpressionNode) right).getResult());
+                    } else {
+                        rr = Float.valueOf(((NumberNode) right).getValue());
+                    }
+                    System.out.println(lr);
+                    System.out.println(rr);
 
                     if (operatorKind.equals(SymbolKind.EQEQ)) {
-                        node.setResult(String.valueOf(lr == rr));
+                        node.setResult(String.valueOf(lr.equals(rr)));
                     } else if (operatorKind.equals(SymbolKind.DIFF)) {
-                        node.setResult(String.valueOf(lr != rr));
+                        node.setResult(String.valueOf(!lr.equals(rr)));
                     } else if (operatorKind.equals(SymbolKind.LESS)) {
                         node.setResult(String.valueOf(lr < rr));
                     } else if (operatorKind.equals(SymbolKind.MORE)) {
@@ -368,6 +427,7 @@ public class SemanticAnalyzer implements ASTVisitor {
 
     @Override
     public void visit(ExpressionNode node) throws Exception {
+        System.out.println(node);
         System.out.println("expression");
         if (node instanceof VarDeclarationNode) {
             visit((VarDeclarationNode) node);
@@ -467,9 +527,19 @@ public class SemanticAnalyzer implements ASTVisitor {
                 if (node.getParameters().size() != 0) {
                     throw new Exception("Built-in function \"" + node.getIdentifier() + "\" need no argument");
                 }
+                if (Compiler.argu==null || Compiler.argu.length!=1) {
+                    throw new Exception("Built-in function \"" + node.getIdentifier() + "\" need 1 argument in LINE COMMAND");
+                }
             }
             case "write", "writeln" -> {
-
+                if (node.getParameters().size() != 1) {
+                    throw new Exception("Built-in function \"" + node.getIdentifier() + "\" need 1 argument");
+                }
+            }
+            case "writeint", "writereal", "not", "chr", "len", "floor" -> {
+                if (node.getParameters().size() != 1) {
+                    throw new Exception("Built-in function \"" + node.getIdentifier() + "\" need exactly 1 argument");
+                }
             }
         }
         if(node.getParameters().size()>0) {
@@ -503,7 +573,7 @@ public class SemanticAnalyzer implements ASTVisitor {
                     if (node.getParameters().size() != 1) {
                         throw new Exception("Built-in function \"" + node.getIdentifier() + "\" need exactly 1 argument");
                     }
-                    if (!param.getTypeStr().equals("str") || !param.getTypeStr().equals("array")) { //TODO
+                    if (!param.getTypeStr().equals("str") && !param.getTypeStr().equals("array")) { //TODO
                         throw new Exception("Built-in function \"" + node.getIdentifier() + "\" parameter type need to be \"str\" or \"array\"");
                     }
                 }
@@ -519,7 +589,7 @@ public class SemanticAnalyzer implements ASTVisitor {
         }
         String identifier = node.getIdentifier();
         ArrayList<ParamNode> function = functionTable.get(identifier);
-        if(function==null){
+        if(function==null && !functions.contains(identifier)){
             try {
                 throw new Exception("Function \"" + identifier + "\" is not implemented yet");
             } catch (Exception e) {
@@ -558,6 +628,7 @@ public class SemanticAnalyzer implements ASTVisitor {
 
         }
         functionTable.put(name, node.getParameters());
+        visit(node.getBody());
     }
 
     @Override
@@ -641,6 +712,10 @@ public class SemanticAnalyzer implements ASTVisitor {
     public void visit(StatementNode node) throws Exception {
         System.out.println("statements");
         for (ExpressionNode statement : node.getStatements()) {
+            System.out.println("ici " + statement);
+            if(statement instanceof MethodCallNode){
+                visit((MethodCallNode) statement);
+            }
             if (statement.getTypeStr().equals("str")) {
                 visit((ValDeclarationNode) statement);
             }
