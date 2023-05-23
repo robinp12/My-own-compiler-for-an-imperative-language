@@ -118,7 +118,7 @@ public class TestSemantic {
 
     @Test
     public void testBasicWhile() throws Exception {
-        String input =  "while 8 >= 3 { val x int; }";
+        String input =  "while 8 >= 3 { var x int; }";
         StringReader reader = new StringReader(input);
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
@@ -128,7 +128,7 @@ public class TestSemantic {
 
     @Test
     public void testComplexWhile() throws Exception {
-        String input =  "var i int = 0; while 8 >= 1 { i = i+1; }";
+        String input =  "var i int = 0; while 8 >= 1 { i = 2+1; }";
         StringReader reader = new StringReader(input);
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
@@ -138,7 +138,7 @@ public class TestSemantic {
 
     @Test
     public void testComplexWhileIllegal() throws Exception {
-        String input =  "var i boolean = true; while 8 >= i { i = i+1; }";
+        String input =  "var i boolean = true; while 8 >= i { i = 2+1; }";
         StringReader reader = new StringReader(input);
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
@@ -488,7 +488,7 @@ public class TestSemantic {
     }
 
     @Test
-    public void testIf() throws ParseException {
+    public void testIf() throws Exception {
         String input = """
                 const v int = 10;
                 if v == 10 {
@@ -497,7 +497,8 @@ public class TestSemantic {
         StringReader reader = new StringReader(input);
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
-        parser.getAST();
+        ProgramNode x = parser.getAST();
+        new SemanticAnalyzer(x);
     }
 
     @Test

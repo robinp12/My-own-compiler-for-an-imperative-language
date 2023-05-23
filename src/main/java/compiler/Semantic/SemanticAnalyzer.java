@@ -237,11 +237,15 @@ public class SemanticAnalyzer implements ASTVisitor {
                 String rstr = null;
                 if (left instanceof BinaryExpressionNode){
                     lstr = ((BinaryExpressionNode) left).getResult();
+                }else if(left instanceof LiteralNode){
+                    //TODO in code generation, involve variable
                 } else {
                     lstr = ((LiteralNode)left).getLiteral();
                 }
                 if (right instanceof BinaryExpressionNode){
                     rstr = ((BinaryExpressionNode) right).getResult();
+                }else if(left instanceof LiteralNode){
+                    //TODO in code generation, involve variable
                 } else {
                     rstr = ((LiteralNode) left).getLiteral();
                 }
@@ -258,11 +262,16 @@ public class SemanticAnalyzer implements ASTVisitor {
                 Integer rint = null;
                 if (left instanceof BinaryExpressionNode){
                     lint = Integer.valueOf(((BinaryExpressionNode) left).getResult());
-                } else {
+                } else if(left instanceof LiteralNode){
+                    //TODO in code generation, involve variable
+                }
+                else {
                     lint = Integer.valueOf(((NumberNode) left).getValue());
                 }
                 if (right instanceof BinaryExpressionNode){
                     rint = Integer.valueOf(((BinaryExpressionNode) right).getResult());
+                } else if(left instanceof LiteralNode){
+                    //TODO in code generation, involve variable
                 } else {
                     rint = Integer.valueOf(((NumberNode) right).getValue());
                 }
@@ -288,11 +297,15 @@ public class SemanticAnalyzer implements ASTVisitor {
                 Float rreal = null;
                 if (left instanceof BinaryExpressionNode){
                     lreal = Float.valueOf(((BinaryExpressionNode) left).getResult());
+                }else if(left instanceof LiteralNode){
+                    //TODO in code generation, involve variable
                 } else {
                     lreal = Float.valueOf(((NumberNode) left).getValue());
                 }
                 if (right instanceof BinaryExpressionNode){
                     rreal = Float.valueOf(((BinaryExpressionNode) right).getResult());
+                }else if(left instanceof LiteralNode){
+                    //TODO in code generation, involve variable
                 } else {
                     rreal = Float.valueOf(((NumberNode) right).getValue());
                 }
@@ -394,7 +407,6 @@ public class SemanticAnalyzer implements ASTVisitor {
     @Override
     public void visit(BlockNode node) throws Exception {
         System.out.println("block");
-        System.out.println();
         visit(node.getStatements());
     }
 
@@ -632,6 +644,7 @@ public class SemanticAnalyzer implements ASTVisitor {
         if(node.getBody().getStatements()!=null){
             visit(node.getBody());
         }
+
     }
 
     @Override
@@ -715,14 +728,7 @@ public class SemanticAnalyzer implements ASTVisitor {
     public void visit(StatementNode node) throws Exception {
         System.out.println("statements");
         for (ExpressionNode statement : node.getStatements()) {
-            System.out.println("ici " + statement);
-            if(statement instanceof MethodCallNode){
-                visit((MethodCallNode) statement);
-            }
-            if (statement.getTypeStr().equals("str")) {
-                visit((ValDeclarationNode) statement);
-            }
-            //visit((ForStatementNode) statement);
+            visit(statement);
         }
     }
 
