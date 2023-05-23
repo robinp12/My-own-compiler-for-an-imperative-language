@@ -9,19 +9,19 @@ import static compiler.Parser.Parser.match;
 
 public class AssignmentArrayNode extends ExpressionNode{
 
-    private ExpressionNode size;
+    private NumberNode size;
     private TypeNode type;
     private ExpressionNode value;
     private ExpressionNode index;
 
-    public AssignmentArrayNode(ExpressionNode size, TypeNode type, ExpressionNode value, ExpressionNode index){
+    public AssignmentArrayNode(NumberNode size, TypeNode type, ExpressionNode value, ExpressionNode index){
         super(type.getTypeSymbol());
         this.size = size;
         this.type = type;
         this.value = value;
         this.index = index;
     }
-    public ExpressionNode getSize() {
+    public NumberNode getSize() {
         return size;
     }
 
@@ -37,7 +37,7 @@ public class AssignmentArrayNode extends ExpressionNode{
 
 
     public static AssignmentArrayNode parseArrayDeclaration() throws ParseException {
-        ExpressionNode size = null;
+        NumberNode size = null;
         TypeNode type = null;
 
         match(SymbolKind.LBRACK);
@@ -51,7 +51,7 @@ public class AssignmentArrayNode extends ExpressionNode{
                 match(SymbolKind.LBRACK);
                 match(SymbolKind.RBRACK);
                 match(SymbolKind.LPAR);
-                size = BinaryExpressionNode.parseBinaryExpressionNode(null);
+                size = NumberNode.parseNumber();
                 match(SymbolKind.RPAR);
             }
         }

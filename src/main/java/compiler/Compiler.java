@@ -24,7 +24,6 @@ public class Compiler {
 
     public static void main(String[] args) {
         argu = args;
-        System.out.println(args.length);
         String input = "readReal();";
         StringReader reader = new StringReader(input);
         Lexer lexer = new Lexer(reader);

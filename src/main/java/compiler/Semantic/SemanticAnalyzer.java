@@ -70,7 +70,8 @@ public class SemanticAnalyzer implements ASTVisitor {
             varType = visit((BinaryExpressionNode) node.getValue());
         }
         if (valType.equals("array")) {
-            //visit((AssignmentArrayNode) node.getValue(), varName, varType);
+            visit((AssignmentArrayNode) node.getValue(), varName);
+
             return;
         }
 
@@ -98,30 +99,34 @@ public class SemanticAnalyzer implements ASTVisitor {
         }
     }
 
-    private void visit(AssignmentArrayNode value, String varType) throws Exception {
+    private void visit(AssignmentArrayNode value, String varName) throws Exception {
         //Check variable and value type
-/*
         // Check if the variable has already been declared in this scope
-        if (SymbolTable.containmut(varName)) {
-            if (!symbolTable.lookupmut(varName).getTypeSymbol().equals(varType+"[]("+value.getSize().getValue()+")")) {
-                throw new Exception("Assignment error: this identifier " + varName + " is already used and is of type " + symbolTable.lookupmut(varName).getTypeSymbol() + " and not " + varType);
+        if (SymbolTable.containarray(varName)) {
+            String varType = SymbolTable.lookuparray(varName).getKey();
+            Integer size = SymbolTable.lookuparray(varName).getValue();
+            if (!varType.equals(value.getType().getTypeSymbol()) || Integer.parseInt(((NumberNode)value.getIndex()).getValue())>=size) {
+                throw new Exception("Illegal array assignement");
             }
-        } else if (SymbolTable.containimmut(varName)) {
-            throw new Exception("Assignment exception: you tried to modify a immutable val or const");
         } else {
-            throw new Exception("Assignment exception: Illegal assignment");
+            throw new Exception("Assignment exception: Illegal assignment, assignation to not  declareted array");
         }
-
- */
     }
 
 
     @Override
     public String visit(BinaryExpressionNode node) throws Exception {
-
         // Get the types of the left and right operands
         String leftType = node.getLeft().getTypeStr();
         String rightType = node.getRight().getTypeStr();
+
+        System.out.println("node "+ node.getLeft());
+        if(node.getLeft() instanceof LiteralNode && node.getRight() instanceof LiteralNode){
+            return "";
+        }
+        if(node.getLeft() instanceof LiteralNode || node.getRight() instanceof LiteralNode){
+            return "";
+        }
 
         if (leftType.equals("binaryExp")) {
             leftType = visit((BinaryExpressionNode) node.getLeft());
@@ -230,7 +235,6 @@ public class SemanticAnalyzer implements ASTVisitor {
         if (right.getTypeStr().equals("binaryExp")) {
             visit((BinaryExpressionNode) node.getRight());
         }
-
         switch (node.getResultType()) {
             case "str":
                 String lstr = null;
@@ -715,12 +719,8 @@ public class SemanticAnalyzer implements ASTVisitor {
     public void visit(StatementNode node) throws Exception {
         System.out.println("statements");
         for (ExpressionNode statement : node.getStatements()) {
-            System.out.println("ici " + statement);
             if(statement instanceof MethodCallNode){
                 visit((MethodCallNode) statement);
-            }
-            if (statement.getTypeStr().equals("str")) {
-                visit((ValDeclarationNode) statement);
             }
             //visit((ForStatementNode) statement);
         }
@@ -734,8 +734,7 @@ public class SemanticAnalyzer implements ASTVisitor {
     @Override
     public void visit(ValDeclarationNode node) throws Exception {
         System.out.println("val");
-        if (!SymbolTable.containimmut(node.getAssignment().getIdentifier())) {
-            String varName = node.getAssignment().getIdentifier();
+        if (!SymbolTable.containmut(node.getAssignment().getIdentifier()) && !SymbolTable.containimmut(node.getAssignment().getIdentifier()) && !SymbolTable.containrecord(node.getAssignment().getIdentifier()) && !SymbolTable.containarray(node.getAssignment().getIdentifier())) {            String varName = node.getAssignment().getIdentifier();
             TypeNode varType = node.getAssignment().getType();
             String valType = node.getAssignment().getValue().getTypeStr();
             if (valType.equals("binaryExp")) {
@@ -767,8 +766,7 @@ public class SemanticAnalyzer implements ASTVisitor {
     @Override
     public void visit(VarDeclarationNode node) throws Exception {
         System.out.println("var");
-        if (!SymbolTable.containmut(node.getAssignment().getIdentifier())) {
-            String varName = node.getAssignment().getIdentifier();
+        if (!SymbolTable.containmut(node.getAssignment().getIdentifier()) && !SymbolTable.containimmut(node.getAssignment().getIdentifier()) && !SymbolTable.containrecord(node.getAssignment().getIdentifier()) && !SymbolTable.containarray(node.getAssignment().getIdentifier())) {            String varName = node.getAssignment().getIdentifier();
             TypeNode varType = node.getAssignment().getType();
             if(node.getAssignment().getValue() instanceof MethodCallNode){
                 MethodCallNode val = (MethodCallNode) node.getAssignment().getValue();
@@ -776,15 +774,29 @@ public class SemanticAnalyzer implements ASTVisitor {
                 if(functions.contains(val.getIdentifier())){
 
                 }else{
-                    throw new Exception("Assignment error, " + val.getIdentifier() + " does not match");
+                    throw new Exception("Assignment error, \"" + val.getIdentifier() + "\" does not match or is not declared");
+                }
+            }
+            else if (node.getAssignment().getValue() instanceof AssignmentArrayNode ){
+                AssignmentArrayNode val = (AssignmentArrayNode) node.getAssignment().getValue();
+                if(varType.getTypeSymbol().equals(val.getType().getTypeSymbol())){
+                    SymbolTable.insertarray(varName,new SimpleEntry<>(val.getType().getTypeSymbol(),Integer.valueOf(val.getSize().getValue())));
+                    return;
+                }else{
+                    throw new Exception("Different type in array definition" );
                 }
             }
             else if (node.getAssignment().getValue() != null) {
                 String valType = node.getAssignment().getValue().getTypeStr();
-                if (valType.equals("binaryExp")) {
+                System.out.println(node.getAssignment());
+                System.out.println(node.getAssignment().getValue());
+                if(node.getAssignment().getValue() instanceof LiteralNode){
+
+                }
+                else if (valType.equals("binaryExp")) {
                     valType = visit((BinaryExpressionNode) node.getAssignment().getValue());
                 }
-                if (valType.equals("array")){
+                else if (valType.equals("array")){
                     valType = visit((AssignmentArrayNode) node.getAssignment().getValue());
                 }
                 else if (!valType.equals(varType.getTypeSymbol())) {

@@ -9,11 +9,14 @@ public class   SymbolTable {
     private static Map<String, TypeNode> mutablesymbolTable;
     private static Map<String, TypeNode> immutablesymbolTable;
     private static Map<String, List<AbstractMap.SimpleEntry<String, String>>> recordsymbolTable;
+    private static Map<String, AbstractMap.SimpleEntry<String, Integer>> arraysymbolTable;
 
     public SymbolTable(){
         this.mutablesymbolTable = new HashMap<>();
         this.immutablesymbolTable = new HashMap<>();
         this.recordsymbolTable = new HashMap<>();
+        this.arraysymbolTable = new HashMap<>();
+
     }
 
     public static void insertmut(String name, TypeNode type) {
@@ -25,6 +28,9 @@ public class   SymbolTable {
     public static void insertrecord(String name, List<AbstractMap.SimpleEntry<String, String>> fields ){
         recordsymbolTable.put(name, fields);
     }
+    public static void insertarray(String name, AbstractMap.SimpleEntry<String, Integer> fields ){
+        arraysymbolTable.put(name, fields);
+    }
 
     public static TypeNode lookupmut(String name) {
         return mutablesymbolTable.get(name);}
@@ -32,6 +38,9 @@ public class   SymbolTable {
         return immutablesymbolTable.get(name);}
     public static List<AbstractMap.SimpleEntry<String, String>> lookuprecord(String name){
         return recordsymbolTable.get(name);
+    }
+    public static AbstractMap.SimpleEntry<String, Integer> lookuparray(String name){
+        return arraysymbolTable.get(name);
     }
 
     public static boolean containmut(String name) {
@@ -43,7 +52,9 @@ public class   SymbolTable {
     public static boolean containrecord(String name){
         return recordsymbolTable.containsKey(name);
     }
-
+    public static boolean containarray(String name){
+        return arraysymbolTable.containsKey(name);
+    }
 /*
     public void add(ArrayList<ParamNode> n){
         for (ParamNode paramNode : n) {

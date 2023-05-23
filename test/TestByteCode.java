@@ -313,6 +313,25 @@ public class TestByteCode {
         bc.getRender();
     }
 
+    @Test
+    public void testBinaryOperationWithRegisters() throws Exception {
+        String input = """
+                var i int = 10;
+                var ii int = 10;
+                var sum int = i + ii;
+                var a int = i * 20.1;
+                var as int = i * "sttttt";
+                var aa int = i * 20;
+                """;
+        StringReader reader = new StringReader(input);
+        Lexer lexer = new Lexer(reader);
+        Parser parser = new Parser(lexer);
+        ProgramNode x = parser.getAST();
+        new SemanticAnalyzer(x);
+        BytecodeCompiler bc = new BytecodeCompiler(x);
+        bc.getRender();
+    }
+
     /*
         NOT WORKING YET
     */
@@ -363,7 +382,7 @@ public class TestByteCode {
     public void testProcIllegalType() throws Exception {
         String input =
                 """
-                proc add(x int, a int, aaa int) void {
+                proc add(x int, a int, aaa int) int {
                     return x + x;
                 }
                 add(1,2,33);
@@ -609,9 +628,14 @@ public class TestByteCode {
         bc.getRender();
     }
     @Test
-    public void testBuiltIn1() throws Exception {
+    public void testBinaryOperationWithRegister() throws Exception {
         String input = """
-                var a int = chr(65);
+                var i int = 10;
+                var ii int = 10;
+                var sum int = i + ii;
+                var a int = i * 20.1;
+                var as int = i * "sttttt";
+                var aa int = i * 20;
                 """;
         StringReader reader = new StringReader(input);
         Lexer lexer = new Lexer(reader);
