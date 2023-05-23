@@ -36,7 +36,6 @@ public class MethodCallNode extends ExpressionNode {
         match(SymbolKind.LPAR);
         ArrayList<ParamNode> params = ParamListNode.parseParams(true);
         match(SymbolKind.RPAR);
-        match(SymbolKind.SEMI);
         return new MethodCallNode(identifier.getLiteral(),null,params);
     }
 
