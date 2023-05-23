@@ -394,6 +394,7 @@ public class SemanticAnalyzer implements ASTVisitor {
     @Override
     public void visit(BlockNode node) throws Exception {
         System.out.println("block");
+        System.out.println();
         visit(node.getStatements());
     }
 
@@ -628,7 +629,9 @@ public class SemanticAnalyzer implements ASTVisitor {
 
         }
         functionTable.put(name, node.getParameters());
-        visit(node.getBody());
+        if(node.getBody().getStatements()!=null){
+            visit(node.getBody());
+        }
     }
 
     @Override
@@ -767,7 +770,16 @@ public class SemanticAnalyzer implements ASTVisitor {
         if (!SymbolTable.containmut(node.getAssignment().getIdentifier())) {
             String varName = node.getAssignment().getIdentifier();
             TypeNode varType = node.getAssignment().getType();
-            if (node.getAssignment().getValue() != null) {
+            if(node.getAssignment().getValue() instanceof MethodCallNode){
+                MethodCallNode val = (MethodCallNode) node.getAssignment().getValue();
+                System.out.println(val.getIdentifier());
+                if(functions.contains(val.getIdentifier())){
+
+                }else{
+                    throw new Exception("Assignment error, " + val.getIdentifier() + " does not match");
+                }
+            }
+            else if (node.getAssignment().getValue() != null) {
                 String valType = node.getAssignment().getValue().getTypeStr();
                 if (valType.equals("binaryExp")) {
                     valType = visit((BinaryExpressionNode) node.getAssignment().getValue());

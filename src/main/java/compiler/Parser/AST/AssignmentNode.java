@@ -33,7 +33,7 @@ public class AssignmentNode extends ExpressionNode{
 
     public static AssignmentNode parseAssignment(String identifier) throws ParseException{
         ExpressionNode value = null;
-
+        System.out.println(lookahead.getKind());
         switch (lookahead.getKind()){
             case EQUALS:
                 match(SymbolKind.EQUALS);
@@ -56,8 +56,14 @@ public class AssignmentNode extends ExpressionNode{
 
             case EQUALS: // Assign value to variable
                 match(SymbolKind.EQUALS);
-                value = BinaryExpressionNode.parseBinaryExpressionNode(null);
-                return new AssignmentNode(identifier, type, value);
+                ExpressionNode val = BinaryExpressionNode.parseBinaryExpressionNode(null);
+                if(lookahead.getKind()==SymbolKind.LPAR){
+                    LiteralNode literalNode = (LiteralNode) val;
+                    MethodCallNode methodCall = MethodCallNode.parseMethodCall(literalNode);
+                    return new AssignmentNode(identifier, type, methodCall);
+                }else{
+                    return new AssignmentNode(identifier, type, val);
+                }
 
             default:
                 return new AssignmentNode(identifier,type,null);

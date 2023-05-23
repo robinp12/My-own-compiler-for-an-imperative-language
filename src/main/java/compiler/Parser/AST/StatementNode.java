@@ -54,6 +54,7 @@ public class StatementNode extends ExpressionNode{
                     LiteralNode literal = LiteralNode.parseLiteral();
                     if(lookahead.getKind().equals(SymbolKind.LPAR)){
                         statements.add(MethodCallNode.parseMethodCall(literal));
+                        match(SymbolKind.SEMI);
                     }else{
                         statements.add(AssignmentNode.parseAssignment(literal.getLiteral()));
                     }

@@ -299,6 +299,19 @@ public class TestByteCode {
         bc.getRender();
     }
 
+    @Test
+    public void testBuiltInVarAssigment() throws Exception {
+        String input = """
+                var a int = chr(65);
+                """;
+        StringReader reader = new StringReader(input);
+        Lexer lexer = new Lexer(reader);
+        Parser parser = new Parser(lexer);
+        ProgramNode x = parser.getAST();
+        new SemanticAnalyzer(x);
+        BytecodeCompiler bc = new BytecodeCompiler(x);
+        bc.getRender();
+    }
 
     /*
         NOT WORKING YET
@@ -598,10 +611,7 @@ public class TestByteCode {
     @Test
     public void testBuiltIn1() throws Exception {
         String input = """
-                proc print() int {
-                    var i = len("65");
-                }
-                print();
+                var a int = chr(65);
                 """;
         StringReader reader = new StringReader(input);
         Lexer lexer = new Lexer(reader);

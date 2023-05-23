@@ -13,6 +13,7 @@ import javax.naming.PartialResultException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.time.chrono.MinguoEra;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -181,6 +182,8 @@ public class BytecodeCompiler {
     }
 
     private void generateBuiltInt(MethodCallNode expression) {
+        method = method == null ? methodMain : method;
+
         System.out.println("built-in");
         String name = expression.getIdentifier();
         ArrayList<ParamNode> params = expression.getParameters();
@@ -353,7 +356,9 @@ public class BytecodeCompiler {
     private void generateBlock(BlockNode block) {
         System.out.println("Block");
         StatementNode stmt = block.getStatements();
-        generateStatement(stmt);
+        if (stmt!=null){
+            generateStatement(stmt);
+        }
     }
 
     private void generateStatement(StatementNode expression) {
@@ -510,6 +515,17 @@ public class BytecodeCompiler {
                 BinaryExpressionNode exp = (BinaryExpressionNode) valType;
                 System.out.println(exp);
                 generateBinaryExpression(exp);
+            } else if (valType instanceof MethodCallNode) {
+                // Case of method call
+                MethodCallNode val = (MethodCallNode) expression.getValue();
+
+                if (SemanticAnalyzer.functions.contains(val.getIdentifier())) {
+                    generateBuiltInt(val);
+                    return;
+                }else{
+                    generateProcCall(val);
+                }
+
             } else if (valType instanceof AssignmentArrayNode) {
                 // Case of array
                 AssignmentArrayNode val = (AssignmentArrayNode) expression.getValue();
