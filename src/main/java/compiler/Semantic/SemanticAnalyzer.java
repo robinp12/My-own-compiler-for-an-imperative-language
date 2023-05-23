@@ -1,6 +1,7 @@
 package compiler.Semantic;
 
 import com.google.common.collect.Lists;
+import compiler.Compiler;
 import compiler.Lexer.SymbolKind;
 import compiler.Parser.AST.*;
 
@@ -10,7 +11,7 @@ import java.util.AbstractMap.SimpleEntry;
 public class SemanticAnalyzer implements ASTVisitor {
     private static SymbolTable symbolTable;
 
-    List<String> functions = Lists.newArrayList(
+    public static List<String> functions = Lists.newArrayList(
             "not",
             "chr",
             "len",
@@ -219,7 +220,6 @@ public class SemanticAnalyzer implements ASTVisitor {
             default:
                 throw new Exception("Invalid operator: binary expression operator error");
         }
-        /*
         // Get the types of the left and right operands
         ExpressionNode left = node.getLeft();
         ExpressionNode right = node.getRight();
@@ -235,7 +235,6 @@ public class SemanticAnalyzer implements ASTVisitor {
             case "str":
                 String lstr = null;
                 String rstr = null;
-
                 if (left instanceof BinaryExpressionNode){
                     lstr = ((BinaryExpressionNode) left).getResult();
                 } else {
@@ -315,17 +314,16 @@ public class SemanticAnalyzer implements ASTVisitor {
                 if (left.getTypeStr().equals("bool")) {
                     Boolean lb = null;
                     Boolean rb = null;
-                    if (left instanceof BinaryExpressionNode){
+                    if (left instanceof BinaryExpressionNode) {
                         lb = Boolean.valueOf(((BinaryExpressionNode) left).getResult());
                     } else {
                         lb = Boolean.valueOf(((NumberNode) left).getValue());
                     }
-                    if (right instanceof BinaryExpressionNode){
+                    if (right instanceof BinaryExpressionNode) {
                         rb = Boolean.valueOf(((BinaryExpressionNode) right).getResult());
                     } else {
                         rb = Boolean.valueOf(((NumberNode) right).getValue());
                     }
-
                     if (operatorKind.equals(SymbolKind.EQEQ)) {
                         node.setResult(String.valueOf(lb == rb));
                     } else if (operatorKind.equals(SymbolKind.DIFF)) {
@@ -338,7 +336,6 @@ public class SemanticAnalyzer implements ASTVisitor {
                 } else if (left.getTypeStr().equals("str")) {
                     String ls = null;
                     String rs = null;
-
                     if (left instanceof BinaryExpressionNode){
                         ls = ((BinaryExpressionNode) left).getResult();
                     } else {
@@ -389,9 +386,7 @@ public class SemanticAnalyzer implements ASTVisitor {
                     }
                     break;
                 }
-
-
-        }*/
+        }
         return node.getResultType();
 
     }
@@ -399,6 +394,7 @@ public class SemanticAnalyzer implements ASTVisitor {
     @Override
     public void visit(BlockNode node) throws Exception {
         System.out.println("block");
+        System.out.println();
         visit(node.getStatements());
     }
 
@@ -432,6 +428,7 @@ public class SemanticAnalyzer implements ASTVisitor {
 
     @Override
     public void visit(ExpressionNode node) throws Exception {
+        System.out.println(node);
         System.out.println("expression");
         if (node instanceof VarDeclarationNode) {
             visit((VarDeclarationNode) node);
@@ -531,9 +528,19 @@ public class SemanticAnalyzer implements ASTVisitor {
                 if (node.getParameters().size() != 0) {
                     throw new Exception("Built-in function \"" + node.getIdentifier() + "\" need no argument");
                 }
+                if (Compiler.argu==null || Compiler.argu.length!=1) {
+                    throw new Exception("Built-in function \"" + node.getIdentifier() + "\" need 1 argument in LINE COMMAND");
+                }
             }
             case "write", "writeln" -> {
-
+                if (node.getParameters().size() != 1) {
+                    throw new Exception("Built-in function \"" + node.getIdentifier() + "\" need 1 argument");
+                }
+            }
+            case "writeint", "writereal", "not", "chr", "len", "floor" -> {
+                if (node.getParameters().size() != 1) {
+                    throw new Exception("Built-in function \"" + node.getIdentifier() + "\" need exactly 1 argument");
+                }
             }
         }
         if(node.getParameters().size()>0) {
@@ -567,7 +574,7 @@ public class SemanticAnalyzer implements ASTVisitor {
                     if (node.getParameters().size() != 1) {
                         throw new Exception("Built-in function \"" + node.getIdentifier() + "\" need exactly 1 argument");
                     }
-                    if (!param.getTypeStr().equals("str") || !param.getTypeStr().equals("array")) { //TODO
+                    if (!param.getTypeStr().equals("str") && !param.getTypeStr().equals("array")) { //TODO
                         throw new Exception("Built-in function \"" + node.getIdentifier() + "\" parameter type need to be \"str\" or \"array\"");
                     }
                 }
@@ -583,7 +590,7 @@ public class SemanticAnalyzer implements ASTVisitor {
         }
         String identifier = node.getIdentifier();
         ArrayList<ParamNode> function = functionTable.get(identifier);
-        if(function==null){
+        if(function==null && !functions.contains(identifier)){
             try {
                 throw new Exception("Function \"" + identifier + "\" is not implemented yet");
             } catch (Exception e) {
@@ -622,6 +629,9 @@ public class SemanticAnalyzer implements ASTVisitor {
 
         }
         functionTable.put(name, node.getParameters());
+        if(node.getBody().getStatements()!=null){
+            visit(node.getBody());
+        }
     }
 
     @Override
@@ -705,6 +715,10 @@ public class SemanticAnalyzer implements ASTVisitor {
     public void visit(StatementNode node) throws Exception {
         System.out.println("statements");
         for (ExpressionNode statement : node.getStatements()) {
+            System.out.println("ici " + statement);
+            if(statement instanceof MethodCallNode){
+                visit((MethodCallNode) statement);
+            }
             if (statement.getTypeStr().equals("str")) {
                 visit((ValDeclarationNode) statement);
             }
@@ -756,7 +770,16 @@ public class SemanticAnalyzer implements ASTVisitor {
         if (!SymbolTable.containmut(node.getAssignment().getIdentifier())) {
             String varName = node.getAssignment().getIdentifier();
             TypeNode varType = node.getAssignment().getType();
-            if (node.getAssignment().getValue() != null) {
+            if(node.getAssignment().getValue() instanceof MethodCallNode){
+                MethodCallNode val = (MethodCallNode) node.getAssignment().getValue();
+                System.out.println(val.getIdentifier());
+                if(functions.contains(val.getIdentifier())){
+
+                }else{
+                    throw new Exception("Assignment error, " + val.getIdentifier() + " does not match");
+                }
+            }
+            else if (node.getAssignment().getValue() != null) {
                 String valType = node.getAssignment().getValue().getTypeStr();
                 if (valType.equals("binaryExp")) {
                     valType = visit((BinaryExpressionNode) node.getAssignment().getValue());
