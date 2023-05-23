@@ -532,7 +532,7 @@ public class SemanticAnalyzer implements ASTVisitor {
                 if (node.getParameters().size() != 0) {
                     throw new Exception("Built-in function \"" + node.getIdentifier() + "\" need no argument");
                 }
-                if (Compiler.argu==null || Compiler.argu.length!=1) {
+                if (Compiler.argu==null || Compiler.argu.length!=2) {
                     throw new Exception("Built-in function \"" + node.getIdentifier() + "\" need 1 argument in LINE COMMAND");
                 }
             }

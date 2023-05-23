@@ -224,9 +224,9 @@ public class BytecodeCompiler {
                 System.out.println("readInt");
                 ++idx;
                 valueTable.put(name + "_func", idx);
-                method.visitLdcInsn(Integer.parseInt(Compiler.argu[0]));
+                method.visitLdcInsn(Integer.parseInt(Compiler.argu[1]));
                 try {
-                    method.visitLdcInsn(Integer.parseInt(Compiler.argu[0]));
+                    method.visitLdcInsn(Integer.parseInt(Compiler.argu[1]));
                 } catch (RuntimeException e) {
                     method.visitLdcInsn(0);
                 }
@@ -237,7 +237,7 @@ public class BytecodeCompiler {
                 ++idx;
                 valueTable.put(name + "_func", idx);
                 try {
-                    method.visitLdcInsn(Float.parseFloat(Compiler.argu[0]));
+                    method.visitLdcInsn(Float.parseFloat(Compiler.argu[1]));
                 } catch (RuntimeException e) {
                     method.visitLdcInsn(0.0F);
                 }
@@ -248,7 +248,7 @@ public class BytecodeCompiler {
                 ++idx;
                 valueTable.put(name + "_func", idx);
                 try {
-                    method.visitLdcInsn(Compiler.argu[0]);
+                    method.visitLdcInsn(Compiler.argu[1]);
                 } catch (RuntimeException e) {
                     method.visitLdcInsn("");
                 }

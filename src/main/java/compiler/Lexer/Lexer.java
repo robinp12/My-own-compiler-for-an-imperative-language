@@ -91,7 +91,7 @@ public class Lexer {
         {
             switch (get_char(i))
             {
-                case ' ': case '\t': case '\n':
+                case ' ': case '\t': case '\n': case '\r':
                     do {c = get_char(++i); }
                     while (c == ' ' || c == '\t' || c == '\n');
                     break;
