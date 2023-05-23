@@ -1,0 +1,4 @@
+proc square() int {return 1;}proc squared() int {return 0;}
+square();
+squared();
+squared();
