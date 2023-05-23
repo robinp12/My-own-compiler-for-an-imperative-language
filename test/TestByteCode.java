@@ -250,10 +250,10 @@ public class TestByteCode {
                 "var c string[] = string[](10); " +
                 "var rc real[] = real[](10); " +
                 "var drc int[] = int[](10); " +
-                "ac[30] = true;" +
-                "c[30] = \"sc\";" +
-                "rc[30] = 1.1;" +
-                "drc[30] = 1;" +
+                "ac[3] = true;" +
+                "c[3] = \"sc\";" +
+                "rc[3] = 1.1;" +
+                "drc[3] = 1;" +
                 "";
         StringReader reader = new StringReader(input);
         Lexer lexer = new Lexer(reader);

@@ -170,10 +170,11 @@ public class BytecodeCompiler {
                 }
             }
         }
-        System.out.println(returnTypeLetter);
         // Appeler la methode dans main
         methodMain.visitMethodInsn(INVOKESTATIC, "Main", name, "(" + argLetter + ")" + returnTypeLetter, false);
-        methodMain.visitInsn(POP);
+        if(!returnTypeLetter.equals("V")){
+            methodMain.visitInsn(POP);
+        }
     }
 
     private void generateBuiltInt(MethodCallNode expression) {
