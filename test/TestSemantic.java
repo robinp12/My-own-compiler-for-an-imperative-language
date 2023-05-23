@@ -128,7 +128,7 @@ public class TestSemantic {
 
     @Test
     public void testComplexWhile() throws Exception {
-        String input =  "var i int = 0; while 8 >= i { i = i+1; }";
+        String input =  "var i int = 0; while 8 >= 1 { i = i+1; }";
         StringReader reader = new StringReader(input);
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
@@ -198,6 +198,36 @@ public class TestSemantic {
     }
 
     @Test
+    public void testArrayIllegal() throws Exception {
+        String input = "var c int[] = int[](10); c[11] = 100;";
+        StringReader reader = new StringReader(input);
+        Lexer lexer = new Lexer(reader);
+        Parser parser = new Parser(lexer);
+        ProgramNode x = parser.getAST();
+        assertThrows(Exception.class, () -> {new SemanticAnalyzer(x);});
+    }
+
+    @Test
+    public void testArrayIllegal2() throws Exception {
+        String input = "var c int[] = int[](10); c[8] = 10.9;";
+        StringReader reader = new StringReader(input);
+        Lexer lexer = new Lexer(reader);
+        Parser parser = new Parser(lexer);
+        ProgramNode x = parser.getAST();
+        assertThrows(Exception.class, () -> {new SemanticAnalyzer(x);});
+    }
+
+    @Test
+    public void testArray() throws Exception {
+        String input = "var c int[] = int[](10); c[8] = 100;";
+        StringReader reader = new StringReader(input);
+        Lexer lexer = new Lexer(reader);
+        Parser parser = new Parser(lexer);
+        ProgramNode x = parser.getAST();
+        new SemanticAnalyzer(x);
+    }
+
+    @Test
     public void testAssignmentConstIllegal() throws Exception {
         String input =  "const x int; " +
                 "x = 10";
@@ -237,8 +267,8 @@ public class TestSemantic {
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
         ProgramNode x = parser.getAST();
-        System.out.println(x);
         new SemanticAnalyzer(x);
+        System.out.println(x);
     }
 
     @Test
@@ -266,13 +296,13 @@ public class TestSemantic {
     @Test
     public void testAssignmentBool1() throws Exception {
         String input = "var x boolean = true;" +
-                "x = (1+1==3); ";
+                "x = (1+2==3); ";
         StringReader reader = new StringReader(input);
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
         ProgramNode x = parser.getAST();
-        System.out.println(x);
         new SemanticAnalyzer(x);
+        System.out.println(x);
     }
 
     @Test
