@@ -51,8 +51,8 @@ public class SemanticAnalyzer implements ASTVisitor {
     }
 
     @Override
-    public void visit(AssignmentArrayNode node) {
-        System.out.println("assignment array");
+    public String visit(AssignmentArrayNode node) {
+        return null;
     }
 
     @Override
@@ -68,6 +68,11 @@ public class SemanticAnalyzer implements ASTVisitor {
         if (varType.equals("binaryExp")) {
             varType = visit((BinaryExpressionNode) node.getValue());
         }
+        if (valType.equals("array")) {
+            //visit((AssignmentArrayNode) node.getValue(), varName, varType);
+            return;
+        }
+
         //Check variable and value type
         if (!valType.equals(varType)) {
             throw new Exception("Assignment error, value type " + valType + " does not match declared type " + varType);
@@ -92,6 +97,23 @@ public class SemanticAnalyzer implements ASTVisitor {
         }
     }
 
+    private void visit(AssignmentArrayNode value, String varType) throws Exception {
+        //Check variable and value type
+/*
+        // Check if the variable has already been declared in this scope
+        if (SymbolTable.containmut(varName)) {
+            if (!symbolTable.lookupmut(varName).getTypeSymbol().equals(varType+"[]("+value.getSize().getValue()+")")) {
+                throw new Exception("Assignment error: this identifier " + varName + " is already used and is of type " + symbolTable.lookupmut(varName).getTypeSymbol() + " and not " + varType);
+            }
+        } else if (SymbolTable.containimmut(varName)) {
+            throw new Exception("Assignment exception: you tried to modify a immutable val or const");
+        } else {
+            throw new Exception("Assignment exception: Illegal assignment");
+        }
+
+ */
+    }
+
 
     @Override
     public String visit(BinaryExpressionNode node) throws Exception {
@@ -104,7 +126,7 @@ public class SemanticAnalyzer implements ASTVisitor {
             leftType = visit((BinaryExpressionNode) node.getLeft());
         }
         if (rightType.equals("binaryExp")) {
-            rightType = visit((BinaryExpressionNode) node.getLeft());
+            rightType = visit((BinaryExpressionNode) node.getRight());
         }
         if (leftType.equals("str")) {
             LiteralNode left = (LiteralNode) node.getLeft();
@@ -197,7 +219,117 @@ public class SemanticAnalyzer implements ASTVisitor {
             default:
                 throw new Exception("Invalid operator: binary expression operator error");
         }
+        // Get the types of the left and right operands
+        ExpressionNode left = node.getLeft();
+        ExpressionNode right = node.getRight();
+
+        if (left.getTypeStr().equals("binaryExp")) {
+            visit((BinaryExpressionNode) node.getLeft());
+        }
+        if (right.getTypeStr().equals("binaryExp")) {
+            visit((BinaryExpressionNode) node.getRight());
+        }
+
+        switch (node.getResultType()) {
+            case "str":
+                LiteralNode lstr = (LiteralNode) left;
+                LiteralNode rstr = (LiteralNode) right;
+
+                if (operatorKind.equals(SymbolKind.PLUS)) {
+                    node.setResult(lstr.getLiteral() + rstr.getLiteral());
+                } else {
+                    throw new Exception("Invalid operation: binary expression error type");
+                }
+                break;
+
+            case "int":
+                NumberNode lint = (NumberNode) left;
+                NumberNode rint = (NumberNode) right;
+
+                if (operatorKind.equals(SymbolKind.PLUS)) {
+                    node.setResult(String.valueOf(Integer.valueOf(lint.getValue()) + Integer.valueOf(rint.getValue())));
+                } else if (operatorKind.equals(SymbolKind.MINUS)) {
+                    node.setResult(String.valueOf(Integer.valueOf(lint.getValue()) - Integer.valueOf(rint.getValue())));
+                } else if (operatorKind.equals(SymbolKind.STAR)) {
+                    node.setResult(String.valueOf(Integer.valueOf(lint.getValue()) * Integer.valueOf(rint.getValue())));
+                } else if (operatorKind.equals(SymbolKind.SLASH)) {
+                    node.setResult(String.valueOf(Integer.valueOf(lint.getValue()) / Integer.valueOf(rint.getValue())));
+                } else if (operatorKind.equals(SymbolKind.PERC)) {
+                    node.setResult(String.valueOf(Integer.valueOf(lint.getValue()) % Integer.valueOf(rint.getValue())));
+                } else {
+                    throw new Exception("Invalid operation: binary expression error type");
+                }
+                break;
+
+
+            case "real":
+                NumberNode lcast = (NumberNode) left;
+                NumberNode rcast = (NumberNode) right;
+                Float lreal = Float.valueOf(lcast.getValue());
+                Float rreal = Float.valueOf(rcast.getValue());
+
+                if (operatorKind.equals(SymbolKind.PLUS)) {
+                    node.setResult(String.valueOf(lreal + rreal));
+                } else if (operatorKind.equals(SymbolKind.MINUS)) {
+                    node.setResult(String.valueOf(lreal - rreal));
+                } else if (operatorKind.equals(SymbolKind.STAR)) {
+                    node.setResult(String.valueOf(lreal * rreal));
+                } else if (operatorKind.equals(SymbolKind.SLASH)) {
+                    node.setResult(String.valueOf(lreal / rreal));
+                } else {
+                    throw new Exception("Invalid operation: binary expression error type");
+                }
+                break;
+
+            case "boolean":
+                if (left.getTypeStr().equals("boolean")) {
+                    BooleanNode lb = (BooleanNode) left;
+                    BooleanNode rb = (BooleanNode) right;
+                    if (operatorKind.equals(SymbolKind.EQEQ)) {
+                        node.setResult(String.valueOf(lb.isVal() == rb.isVal()));
+                    } else if (operatorKind.equals(SymbolKind.DIFF)) {
+                        node.setResult(String.valueOf(lb.isVal() != rb.isVal()));
+                    } else {
+                        throw new Exception("Invalid operation: binary expression error type");
+                    }
+                    //TODO: AND et OR
+                    break;
+                } else if (left.getTypeStr().equals("str")) {
+                    LiteralNode ls = (LiteralNode) left;
+                    LiteralNode rs = (LiteralNode) right;
+                    if (operatorKind.equals(SymbolKind.EQEQ)) {
+                        node.setResult(String.valueOf(ls.getLiteral().equals(rs.getLiteral())));
+                    } else if (operatorKind.equals(SymbolKind.DIFF)) {
+                        node.setResult(String.valueOf(!ls.getLiteral().equals(rs.getLiteral())));
+                    } else {
+                        throw new Exception("Invalid operation: binary expression error type");
+                    }
+                } else {
+                    NumberNode lcst = (NumberNode) left;
+                    NumberNode rcst = (NumberNode) right;
+                    Float lr = Float.valueOf(lcst.getValue());
+                    Float rr = Float.valueOf(rcst.getValue());
+
+                    if (operatorKind.equals(SymbolKind.EQEQ)) {
+                        node.setResult(String.valueOf(lr == rr));
+                    } else if (operatorKind.equals(SymbolKind.DIFF)) {
+                        node.setResult(String.valueOf(lr != rr));
+                    } else if (operatorKind.equals(SymbolKind.LESS)) {
+                        node.setResult(String.valueOf(lr < rr));
+                    } else if (operatorKind.equals(SymbolKind.MORE)) {
+                        node.setResult(String.valueOf(lr > rr));
+                    } else if (operatorKind.equals(SymbolKind.LESSEQ)) {
+                        node.setResult(String.valueOf(lr <= rr));
+                    } else if (operatorKind.equals(SymbolKind.MOREEQ)) {
+                        node.setResult(String.valueOf(lr >= rr));
+                    } else {
+                        throw new Exception("Invalid operation: binary expression error type");
+                    }
+                    break;
+                }
+        }
         return node.getResultType();
+
     }
 
     @Override
@@ -565,7 +697,10 @@ public class SemanticAnalyzer implements ASTVisitor {
                 if (valType.equals("binaryExp")) {
                     valType = visit((BinaryExpressionNode) node.getAssignment().getValue());
                 }
-                if (!valType.equals(varType.getTypeSymbol())) {
+                if (valType.equals("array")){
+                    valType = visit((AssignmentArrayNode) node.getAssignment().getValue());
+                }
+                else if (!valType.equals(varType.getTypeSymbol())) {
                     throw new Exception("Assignment error, value type " + valType + " does not match declared type " + varType.getTypeSymbol());
                 }
             }

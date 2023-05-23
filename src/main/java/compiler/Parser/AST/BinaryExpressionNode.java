@@ -197,6 +197,8 @@ public class BinaryExpressionNode extends ExpressionNode {
                 "left=" + left +
                 ", operator=" + operator +
                 ", right=" + right +
+                ", result type=" + type +
+                ", result=" + result +
                 '}';
     }
 
