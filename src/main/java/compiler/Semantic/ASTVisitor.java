@@ -5,7 +5,7 @@ import compiler.Parser.AST.*;
 public interface ASTVisitor {
     void visit(ProgramNode node) throws Exception;
     void visit(ArithmeticExpressionNode node);
-    void visit(AssignmentArrayNode node);
+    String visit(AssignmentArrayNode node);
     void visit(AssignmentNode node) throws Exception;
     String visit(BinaryExpressionNode node) throws Exception;
     void visit(BlockNode node) throws Exception;

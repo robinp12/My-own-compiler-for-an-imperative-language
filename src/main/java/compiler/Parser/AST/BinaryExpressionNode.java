@@ -19,6 +19,7 @@ public class BinaryExpressionNode extends ExpressionNode {
     private Symbol operator;
     private ExpressionNode right;
     private String type;
+    private String result;
 
     public BinaryExpressionNode(ExpressionNode left, Symbol operator, ExpressionNode right) {
         super("binaryExp");
@@ -206,4 +207,13 @@ public class BinaryExpressionNode extends ExpressionNode {
     public String getResultType(){
         return this.type;
     }
+
+    public void setResult(String res) {
+        this.result = res;
+    }
+
+    public String getResult(){
+        return this.result;
+    }
+
 }

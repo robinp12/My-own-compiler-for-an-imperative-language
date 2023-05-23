@@ -1,5 +1,7 @@
 import compiler.Bytecode.BytecodeCompiler;
+import compiler.Bytecode.ExpressionEvaluator;
 import compiler.Lexer.Lexer;
+import compiler.Parser.AST.BinaryExpressionNode;
 import compiler.Parser.AST.ProgramNode;
 import compiler.Parser.Parser;
 import compiler.Semantic.SemanticAnalyzer;
