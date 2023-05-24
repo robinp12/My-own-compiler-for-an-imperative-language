@@ -15,6 +15,7 @@ public class TestByteCode {
                 proc add() int {
                     return 10+1;
                 }
+                add();
                 """;
         StringReader reader = new StringReader(input);
         Lexer lexer = new Lexer(reader);
@@ -47,7 +48,9 @@ public class TestByteCode {
     @Test
     public void testBasicProcString() throws Exception {
         String input =  "proc add() string {" +
-                "return \"Hola\";" +
+                "var a int = 1/1;"+
+                "var b int = 2/2;"+
+                "return a;" +
                 "}" +
                 "add()";
         StringReader reader = new StringReader(input);
@@ -349,6 +352,44 @@ public class TestByteCode {
         BytecodeCompiler bc = new BytecodeCompiler(x);
         bc.getRender();
     }
+    @Test
+    public void testBasicProcs() throws Exception {
+        String input =
+                """
+                    proc lens(v int, a int) int {return v+v;}
+                    proc lens1(v int) int {return v+v;}
+
+                    lens(20000,11);
+                    lens1(111);
+                    var i int = 0;
+                """;
+        StringReader reader = new StringReader(input);
+        Lexer lexer = new Lexer(reader);
+        Parser parser = new Parser(lexer);
+        ProgramNode x = parser.getAST();
+        SemanticAnalyzer sa = new SemanticAnalyzer();
+        x = sa.SemanticAnalyzer(x);
+        BytecodeCompiler bc = new BytecodeCompiler(x);
+        bc.getRender();
+    }
+    @Test
+    public void testProcIllegalType() throws Exception {
+        String input =
+                """
+                proc add(x int, a int, aaa int) int {
+                    return x + x;
+                }
+                add(1,2,33);
+                """;
+        StringReader reader = new StringReader(input);
+        Lexer lexer = new Lexer(reader);
+        Parser parser = new Parser(lexer);
+        ProgramNode x = parser.getAST();
+        SemanticAnalyzer sa = new SemanticAnalyzer();
+        x = sa.SemanticAnalyzer(x);
+        BytecodeCompiler bc = new BytecodeCompiler(x);
+        bc.getRender();
+    }
 
     /*
         NOT WORKING YET
@@ -472,7 +513,6 @@ public class TestByteCode {
         BytecodeCompiler bc = new BytecodeCompiler(x);
         bc.getRender();
     }
-
     @Test
     public void testRecordComplexAssign() throws Exception {
         String input = """
@@ -640,8 +680,8 @@ public class TestByteCode {
     public void testBasicProcssx() throws Exception {
         String input =
                 """
-                    proc squared(v int, x int) int {return v+x;}
-                    proc square(v int) int {return 0+1;}
+                    proc squared(v int, x int) int {return v%x;}
+                    proc square(v int) int {return v;}
                     squared(10,10);
                 """;
         StringReader reader = new StringReader(input);
