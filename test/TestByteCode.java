@@ -350,20 +350,88 @@ public class TestByteCode {
         bc.getRender();
     }
 
+    @Test
+    public void testArrayReassignment() throws Exception {
+        String input = "var ac boolean[] = boolean[](10); " +
+                "var rc real[] = real[](10); " +
+                "var drc int[] = int[](10); " +
+                "ac[3] = true;" +
+                "rc[3] = 1.1;" +
+                "drc[3] = 1;" +
+                "";
+        StringReader reader = new StringReader(input);
+        Lexer lexer = new Lexer(reader);
+        Parser parser = new Parser(lexer);
+        ProgramNode x = parser.getAST();
+        new SemanticAnalyzer(x);
+        BytecodeCompiler bc = new BytecodeCompiler(x);
+        bc.getRender();
+    }
+
+    @Test
+    public void testRecordAssign2() throws Exception {
+        String input = """
+                record Point {
+                    x int;
+                    y int;
+                }
+                                
+                record Person {
+                    name string;
+                    history int[];
+                }
+                """;
+        StringReader reader = new StringReader(input);
+        Lexer lexer = new Lexer(reader);
+        Parser parser = new Parser(lexer);
+        ProgramNode x = parser.getAST();
+        new SemanticAnalyzer(x);
+        BytecodeCompiler bc = new BytecodeCompiler(x);
+        bc.getRender();
+    }
+    @Test
+    public void testBasicProcssx() throws Exception {
+        String input =
+                """
+                    proc squared(v int, x int) int {return v%x;}
+                    proc square(v int) int {return v;}
+                    squared(10,10);
+                    square(10);
+                """;
+        StringReader reader = new StringReader(input);
+        Lexer lexer = new Lexer(reader);
+        Parser parser = new Parser(lexer);
+        ProgramNode x = parser.getAST();
+        new SemanticAnalyzer(x);
+        BytecodeCompiler bc = new BytecodeCompiler(x);
+        bc.getRender();
+    }
+    @Test
+    public void testIfSameVar() throws Exception {
+        String input = """
+                var i int = 1;
+                if true {
+                    var i int = 1;
+                }else{
+                    var i int = 1;
+                }""";
+        StringReader reader = new StringReader(input);
+        Lexer lexer = new Lexer(reader);
+        Parser parser = new Parser(lexer);
+        ProgramNode x = parser.getAST();
+        new SemanticAnalyzer(x);
+        BytecodeCompiler bc = new BytecodeCompiler(x);
+        bc.getRender();
+    }
+
     /*
         NOT WORKING YET
     */
 
     @Test
-    public void testArrayReassignment() throws Exception {
-        String input = "var ac boolean[] = boolean[](10); " +
-                "var c string[] = string[](10); " +
-                "var rc real[] = real[](10); " +
-                "var drc int[] = int[](10); " +
-                "ac[3] = true;" +
+    public void testArrayReassignmentString() throws Exception {
+        String input = "var c string[] = string[](10); " +
                 "c[3] = \"sc\";" +
-                "rc[3] = 1.1;" +
-                "drc[3] = 1;" +
                 "";
         StringReader reader = new StringReader(input);
         Lexer lexer = new Lexer(reader);
@@ -470,23 +538,6 @@ public class TestByteCode {
         bc.getRender();
     }
 
-    @Test
-    public void testIfSameVar() throws Exception {
-        String input = """
-                var i int = 1;
-                if true {
-                    var i int = 1;
-                }else{
-                    var i int = 1;
-                }""";
-        StringReader reader = new StringReader(input);
-        Lexer lexer = new Lexer(reader);
-        Parser parser = new Parser(lexer);
-        ProgramNode x = parser.getAST();
-        new SemanticAnalyzer(x);
-        BytecodeCompiler bc = new BytecodeCompiler(x);
-        bc.getRender();
-    }
     @Test
     public void testIfBasic() throws Exception {
         String input = """
@@ -600,24 +651,6 @@ public class TestByteCode {
         BytecodeCompiler bc = new BytecodeCompiler(x);
         bc.getRender();
     }
-
-    @Test
-    public void testBasicProcssx() throws Exception {
-        String input =
-                """
-                    proc squared(v int, x int) int {return v%x;}
-                    proc square(v int) int {return v;}
-                    squared(10,10);
-                    square(10);
-                """;
-        StringReader reader = new StringReader(input);
-        Lexer lexer = new Lexer(reader);
-        Parser parser = new Parser(lexer);
-        ProgramNode x = parser.getAST();
-        new SemanticAnalyzer(x);
-        BytecodeCompiler bc = new BytecodeCompiler(x);
-        bc.getRender();
-    }
     @Test
     public void testForLoopinProc() throws Exception {
         String input = """
@@ -627,24 +660,6 @@ public class TestByteCode {
                     for i=999 to 1000 by 1 {
                         //...
                     }
-                }""";
-        StringReader reader = new StringReader(input);
-        Lexer lexer = new Lexer(reader);
-        Parser parser = new Parser(lexer);
-        ProgramNode x = parser.getAST();
-        new SemanticAnalyzer(x);
-        BytecodeCompiler bc = new BytecodeCompiler(x);
-        bc.getRender();
-    }
-    @Test
-    public void testIfSimples() throws Exception {
-        String input = """
-                var a int = 10;
-                if true {
-                    var as int = 10;
-                }
-                else{
-                    var as int = 10;
                 }""";
         StringReader reader = new StringReader(input);
         Lexer lexer = new Lexer(reader);
