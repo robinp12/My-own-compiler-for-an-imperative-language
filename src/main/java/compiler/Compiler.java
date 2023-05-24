@@ -34,7 +34,8 @@ public class Compiler {
         Parser parser = null;
         parser = new Parser(lexer);
         ProgramNode x = parser.getAST();
-        new SemanticAnalyzer(x);
+        SemanticAnalyzer sa = new SemanticAnalyzer();
+        x = sa.SemanticAnalyzer(x);
         BytecodeCompiler bc = new BytecodeCompiler(x);
         bc.getRender();
 

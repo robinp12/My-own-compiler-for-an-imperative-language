@@ -660,6 +660,12 @@ public class BytecodeCompiler {
 
         ExpressionNode left = node.getLeft();
         ExpressionNode right = node.getRight();
+        if (left instanceof BinaryExpressionNode){
+            generateBinaryExpression((BinaryExpressionNode) left);
+        }
+        if (right instanceof BinaryExpressionNode){
+            generateBinaryExpression((BinaryExpressionNode) right);
+        }
         switch (node.getOperator().getKind()) {
             case PLUS -> {
                 if (left.getTypeStr().equals("str")) {

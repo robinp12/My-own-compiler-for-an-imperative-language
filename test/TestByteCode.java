@@ -20,8 +20,8 @@ public class TestByteCode {
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
         ProgramNode x = parser.getAST();
-        new SemanticAnalyzer(x);
-        System.out.println(x);
+        SemanticAnalyzer sa = new SemanticAnalyzer();
+        x = sa.SemanticAnalyzer(x);
         BytecodeCompiler bc = new BytecodeCompiler(x);
         bc.getRender();
     }
@@ -39,7 +39,8 @@ public class TestByteCode {
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
         ProgramNode x = parser.getAST();
-        new SemanticAnalyzer(x);
+        SemanticAnalyzer sa = new SemanticAnalyzer();
+        x = sa.SemanticAnalyzer(x);
         BytecodeCompiler bc = new BytecodeCompiler(x);
         bc.getRender();
     }
@@ -53,7 +54,8 @@ public class TestByteCode {
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
         ProgramNode x = parser.getAST();
-        new SemanticAnalyzer(x);
+        SemanticAnalyzer sa = new SemanticAnalyzer();
+        x = sa.SemanticAnalyzer(x);
         BytecodeCompiler bc = new BytecodeCompiler(x);
         bc.getRender();
     }
@@ -81,7 +83,8 @@ public class TestByteCode {
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
         ProgramNode x = parser.getAST();
-        new SemanticAnalyzer(x);
+        SemanticAnalyzer sa = new SemanticAnalyzer();
+        x = sa.SemanticAnalyzer(x);
         BytecodeCompiler bc = new BytecodeCompiler(x);
         bc.getRender();
     }
@@ -95,7 +98,8 @@ public class TestByteCode {
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
         ProgramNode x = parser.getAST();
-        new SemanticAnalyzer(x);
+        SemanticAnalyzer sa = new SemanticAnalyzer();
+        x = sa.SemanticAnalyzer(x);
         BytecodeCompiler bc = new BytecodeCompiler(x);
         bc.getRender();
     }
@@ -108,7 +112,8 @@ public class TestByteCode {
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
         ProgramNode x = parser.getAST();
-        new SemanticAnalyzer(x);
+        SemanticAnalyzer sa = new SemanticAnalyzer();
+        x = sa.SemanticAnalyzer(x);
         BytecodeCompiler bc = new BytecodeCompiler(x);
         bc.getRender();
     }
@@ -123,7 +128,8 @@ public class TestByteCode {
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
         ProgramNode x = parser.getAST();
-        new SemanticAnalyzer(x);
+        SemanticAnalyzer sa = new SemanticAnalyzer();
+        x = sa.SemanticAnalyzer(x);
         BytecodeCompiler bc = new BytecodeCompiler(x);
         bc.getRender();
     }
@@ -139,7 +145,8 @@ public class TestByteCode {
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
         ProgramNode x = parser.getAST();
-        new SemanticAnalyzer(x);
+        SemanticAnalyzer sa = new SemanticAnalyzer();
+        x = sa.SemanticAnalyzer(x);
         BytecodeCompiler bc = new BytecodeCompiler(x);
         bc.getRender();
     }
@@ -153,7 +160,8 @@ public class TestByteCode {
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
         ProgramNode x = parser.getAST();
-        new SemanticAnalyzer(x);
+        SemanticAnalyzer sa = new SemanticAnalyzer();
+        x = sa.SemanticAnalyzer(x);
         BytecodeCompiler bc = new BytecodeCompiler(x);
         bc.getRender();
     }
@@ -173,7 +181,8 @@ public class TestByteCode {
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
         ProgramNode x = parser.getAST();
-        new SemanticAnalyzer(x);
+        SemanticAnalyzer sa = new SemanticAnalyzer();
+        x = sa.SemanticAnalyzer(x);
         BytecodeCompiler bc = new BytecodeCompiler(x);
         bc.getRender();
     }
@@ -185,7 +194,8 @@ public class TestByteCode {
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
         ProgramNode x = parser.getAST();
-        new SemanticAnalyzer(x);
+        SemanticAnalyzer sa = new SemanticAnalyzer();
+        x = sa.SemanticAnalyzer(x);
         BytecodeCompiler bc = new BytecodeCompiler(x);
         bc.getRender();
     }
@@ -200,7 +210,8 @@ public class TestByteCode {
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
         ProgramNode x = parser.getAST();
-        new SemanticAnalyzer(x);
+        SemanticAnalyzer sa = new SemanticAnalyzer();
+        x = sa.SemanticAnalyzer(x);
         BytecodeCompiler bc = new BytecodeCompiler(x);
         bc.getRender();
     }
@@ -218,7 +229,8 @@ public class TestByteCode {
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
         ProgramNode x = parser.getAST();
-        new SemanticAnalyzer(x);
+        SemanticAnalyzer sa = new SemanticAnalyzer();
+        x = sa.SemanticAnalyzer(x);
         BytecodeCompiler bc = new BytecodeCompiler(x);
         bc.getRender();
     }
@@ -240,7 +252,8 @@ public class TestByteCode {
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
         ProgramNode x = parser.getAST();
-        new SemanticAnalyzer(x);
+        SemanticAnalyzer sa = new SemanticAnalyzer();
+        x = sa.SemanticAnalyzer(x);
         BytecodeCompiler bc = new BytecodeCompiler(x);
         bc.getRender();
     }
@@ -260,7 +273,8 @@ public class TestByteCode {
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
         ProgramNode x = parser.getAST();
-        new SemanticAnalyzer(x);
+        SemanticAnalyzer sa = new SemanticAnalyzer();
+        x = sa.SemanticAnalyzer(x);
         BytecodeCompiler bc = new BytecodeCompiler(x);
         bc.getRender();
     }
@@ -278,7 +292,8 @@ public class TestByteCode {
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
         ProgramNode x = parser.getAST();
-        new SemanticAnalyzer(x);
+        SemanticAnalyzer sa = new SemanticAnalyzer();
+        x = sa.SemanticAnalyzer(x);
         BytecodeCompiler bc = new BytecodeCompiler(x);
         bc.getRender();
     }
@@ -295,7 +310,8 @@ public class TestByteCode {
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
         ProgramNode x = parser.getAST();
-        new SemanticAnalyzer(x);
+        SemanticAnalyzer sa = new SemanticAnalyzer();
+        x = sa.SemanticAnalyzer(x);
         BytecodeCompiler bc = new BytecodeCompiler(x);
         bc.getRender();
     }
@@ -309,8 +325,9 @@ public class TestByteCode {
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
         ProgramNode x = parser.getAST();
-        new SemanticAnalyzer(x);
-        BytecodeCompiler bc = new BytecodeCompiler(x);
+        SemanticAnalyzer sa = new SemanticAnalyzer();
+        x = sa.SemanticAnalyzer(x);
+        BytecodeCompiler bc = new BytecodeCompiler(x);;
         bc.getRender();
     }
 
@@ -328,7 +345,8 @@ public class TestByteCode {
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
         ProgramNode x = parser.getAST();
-        new SemanticAnalyzer(x);
+        SemanticAnalyzer sa = new SemanticAnalyzer();
+        x = sa.SemanticAnalyzer(x);
         BytecodeCompiler bc = new BytecodeCompiler(x);
         bc.getRender();
     }
@@ -345,7 +363,8 @@ public class TestByteCode {
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
         ProgramNode x = parser.getAST();
-        new SemanticAnalyzer(x);
+        SemanticAnalyzer sa = new SemanticAnalyzer();
+        x = sa.SemanticAnalyzer(x);
         BytecodeCompiler bc = new BytecodeCompiler(x);
         bc.getRender();
     }
@@ -358,8 +377,8 @@ public class TestByteCode {
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
         ProgramNode x = parser.getAST();
-        new SemanticAnalyzer(x);
-        System.out.println(x);
+        SemanticAnalyzer sa = new SemanticAnalyzer();
+        x = sa.SemanticAnalyzer(x);
         BytecodeCompiler bc = new BytecodeCompiler(x);
         bc.getRender();
     }
@@ -375,7 +394,8 @@ public class TestByteCode {
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
         ProgramNode x = parser.getAST();
-        new SemanticAnalyzer(x);
+        SemanticAnalyzer sa = new SemanticAnalyzer();
+        x = sa.SemanticAnalyzer(x);
         BytecodeCompiler bc = new BytecodeCompiler(x);
         bc.getRender();
     }
@@ -393,7 +413,8 @@ public class TestByteCode {
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
         ProgramNode x = parser.getAST();
-        new SemanticAnalyzer(x);
+        SemanticAnalyzer sa = new SemanticAnalyzer();
+        x = sa.SemanticAnalyzer(x);
         BytecodeCompiler bc = new BytecodeCompiler(x);
         bc.getRender();
     }
@@ -407,7 +428,8 @@ public class TestByteCode {
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
         ProgramNode x = parser.getAST();
-        new SemanticAnalyzer(x);
+        SemanticAnalyzer sa = new SemanticAnalyzer();
+        x = sa.SemanticAnalyzer(x);
         BytecodeCompiler bc = new BytecodeCompiler(x);
         bc.getRender();
     }
@@ -423,7 +445,8 @@ public class TestByteCode {
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
         ProgramNode x = parser.getAST();
-        new SemanticAnalyzer(x);
+        SemanticAnalyzer sa = new SemanticAnalyzer();
+        x = sa.SemanticAnalyzer(x);
         BytecodeCompiler bc = new BytecodeCompiler(x);
         bc.getRender();
     }
@@ -440,7 +463,8 @@ public class TestByteCode {
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
         ProgramNode x = parser.getAST();
-        new SemanticAnalyzer(x);
+        SemanticAnalyzer sa = new SemanticAnalyzer();
+        x = sa.SemanticAnalyzer(x);
         BytecodeCompiler bc = new BytecodeCompiler(x);
         bc.getRender();
     }
@@ -457,7 +481,8 @@ public class TestByteCode {
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
         ProgramNode x = parser.getAST();
-        new SemanticAnalyzer(x);
+        SemanticAnalyzer sa = new SemanticAnalyzer();
+        x = sa.SemanticAnalyzer(x);
         BytecodeCompiler bc = new BytecodeCompiler(x);
         bc.getRender();
     }
@@ -475,7 +500,8 @@ public class TestByteCode {
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
         ProgramNode x = parser.getAST();
-        new SemanticAnalyzer(x);
+        SemanticAnalyzer sa = new SemanticAnalyzer();
+        x = sa.SemanticAnalyzer(x);
         BytecodeCompiler bc = new BytecodeCompiler(x);
         bc.getRender();
     }
@@ -491,7 +517,8 @@ public class TestByteCode {
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
         ProgramNode x = parser.getAST();
-        new SemanticAnalyzer(x);
+        SemanticAnalyzer sa = new SemanticAnalyzer();
+        x = sa.SemanticAnalyzer(x);
         BytecodeCompiler bc = new BytecodeCompiler(x);
         bc.getRender();
     }
@@ -506,7 +533,8 @@ public class TestByteCode {
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
         ProgramNode x = parser.getAST();
-        new SemanticAnalyzer(x);
+        SemanticAnalyzer sa = new SemanticAnalyzer();
+        x = sa.SemanticAnalyzer(x);
         BytecodeCompiler bc = new BytecodeCompiler(x);
         bc.getRender();
     }
@@ -523,7 +551,8 @@ public class TestByteCode {
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
         ProgramNode x = parser.getAST();
-        new SemanticAnalyzer(x);
+        SemanticAnalyzer sa = new SemanticAnalyzer();
+        x = sa.SemanticAnalyzer(x);
         BytecodeCompiler bc = new BytecodeCompiler(x);
         bc.getRender();
     }
@@ -535,7 +564,8 @@ public class TestByteCode {
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
         ProgramNode x = parser.getAST();
-        new SemanticAnalyzer(x);
+        SemanticAnalyzer sa = new SemanticAnalyzer();
+        x = sa.SemanticAnalyzer(x);
         BytecodeCompiler bc = new BytecodeCompiler(x);
         bc.getRender();
     }
@@ -553,7 +583,8 @@ public class TestByteCode {
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
         ProgramNode x = parser.getAST();
-        new SemanticAnalyzer(x);
+        SemanticAnalyzer sa = new SemanticAnalyzer();
+        x = sa.SemanticAnalyzer(x);
         BytecodeCompiler bc = new BytecodeCompiler(x);
         bc.getRender();
     }
@@ -570,7 +601,8 @@ public class TestByteCode {
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
         ProgramNode x = parser.getAST();
-        new SemanticAnalyzer(x);
+        SemanticAnalyzer sa = new SemanticAnalyzer();
+        x = sa.SemanticAnalyzer(x);
         BytecodeCompiler bc = new BytecodeCompiler(x);
         bc.getRender();
     }
@@ -589,7 +621,8 @@ public class TestByteCode {
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
         ProgramNode x = parser.getAST();
-        new SemanticAnalyzer(x);
+        SemanticAnalyzer sa = new SemanticAnalyzer();
+        x = sa.SemanticAnalyzer(x);
         BytecodeCompiler bc = new BytecodeCompiler(x);
         bc.getRender();
     }
@@ -607,7 +640,8 @@ public class TestByteCode {
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
         ProgramNode x = parser.getAST();
-        new SemanticAnalyzer(x);
+        SemanticAnalyzer sa = new SemanticAnalyzer();
+        x = sa.SemanticAnalyzer(x);
         BytecodeCompiler bc = new BytecodeCompiler(x);
         bc.getRender();
     }
@@ -625,7 +659,8 @@ public class TestByteCode {
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
         ProgramNode x = parser.getAST();
-        new SemanticAnalyzer(x);
+        SemanticAnalyzer sa = new SemanticAnalyzer();
+        x = sa.SemanticAnalyzer(x);
         BytecodeCompiler bc = new BytecodeCompiler(x);
         bc.getRender();
     }
@@ -643,7 +678,8 @@ public class TestByteCode {
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
         ProgramNode x = parser.getAST();
-        new SemanticAnalyzer(x);
+        SemanticAnalyzer sa = new SemanticAnalyzer();
+        x = sa.SemanticAnalyzer(x);
         BytecodeCompiler bc = new BytecodeCompiler(x);
         bc.getRender();
     }

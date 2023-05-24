@@ -24,9 +24,9 @@ public class SemanticAnalyzer implements ASTVisitor {
             "write",
             "writeln"
     );
-    private final Map<String, ArrayList<ParamNode>> functionTable;
+    private Map<String, ArrayList<ParamNode>> functionTable;
 
-    public SemanticAnalyzer(ProgramNode programNode) throws Exception {
+    public ProgramNode SemanticAnalyzer(ProgramNode programNode) throws Exception {
         this.functionTable = new HashMap<>();
         if (programNode.getTypeStr().equals("root")) {
             symbolTable = new SymbolTable();
@@ -34,6 +34,7 @@ public class SemanticAnalyzer implements ASTVisitor {
         } else {
             throw new Exception("Semantic error ProgramNode");
         }
+        return programNode;
     }
 
     @Override
@@ -120,8 +121,6 @@ public class SemanticAnalyzer implements ASTVisitor {
         String leftType = node.getLeft().getTypeStr();
         String rightType = node.getRight().getTypeStr();
 
-        System.out.println("node "+ node.getLeft());
-
         if (leftType.equals("binaryExp")) {
             leftType = visit((BinaryExpressionNode) node.getLeft());
         }
@@ -189,6 +188,7 @@ public class SemanticAnalyzer implements ASTVisitor {
                 break;
             case EQEQ:
             case DIFF:
+
                 // Comparison operations for compatible types
                 if ((leftType.equals("int") && rightType.equals("real")) || (leftType.equals("real") && rightType.equals("int")) || leftType.equals(rightType)) {
                     node.setResultType("bool");

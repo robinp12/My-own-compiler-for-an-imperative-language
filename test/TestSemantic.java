@@ -23,7 +23,8 @@ public class TestSemantic {
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
         ProgramNode x = parser.getAST();
-        new SemanticAnalyzer(x);
+        SemanticAnalyzer sa = new SemanticAnalyzer();
+        x = sa.SemanticAnalyzer(x);
     }
 
     @Test
@@ -33,7 +34,8 @@ public class TestSemantic {
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
         ProgramNode x = parser.getAST();
-        new SemanticAnalyzer(x);
+        SemanticAnalyzer sa = new SemanticAnalyzer();
+        x = sa.SemanticAnalyzer(x);
     }
 
     @Test
@@ -43,7 +45,8 @@ public class TestSemantic {
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
         ProgramNode x = parser.getAST();
-        new SemanticAnalyzer(x);
+        SemanticAnalyzer sa = new SemanticAnalyzer();
+        x = sa.SemanticAnalyzer(x);
     }
 
     @Test
@@ -53,7 +56,8 @@ public class TestSemantic {
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
         ProgramNode x = parser.getAST();
-        new SemanticAnalyzer(x);
+        SemanticAnalyzer sa = new SemanticAnalyzer();
+        x = sa.SemanticAnalyzer(x);
     }
 
     @Test
@@ -63,7 +67,8 @@ public class TestSemantic {
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
         ProgramNode x = parser.getAST();
-        new SemanticAnalyzer(x);
+        SemanticAnalyzer sa = new SemanticAnalyzer();
+        x = sa.SemanticAnalyzer(x);
     }
 
     @Test
@@ -73,7 +78,8 @@ public class TestSemantic {
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
         ProgramNode x = parser.getAST();
-        assertThrows(Exception.class, () -> {new SemanticAnalyzer(x);});
+        SemanticAnalyzer sa = new SemanticAnalyzer();
+        assertThrows(Exception.class, () -> {sa.SemanticAnalyzer(x);});
     }
 
     @Test
@@ -83,7 +89,8 @@ public class TestSemantic {
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
         ProgramNode x = parser.getAST();
-        assertThrows(Exception.class, () -> {new SemanticAnalyzer(x);});
+        SemanticAnalyzer sa = new SemanticAnalyzer();
+        assertThrows(Exception.class, () -> {sa.SemanticAnalyzer(x);});
     }
 
     @Test
@@ -93,7 +100,8 @@ public class TestSemantic {
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
         ProgramNode x = parser.getAST();
-        assertThrows(Exception.class, () -> {new SemanticAnalyzer(x);});
+        SemanticAnalyzer sa = new SemanticAnalyzer();
+        assertThrows(Exception.class, () -> {sa.SemanticAnalyzer(x);});
     }
 
     @Test
@@ -103,7 +111,8 @@ public class TestSemantic {
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
         ProgramNode x = parser.getAST();
-        assertThrows(Exception.class, () -> {new SemanticAnalyzer(x);});
+        SemanticAnalyzer sa = new SemanticAnalyzer();
+        assertThrows(Exception.class, () -> {sa.SemanticAnalyzer(x);});
     }
 
     @Test
@@ -113,7 +122,8 @@ public class TestSemantic {
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
         ProgramNode x = parser.getAST();
-        new SemanticAnalyzer(x);
+        SemanticAnalyzer sa = new SemanticAnalyzer();
+        x = sa.SemanticAnalyzer(x);
     }
 
     @Test
@@ -123,7 +133,8 @@ public class TestSemantic {
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
         ProgramNode x = parser.getAST();
-        new SemanticAnalyzer(x);
+        SemanticAnalyzer sa = new SemanticAnalyzer();
+        x = sa.SemanticAnalyzer(x);
     }
 
     @Test
@@ -133,7 +144,8 @@ public class TestSemantic {
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
         ProgramNode x = parser.getAST();
-        new SemanticAnalyzer(x);
+        SemanticAnalyzer sa = new SemanticAnalyzer();
+        x = sa.SemanticAnalyzer(x);
     }
 
     @Test
@@ -143,7 +155,8 @@ public class TestSemantic {
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
         ProgramNode x = parser.getAST();
-        assertThrows(Exception.class, () -> {new SemanticAnalyzer(x);});
+        SemanticAnalyzer sa = new SemanticAnalyzer();
+        assertThrows(Exception.class, () -> {sa.SemanticAnalyzer(x);});
     }
 
     @Test
@@ -153,7 +166,8 @@ public class TestSemantic {
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
         ProgramNode x = parser.getAST();
-        assertThrows(Exception.class, () -> {new SemanticAnalyzer(x);});
+        SemanticAnalyzer sa = new SemanticAnalyzer();
+        assertThrows(Exception.class, () -> {sa.SemanticAnalyzer(x);});
 
     }
 
@@ -164,7 +178,8 @@ public class TestSemantic {
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
         ProgramNode x = parser.getAST();
-        new SemanticAnalyzer(x);
+        SemanticAnalyzer sa = new SemanticAnalyzer();
+        x = sa.SemanticAnalyzer(x);
     }
 
     @Test
@@ -174,7 +189,8 @@ public class TestSemantic {
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
         ProgramNode x = parser.getAST();
-        assertThrows(Exception.class, () -> {new SemanticAnalyzer(x);});
+        SemanticAnalyzer sa = new SemanticAnalyzer();
+        assertThrows(Exception.class, () -> {sa.SemanticAnalyzer(x);});
     }
 
     @Test
@@ -184,7 +200,8 @@ public class TestSemantic {
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
         ProgramNode x = parser.getAST();
-        new SemanticAnalyzer(x);
+        SemanticAnalyzer sa = new SemanticAnalyzer();
+        x = sa.SemanticAnalyzer(x);
     }
 
     @Test
@@ -194,7 +211,8 @@ public class TestSemantic {
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
         ProgramNode x = parser.getAST();
-        new SemanticAnalyzer(x);
+        SemanticAnalyzer sa = new SemanticAnalyzer();
+        x = sa.SemanticAnalyzer(x);
     }
 
     @Test
@@ -204,7 +222,8 @@ public class TestSemantic {
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
         ProgramNode x = parser.getAST();
-        assertThrows(Exception.class, () -> {new SemanticAnalyzer(x);});
+        SemanticAnalyzer sa = new SemanticAnalyzer();
+        assertThrows(Exception.class, () -> {sa.SemanticAnalyzer(x);});
     }
 
     @Test
@@ -214,7 +233,8 @@ public class TestSemantic {
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
         ProgramNode x = parser.getAST();
-        assertThrows(Exception.class, () -> {new SemanticAnalyzer(x);});
+        SemanticAnalyzer sa = new SemanticAnalyzer();
+        assertThrows(Exception.class, () -> {sa.SemanticAnalyzer(x);});
     }
 
     @Test
@@ -224,7 +244,8 @@ public class TestSemantic {
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
         ProgramNode x = parser.getAST();
-        new SemanticAnalyzer(x);
+        SemanticAnalyzer sa = new SemanticAnalyzer();
+        x = sa.SemanticAnalyzer(x);
     }
 
     @Test
@@ -235,7 +256,8 @@ public class TestSemantic {
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
         ProgramNode x = parser.getAST();
-        assertThrows(Exception.class, () -> {new SemanticAnalyzer(x);});
+        SemanticAnalyzer sa = new SemanticAnalyzer();
+        assertThrows(Exception.class, () -> {sa.SemanticAnalyzer(x);});
     }
 
     @Test
@@ -246,7 +268,8 @@ public class TestSemantic {
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
         ProgramNode x = parser.getAST();
-        assertThrows(Exception.class, () -> {new SemanticAnalyzer(x);});
+        SemanticAnalyzer sa = new SemanticAnalyzer();
+        assertThrows(Exception.class, () -> {sa.SemanticAnalyzer(x);});
     }
 
     @Test
@@ -257,7 +280,8 @@ public class TestSemantic {
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
         ProgramNode x = parser.getAST();
-        assertThrows(Exception.class, () -> {new SemanticAnalyzer(x);});
+        SemanticAnalyzer sa = new SemanticAnalyzer();
+        assertThrows(Exception.class, () -> {sa.SemanticAnalyzer(x);});
     }
 
     @Test
@@ -267,7 +291,8 @@ public class TestSemantic {
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
         ProgramNode x = parser.getAST();
-        new SemanticAnalyzer(x);
+        SemanticAnalyzer sa = new SemanticAnalyzer();
+        x = sa.SemanticAnalyzer(x);
     }
 
     @Test
@@ -277,7 +302,8 @@ public class TestSemantic {
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
         ProgramNode x = parser.getAST();
-        new SemanticAnalyzer(x);
+        SemanticAnalyzer sa = new SemanticAnalyzer();
+        x = sa.SemanticAnalyzer(x);
     }
 
     @Test
@@ -287,7 +313,8 @@ public class TestSemantic {
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
         ProgramNode x = parser.getAST();
-        assertThrows(Exception.class, () -> {new SemanticAnalyzer(x);});
+        SemanticAnalyzer sa = new SemanticAnalyzer();
+        assertThrows(Exception.class, () -> {sa.SemanticAnalyzer(x);});
     }
 
     @Test
@@ -298,7 +325,8 @@ public class TestSemantic {
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
         ProgramNode x = parser.getAST();
-        new SemanticAnalyzer(x);
+        SemanticAnalyzer sa = new SemanticAnalyzer();
+        x = sa.SemanticAnalyzer(x);
     }
 
     @Test
@@ -310,7 +338,8 @@ public class TestSemantic {
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
         ProgramNode x = parser.getAST();
-        new SemanticAnalyzer(x);
+        SemanticAnalyzer sa = new SemanticAnalyzer();
+        x = sa.SemanticAnalyzer(x);
     }
 
     @Test
@@ -322,7 +351,8 @@ public class TestSemantic {
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
         ProgramNode x = parser.getAST();
-        assertThrows(Exception.class, () -> {new SemanticAnalyzer(x);});
+        SemanticAnalyzer sa = new SemanticAnalyzer();
+        assertThrows(Exception.class, () -> {sa.SemanticAnalyzer(x);});
     }
 
     @Test
@@ -334,7 +364,8 @@ public class TestSemantic {
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
         ProgramNode x = parser.getAST();
-        assertThrows(Exception.class, () -> {new SemanticAnalyzer(x);});
+        SemanticAnalyzer sa = new SemanticAnalyzer();
+        assertThrows(Exception.class, () -> {sa.SemanticAnalyzer(x);});
     }
 
     @Test
@@ -346,7 +377,8 @@ public class TestSemantic {
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
         ProgramNode x = parser.getAST();
-        assertThrows(Exception.class, () -> {new SemanticAnalyzer(x);});
+        SemanticAnalyzer sa = new SemanticAnalyzer();
+        assertThrows(Exception.class, () -> {sa.SemanticAnalyzer(x);});
     }
 
     @Test
@@ -358,7 +390,8 @@ public class TestSemantic {
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
         ProgramNode x = parser.getAST();
-        new SemanticAnalyzer(x);
+        SemanticAnalyzer sa = new SemanticAnalyzer();
+        x = sa.SemanticAnalyzer(x);
     }
 
 
@@ -373,7 +406,8 @@ public class TestSemantic {
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
         ProgramNode x = parser.getAST();
-        new SemanticAnalyzer(x);
+        SemanticAnalyzer sa = new SemanticAnalyzer();
+        x = sa.SemanticAnalyzer(x);
     }
 
     @Test
@@ -386,7 +420,8 @@ public class TestSemantic {
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
         ProgramNode x = parser.getAST();
-        assertThrows(Exception.class, () -> {new SemanticAnalyzer(x);});
+        SemanticAnalyzer sa = new SemanticAnalyzer();
+        assertThrows(Exception.class, () -> {sa.SemanticAnalyzer(x);});
     }
 
     @Test
@@ -400,7 +435,8 @@ public class TestSemantic {
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
         ProgramNode x = parser.getAST();
-        assertThrows(Exception.class, () -> {new SemanticAnalyzer(x);});
+        SemanticAnalyzer sa = new SemanticAnalyzer();
+        assertThrows(Exception.class, () -> {sa.SemanticAnalyzer(x);});
     }
 
     @Test
@@ -414,7 +450,8 @@ public class TestSemantic {
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
         ProgramNode x = parser.getAST();
-        new SemanticAnalyzer(x);
+        SemanticAnalyzer sa = new SemanticAnalyzer();
+        x = sa.SemanticAnalyzer(x);
     }
 
     @Test
@@ -431,7 +468,8 @@ public class TestSemantic {
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
         ProgramNode x = parser.getAST();
-        new SemanticAnalyzer(x);
+        SemanticAnalyzer sa = new SemanticAnalyzer();
+        x = sa.SemanticAnalyzer(x);
     }
 
     @Test
@@ -448,7 +486,8 @@ public class TestSemantic {
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
         ProgramNode x = parser.getAST();
-        assertThrows(Exception.class, () -> {new SemanticAnalyzer(x);});
+        SemanticAnalyzer sa = new SemanticAnalyzer();
+        assertThrows(Exception.class, () -> {sa.SemanticAnalyzer(x);});
     }
 
     @Test
@@ -465,7 +504,8 @@ public class TestSemantic {
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
         ProgramNode x = parser.getAST();
-        assertThrows(Exception.class, () -> {new SemanticAnalyzer(x);});
+        SemanticAnalyzer sa = new SemanticAnalyzer();
+        assertThrows(Exception.class, () -> {sa.SemanticAnalyzer(x);});
     }
 
     @Test
@@ -479,7 +519,8 @@ public class TestSemantic {
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
         ProgramNode x = parser.getAST();
-        assertThrows(Exception.class, () -> {new SemanticAnalyzer(x);});
+        SemanticAnalyzer sa = new SemanticAnalyzer();
+        assertThrows(Exception.class, () -> {sa.SemanticAnalyzer(x);});
     }
 
     @Test
@@ -493,7 +534,8 @@ public class TestSemantic {
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
         ProgramNode x = parser.getAST();
-        new SemanticAnalyzer(x);
+        SemanticAnalyzer sa = new SemanticAnalyzer();
+        x = sa.SemanticAnalyzer(x);
     }
 
     @Test
@@ -507,7 +549,8 @@ public class TestSemantic {
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
         ProgramNode x = parser.getAST();
-        assertThrows(Exception.class, () -> {new SemanticAnalyzer(x);});
+        SemanticAnalyzer sa = new SemanticAnalyzer();
+        assertThrows(Exception.class, () -> {sa.SemanticAnalyzer(x);});
     }
 
     @Test
@@ -520,7 +563,8 @@ public class TestSemantic {
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
         ProgramNode x = parser.getAST();
-        assertThrows(Exception.class, () -> {new SemanticAnalyzer(x);});
+        SemanticAnalyzer sa = new SemanticAnalyzer();
+        assertThrows(Exception.class, () -> {sa.SemanticAnalyzer(x);});
     }
 
     @Test
@@ -534,7 +578,8 @@ public class TestSemantic {
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
         ProgramNode x = parser.getAST();
-        assertThrows(Exception.class, () -> {new SemanticAnalyzer(x);});
+        SemanticAnalyzer sa = new SemanticAnalyzer();
+        assertThrows(Exception.class, () -> {sa.SemanticAnalyzer(x);});
     }
 
 }
