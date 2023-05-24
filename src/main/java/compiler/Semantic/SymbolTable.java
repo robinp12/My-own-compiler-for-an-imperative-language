@@ -55,6 +55,19 @@ public class   SymbolTable {
     public static boolean containarray(String name){
         return arraysymbolTable.containsKey(name);
     }
+    public void checkTypes(BlockNode b, SymbolTable globalTable){
+        checkTypes(b.getStatements());
+    }
+
+    public void checkTypes(StatementNode statements) {
+        for (ExpressionNode statement : statements.getStatements()) {
+
+            System.out.println(statement);
+        }
+    }
+    public void checkTypes(AssignmentArrayNode array){
+
+    }
 /*
     public void add(ArrayList<ParamNode> n){
         for (ParamNode paramNode : n) {

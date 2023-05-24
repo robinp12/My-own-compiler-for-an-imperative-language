@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import static compiler.Bytecode.AsmUtils.invokeStatic;
 import static compiler.Lexer.SymbolKind.LESS;
 import static compiler.Lexer.SymbolKind.LESSEQ;
 import static org.objectweb.asm.Opcodes.*;
@@ -22,6 +21,7 @@ import static org.objectweb.asm.Opcodes.*;
 
 public class BytecodeCompiler {
     private final ClassWriter container;
+    private ByteArrayClassLoader loader;
     private ClassWriter recordClass;
     /* MethodVisitor for current method. */
     private MethodVisitor methodMain;
@@ -35,6 +35,7 @@ public class BytecodeCompiler {
         System.out.println("------ BYTECODE ------");
         this.valueTable = new HashMap<>();
         this.recordClass = null;
+        this.loader = new ByteArrayClassLoader();
 
         // Class
         container = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
@@ -111,7 +112,7 @@ public class BytecodeCompiler {
         } else if (expression instanceof AssignmentNode) {
             generateAssignment((AssignmentNode) expression, (method == null) ? methodMain : method);
         } else if (expression instanceof WhileStatementNode) {
-            generateWhile((WhileStatementNode) expression);
+            generateWhile((WhileStatementNode) expression, (method == null) ? methodMain : method);
         } else if (expression instanceof ReturnNode) {
             generateReturn((ReturnNode) expression);
         } else if (expression instanceof MethodCallNode) {
@@ -264,7 +265,7 @@ public class BytecodeCompiler {
         }
     }
 
-    private void generateWhile(WhileStatementNode expression) {
+    private void generateWhile(WhileStatementNode expression, MethodVisitor method) {
         System.out.println("while");
         BinaryExpressionNode exp = (BinaryExpressionNode) expression.getCondition();
 
@@ -604,6 +605,7 @@ public class BytecodeCompiler {
         System.out.println("pas encore : " + record);
         String id = record.getIdentifier();
         String name = id.substring(0, 1).toUpperCase() + id.substring(1);
+        RecordAsm.generateRecord(name,record,loader);
     }
 
     public void generateProc(MethodNode expression) {
@@ -613,7 +615,7 @@ public class BytecodeCompiler {
             case "str" -> "Ljava/lang/String;";
             case "int" -> "I";
             case "bool" -> "Z";
-            case "reel" -> "F";
+            case "real" -> "F";
             default -> "V";
         };
         // Return type
@@ -628,7 +630,7 @@ public class BytecodeCompiler {
                 case "str" -> argLetter.append("Ljava/lang/String;");
                 case "int" -> argLetter.append("I");
                 case "bool" -> argLetter.append("Z");
-                case "reel" -> argLetter.append("F");
+                case "real" -> argLetter.append("F");
             }
         }
 
@@ -646,7 +648,7 @@ public class BytecodeCompiler {
         switch (expression.getReturnType().getTypeSymbol()) {
             case "str" -> method.visitInsn(ARETURN);
             case "int", "bool" -> method.visitInsn(IRETURN);
-            case "reel" -> method.visitInsn(FRETURN);
+            case "real" -> method.visitInsn(FRETURN);
         }
 
         method.visitMaxs(-1, -1);
@@ -669,10 +671,8 @@ public class BytecodeCompiler {
                         String a = ((StringNode) left).getValue();
                         String b = ((StringNode) right).getValue();
                         System.out.println(a + b);
-                        invokeStatic(method, RunTime.class, "concat", String.class, String.class);
                     }
                 } else if (right.getTypeStr().equals("str")) {
-                    invokeStatic(method, RunTime.class, "concat", String.class, String.class);
                 } else {
                     numOperation(LADD, DADD, left, right);
                 }
@@ -691,7 +691,6 @@ public class BytecodeCompiler {
     }
 
     private void numOperation(int longOpcode, int doubleOpcode, ExpressionNode left, ExpressionNode right) {
-        method = method == null ? methodMain : method;
 
         if (left.getTypeStr().equals("int") && right.getTypeStr().equals("int")) {
             String leftVal = ((NumberNode) left).getValue();

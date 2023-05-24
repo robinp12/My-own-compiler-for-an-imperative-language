@@ -31,6 +31,11 @@ public class ParamNode extends ExpressionNode {
     public static ParamNode parseParam() throws ParseException {
         String identifier = LiteralNode.parseLiteral().getLiteral();
         TypeNode type = TypeNode.parseType();
+        if(lookahead.getKind().equals(SymbolKind.LBRACK)){
+            match(SymbolKind.LBRACK);
+            match(SymbolKind.RBRACK);
+            return new ParamNode(new TypeNode(type.getTypeStr()+"_array",identifier),identifier);
+        }
         return new ParamNode(type, identifier);
     }
 
