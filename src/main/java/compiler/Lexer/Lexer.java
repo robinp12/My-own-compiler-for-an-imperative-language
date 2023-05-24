@@ -134,6 +134,11 @@ public class Lexer {
                         return new Symbol(SymbolKind.EQEQ);
                     }
                     return new Symbol(SymbolKind.EQUALS);
+                case '!' :
+                    if (get_char(++i) == '='){
+                        i++;
+                        return new Symbol(SymbolKind.DIFF);
+                    }
                 case '<' :
                     if (get_char(++i) == '='){
                         i++;
@@ -217,11 +222,11 @@ public class Lexer {
                         return new Symbol(SymbolKind.LITERAL,get_literal());
 
                 case 'v' :
-                    if (get_char(i) == 'v' && get_char(i+1) == 'a' && get_char(i+2) == 'r'){
+                    if (get_char(i) == 'v' && get_char(i+1) == 'a' && get_char(i+2) == 'r' && get_char(i+3) == ' '){
                         i+=3;
                         return new Symbol(SymbolKind.VAR);
                     }
-                    else if (get_char(i+1) == 'a' && get_char(i+2) == 'l'){
+                    else if (get_char(i+1) == 'a' && get_char(i+2) == 'l' && get_char(i+3) == ' '){
                         i+=3;
                         return new Symbol(SymbolKind.VAL);
                     }

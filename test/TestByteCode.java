@@ -332,6 +332,50 @@ public class TestByteCode {
     }
 
     @Test
+    public void testRecordWithArrayAssign() throws Exception {
+        String input = """
+                record Point {
+                    x String[];
+                    y int[];
+                    xx boolean;
+                    yy real;
+                }""";
+        StringReader reader = new StringReader(input);
+        Lexer lexer = new Lexer(reader);
+        Parser parser = new Parser(lexer);
+        ProgramNode x = parser.getAST();
+        SemanticAnalyzer sa = new SemanticAnalyzer();
+        x = sa.SemanticAnalyzer(x);
+        BytecodeCompiler bc = new BytecodeCompiler(x);
+        bc.getRender();
+    }
+
+    /*
+        NOT WORKING YET
+    */
+
+    @Test
+    public void testArrayReassgnment() throws Exception {
+        String input = "var ac boolean[] = boolean[](10); " +
+                "var c string[] = string[](10); " +
+                "var rc real[] = real[](10); " +
+                "var drc int[] = int[](10); " +
+                "ac[3] = true;" +
+                "c[3] = \"sc\";" +
+                "rc[3] = 1.1;" +
+                "drc[3] = 1;" +
+                "";
+        StringReader reader = new StringReader(input);
+        Lexer lexer = new Lexer(reader);
+        Parser parser = new Parser(lexer);
+        ProgramNode x = parser.getAST();
+        SemanticAnalyzer sa = new SemanticAnalyzer();
+        x = sa.SemanticAnalyzer(x);
+        BytecodeCompiler bc = new BytecodeCompiler(x);
+        bc.getRender();
+    }
+
+    @Test
     public void testBinaryOperationWithRegisters() throws Exception {
         String input = """
                 var i int = 10;
@@ -350,11 +394,6 @@ public class TestByteCode {
         BytecodeCompiler bc = new BytecodeCompiler(x);
         bc.getRender();
     }
-
-    /*
-        NOT WORKING YET
-    */
-
 
     @Test
     public void testDeclarationBool() throws Exception {
@@ -435,12 +474,19 @@ public class TestByteCode {
     }
 
     @Test
-    public void testRecord() throws Exception {
+    public void testRecordComplexAssign() throws Exception {
         String input = """
                 record Point {
                     x int;
                     y int;
-                }""";
+                }
+                                
+                record Person {
+                    name string;
+                    location Point;
+                    history int[];
+                }
+                """;
         StringReader reader = new StringReader(input);
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
@@ -450,6 +496,7 @@ public class TestByteCode {
         BytecodeCompiler bc = new BytecodeCompiler(x);
         bc.getRender();
     }
+
     @Test
     public void testIfSameVar() throws Exception {
         String input = """
@@ -673,6 +720,30 @@ public class TestByteCode {
                 var a int = i * 20.1;
                 var as int = i * "sttttt";
                 var aa int = i * 20;
+                """;
+        StringReader reader = new StringReader(input);
+        Lexer lexer = new Lexer(reader);
+        Parser parser = new Parser(lexer);
+        ProgramNode x = parser.getAST();
+        SemanticAnalyzer sa = new SemanticAnalyzer();
+        x = sa.SemanticAnalyzer(x);
+        BytecodeCompiler bc = new BytecodeCompiler(x);
+        bc.getRender();
+    }
+
+    @Test
+    public void testMain() throws Exception {
+        String input = """
+            proc main() void {
+                var value int = 3;
+                var i int;
+                for i=1 to 100 by 2 {
+                    while value!=3 {
+                        // ....
+                    }
+                }
+                i = (i+2)*2;
+            }
                 """;
         StringReader reader = new StringReader(input);
         Lexer lexer = new Lexer(reader);

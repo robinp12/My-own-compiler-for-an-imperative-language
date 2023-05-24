@@ -28,7 +28,7 @@ public enum SymbolKind {
     COMMENT("//"),
     PERC("%"),
     EQEQ("=="),
-    DIFF("<>"),
+    DIFF("!="),
     LESS("<"),
     MORE(">"),
     LESSEQ("<="),

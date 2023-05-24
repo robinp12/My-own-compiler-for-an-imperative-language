@@ -16,6 +16,7 @@ public class   SymbolTable {
         this.immutablesymbolTable = new HashMap<>();
         this.recordsymbolTable = new HashMap<>();
         this.arraysymbolTable = new HashMap<>();
+
     }
 
     public static void insertmut(String name, TypeNode type) {
