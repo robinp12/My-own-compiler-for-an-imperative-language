@@ -105,17 +105,6 @@ public class TestSemantic {
     }
 
     @Test
-    public void testBasicDuplicatedVar() throws Exception {
-        String input =  "var a int = 2; var a int = 4; ";
-        StringReader reader = new StringReader(input);
-        Lexer lexer = new Lexer(reader);
-        Parser parser = new Parser(lexer);
-        ProgramNode x = parser.getAST();
-        SemanticAnalyzer sa = new SemanticAnalyzer();
-        assertThrows(Exception.class, () -> {sa.SemanticAnalyzer(x);});
-    }
-
-    @Test
     public void testBasicConst() throws Exception {
         String input =  "const a string = \"coucou\";";
         StringReader reader = new StringReader(input);

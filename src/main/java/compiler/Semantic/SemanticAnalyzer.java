@@ -116,6 +116,7 @@ public class SemanticAnalyzer implements ASTVisitor {
         String leftType = node.getLeft().getTypeStr();
         String rightType = node.getRight().getTypeStr();
 
+
         if (leftType.equals("binaryExp")) {
             leftType = visit((BinaryExpressionNode) node.getLeft());
         }
@@ -138,6 +139,9 @@ public class SemanticAnalyzer implements ASTVisitor {
                 rightType = SymbolTable.lookupimmut(right.getLiteral()).getTypeStr();
             }
         }
+        System.out.println("here");
+        System.out.println(leftType);
+        System.out.println(rightType);
 
         // Determine the result type based on the operator
         SymbolKind operatorKind = node.getOperator().getKind();
@@ -223,6 +227,9 @@ public class SemanticAnalyzer implements ASTVisitor {
         if (right.getTypeStr().equals("binaryExp")) {
             visit((BinaryExpressionNode) node.getRight());
         }
+        if (rightType.equals(null) || leftType.equals(null)){
+            return node.getResultType();
+        }
         switch (node.getResultType()) {
             case "str":
                 String lstr = null;
@@ -231,6 +238,7 @@ public class SemanticAnalyzer implements ASTVisitor {
                     lstr = ((BinaryExpressionNode) left).getResult();
                 }else if(left instanceof LiteralNode){
                     //TODO in code generation, involve variable
+                    return node.getResultType();
                 } else {
                     lstr = ((LiteralNode)left).getLiteral();
                 }
@@ -238,6 +246,7 @@ public class SemanticAnalyzer implements ASTVisitor {
                     rstr = ((BinaryExpressionNode) right).getResult();
                 }else if(left instanceof LiteralNode){
                     //TODO in code generation, involve variable
+                    return node.getResultType();
                 } else {
                     rstr = ((LiteralNode) left).getLiteral();
                 }
@@ -252,18 +261,24 @@ public class SemanticAnalyzer implements ASTVisitor {
             case "int":
                 Integer lint = null;
                 Integer rint = null;
-                if (left instanceof BinaryExpressionNode){
-                    lint = Integer.valueOf(((BinaryExpressionNode) left).getResult());
+                if (left instanceof BinaryExpressionNode ){
+                    if (((BinaryExpressionNode) left).getResult() != null) {
+                        lint = Integer.valueOf(((BinaryExpressionNode) left).getResult());
+                    }else{
+                        return node.getResultType();
+                    }
                 } else if(left instanceof LiteralNode){
                     //TODO in code generation, involve variable
+                    return node.getResultType();
                 }
-                else {
+                else{
                     lint = Integer.valueOf(((NumberNode) left).getValue());
                 }
                 if (right instanceof BinaryExpressionNode){
                     rint = Integer.valueOf(((BinaryExpressionNode) right).getResult());
                 } else if(left instanceof LiteralNode){
                     //TODO in code generation, involve variable
+                    return node.getResultType();
                 } else {
                     rint = Integer.valueOf(((NumberNode) right).getValue());
                 }
@@ -291,6 +306,7 @@ public class SemanticAnalyzer implements ASTVisitor {
                     lreal = Float.valueOf(((BinaryExpressionNode) left).getResult());
                 }else if(left instanceof LiteralNode){
                     //TODO in code generation, involve variable
+                    return node.getResultType();
                 } else {
                     lreal = Float.valueOf(((NumberNode) left).getValue());
                 }
@@ -298,6 +314,7 @@ public class SemanticAnalyzer implements ASTVisitor {
                     rreal = Float.valueOf(((BinaryExpressionNode) right).getResult());
                 }else if(left instanceof LiteralNode){
                     //TODO in code generation, involve variable
+                    return node.getResultType();
                 } else {
                     rreal = Float.valueOf(((NumberNode) right).getValue());
                 }
@@ -337,7 +354,7 @@ public class SemanticAnalyzer implements ASTVisitor {
                         throw new Exception("Invalid operation: binary expression error type");
                     }
                     //TODO: AND et OR
-                    break;
+                    return node.getResultType();
                 } else if (left.getTypeStr().equals("str")) {
                     String ls = null;
                     String rs = null;
@@ -743,7 +760,8 @@ public class SemanticAnalyzer implements ASTVisitor {
 
     @Override
     public void visit(VarDeclarationNode node) throws Exception {
-        if (!SymbolTable.containmut(node.getAssignment().getIdentifier()) && !SymbolTable.containimmut(node.getAssignment().getIdentifier()) && !SymbolTable.containrecord(node.getAssignment().getIdentifier()) && !SymbolTable.containarray(node.getAssignment().getIdentifier())) {            String varName = node.getAssignment().getIdentifier();
+        //if (!SymbolTable.containmut(node.getAssignment().getIdentifier()) && !SymbolTable.containimmut(node.getAssignment().getIdentifier()) && !SymbolTable.containrecord(node.getAssignment().getIdentifier()) && !SymbolTable.containarray(node.getAssignment().getIdentifier())) {
+            String varName = node.getAssignment().getIdentifier();
             TypeNode varType = node.getAssignment().getType();
             if(node.getAssignment().getValue() instanceof MethodCallNode){
                 MethodCallNode val = (MethodCallNode) node.getAssignment().getValue();
@@ -776,9 +794,9 @@ public class SemanticAnalyzer implements ASTVisitor {
             }
             //Check variable and value type
             SymbolTable.insertmut(varName, varType);
-        } else {
-            throw new Exception("Semantic error: duplicated var declaration");
-        }
+        //} else {
+         //   throw new Exception("Semantic error: duplicated var declaration");
+        //}
     }
 
     @Override

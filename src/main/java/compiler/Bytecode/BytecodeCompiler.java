@@ -536,6 +536,7 @@ public class BytecodeCompiler {
     public void generateVar(AssignmentNode expression, MethodVisitor method) {
         System.out.println("var || val");
         String type = expression.getTypeStr();
+        System.out.println(type);
         if (type.equals("int")) {
             ExpressionNode valType = expression.getValue();
             if (valType instanceof BinaryExpressionNode) {
@@ -606,7 +607,16 @@ public class BytecodeCompiler {
                 method.visitIntInsn(BIPUSH, Integer.parseInt(size.getValue()));
                 method.visitIntInsn(NEWARRAY, T_BOOLEAN);
                 method.visitVarInsn(ASTORE, idx);
-            } else {
+            }else if(valType instanceof BinaryExpressionNode){
+                BinaryExpressionNode val = (BinaryExpressionNode) expression.getValue();
+                if (val.getResult() != null){
+                    ++idx;
+                    valueTable.put(expression.getIdentifier(), idx);
+                    int isTrue = Boolean.parseBoolean(val.getResult()) ? ICONST_1 : ICONST_0;
+                    method.visitInsn(isTrue);
+                }
+            }
+            else {
                 BooleanNode val = (BooleanNode) expression.getValue();
                 ++idx;
                 valueTable.put(expression.getIdentifier(), idx);
@@ -630,7 +640,15 @@ public class BytecodeCompiler {
                 method.visitIntInsn(BIPUSH, Integer.parseInt(size.getValue()));
                 method.visitIntInsn(NEWARRAY, T_FLOAT);
                 method.visitVarInsn(ASTORE, idx);
-            } else {
+            } else if(valType instanceof BinaryExpressionNode){
+                BinaryExpressionNode val = (BinaryExpressionNode) expression.getValue();
+                if (val.getResult() != null){
+                    ++idx;
+                    valueTable.put(expression.getIdentifier(), idx);
+                    method.visitLdcInsn(Float.parseFloat(val.getResult()));
+                    method.visitVarInsn(FSTORE, idx);
+                }
+            }else {
                 NumberNode val = (NumberNode) expression.getValue();
                 ++idx;
                 valueTable.put(expression.getIdentifier(), idx);

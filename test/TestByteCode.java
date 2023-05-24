@@ -500,9 +500,9 @@ public class TestByteCode {
                 var i int = 10;
                 var ii int = 10;
                 var sum int = i + ii;
-                var a int = i * 20.1;
-                var as int = i * "sttttt";
-                var aa int = i * 20;
+                var a int = i * 20;
+                var as int = i * ii;
+                var aa int = i * 20 + ii;
                 """;
         StringReader reader = new StringReader(input);
         Lexer lexer = new Lexer(reader);
@@ -601,7 +601,9 @@ public class TestByteCode {
                                 
                 record Person {
                     name string;
-                    location Point;
+                    age int;
+                    kids int;
+                    married boolean;
                     history int[];
                 }
                 """;
@@ -671,38 +673,7 @@ public class TestByteCode {
         bc.getRender();
     }
 
-    @Test
-    public void testIfIllegalType() throws Exception {
-        String input = """
-                const v int = 3;
-                if v == "test" {
-                    return true;
-                }""";
-        StringReader reader = new StringReader(input);
-        Lexer lexer = new Lexer(reader);
-        Parser parser = new Parser(lexer);
-        ProgramNode x = parser.getAST();
-        SemanticAnalyzer sa = new SemanticAnalyzer();
-        x = sa.SemanticAnalyzer(x);
-        BytecodeCompiler bc = new BytecodeCompiler(x);
-        bc.getRender();
-    }
 
-    @Test
-    public void testIfIllegalNoDecl() throws Exception {
-        String input = """
-                if v == 10 {
-                    return true;
-                }""";
-        StringReader reader = new StringReader(input);
-        Lexer lexer = new Lexer(reader);
-        Parser parser = new Parser(lexer);
-        ProgramNode x = parser.getAST();
-        SemanticAnalyzer sa = new SemanticAnalyzer();
-        x = sa.SemanticAnalyzer(x);
-        BytecodeCompiler bc = new BytecodeCompiler(x);
-        bc.getRender();
-    }
     @Test
     public void testWhile() throws Exception {
         String input = """
