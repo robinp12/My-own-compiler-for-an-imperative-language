@@ -46,7 +46,6 @@ public final class RecordAsm {
         for (ParamNode recordParameter : recordParameters) {
             String id = recordParameter.getIdentifier();
             String type = recordParameter.getTypeStr();
-            System.out.println(recordParameter);
             switch (type) {
                 case "str" -> argLetter.append("Ljava/lang/String;");
                 case "int" -> argLetter.append("I");

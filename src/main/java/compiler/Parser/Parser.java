@@ -32,7 +32,6 @@ public class Parser {
             throw new ParseException("There is an error in parsing. " +
                     token + " token was expected but was " + lookahead.getKind() + "\n", 0);
         } else {
-            //System.out.println("(Optional message) Matching Symbol " + token);
             Symbol matchingSymbol = lookahead;
             lookahead = lexer.getNextSymbol();
             return matchingSymbol;

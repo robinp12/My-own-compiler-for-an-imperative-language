@@ -26,7 +26,6 @@ public class Lexer {
             }
         }
         input_string = str.toLowerCase().codePoints().toArray();
-        System.out.println(str);
     }
 
 
@@ -97,7 +96,6 @@ public class Lexer {
                     break;
 
                 case EOI :
-                    System.out.println("FIN DU FICHIER");
                     return new Symbol(SymbolKind.ENDOFFILE);
 
                 //delimiters

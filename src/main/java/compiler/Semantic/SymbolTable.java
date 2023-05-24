@@ -62,7 +62,6 @@ public class   SymbolTable {
     public void checkTypes(StatementNode statements) {
         for (ExpressionNode statement : statements.getStatements()) {
 
-            System.out.println(statement);
         }
     }
     public void checkTypes(AssignmentArrayNode array){

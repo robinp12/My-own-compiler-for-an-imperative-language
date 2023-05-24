@@ -13,7 +13,7 @@ public class TestByteCode {
     public void testBasicProc() throws Exception {
         String input =  """
                 proc add() int {
-                    return 10+1;
+                    return 10+10;
                 }
                 add();
                 """;
@@ -49,7 +49,7 @@ public class TestByteCode {
     public void testBasicProcString() throws Exception {
         String input =  "proc add() string {" +
                 "var a int = 1/1;"+
-                "var b int = 2/2;"+
+                "var b int = 2%2;"+
                 "return a;" +
                 "}" +
                 "add()";
@@ -140,9 +140,11 @@ public class TestByteCode {
     public void testForLoop() throws Exception {
         String input = """
                 var i int;
-                var ia int = 10;
+                var ia int = 1337;
                 for i=1009999 to 1000 by 992 {
-                        //
+                        write("print");
+                        ia = 999;
+                        var a string = "test";
                     }""";
         StringReader reader = new StringReader(input);
         Lexer lexer = new Lexer(reader);
@@ -323,6 +325,9 @@ public class TestByteCode {
     public void testBuiltInVarAssigment() throws Exception {
         String input = """
                 var a int = chr(65);
+                var leng int = len("test");
+                not(true);
+                var f int = floor(5.5);
                 """;
         StringReader reader = new StringReader(input);
         Lexer lexer = new Lexer(reader);
@@ -337,7 +342,7 @@ public class TestByteCode {
     @Test
     public void testRecordWithArrayAssign() throws Exception {
         String input = """
-                record Point {
+                record Pointe {
                     x String[];
                     y int[];
                     xx boolean;
@@ -516,7 +521,7 @@ public class TestByteCode {
 */
     @Test
     public void testDeclarationBool() throws Exception {
-        String input = "var x boolean = (1==1); ";
+        String input = "var x boolean = (1+1==2); ";
         StringReader reader = new StringReader(input);
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);

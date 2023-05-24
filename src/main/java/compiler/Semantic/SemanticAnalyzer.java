@@ -139,9 +139,6 @@ public class SemanticAnalyzer implements ASTVisitor {
                 rightType = SymbolTable.lookupimmut(right.getLiteral()).getTypeStr();
             }
         }
-        System.out.println("here");
-        System.out.println(leftType);
-        System.out.println(rightType);
 
         // Determine the result type based on the operator
         SymbolKind operatorKind = node.getOperator().getKind();
@@ -413,7 +410,6 @@ public class SemanticAnalyzer implements ASTVisitor {
 
     @Override
     public void visit(BlockNode node) throws Exception {
-        System.out.println("block");
         visit(node.getStatements());
     }
 
@@ -445,8 +441,6 @@ public class SemanticAnalyzer implements ASTVisitor {
 
     @Override
     public void visit(ExpressionNode node) throws Exception {
-        System.out.println("expression");
-        System.out.println(node);
         if (node instanceof VarDeclarationNode) {
             visit((VarDeclarationNode) node);
         } else if (node instanceof ValDeclarationNode) {

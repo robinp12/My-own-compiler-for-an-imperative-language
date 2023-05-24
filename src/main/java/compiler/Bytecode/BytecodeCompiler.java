@@ -31,7 +31,6 @@ public class BytecodeCompiler {
     private String returnTypeLetter;
 
     public BytecodeCompiler(ProgramNode ast) {
-        System.out.println("------ BYTECODE ------");
         this.valueTable = new HashMap<>();
         this.loader = new ByteArrayClassLoader();
 
@@ -49,7 +48,6 @@ public class BytecodeCompiler {
         // Others methods
         root(ast);
         container.visitEnd();
-        System.out.println("Variable Table : " + valueTable);
     }
 
     public void getRender() {
@@ -147,7 +145,6 @@ public class BytecodeCompiler {
     private void generateProcCall(MethodCallNode expression) {
         method = method == null ? methodMain : method;
 
-        System.out.println("methodCallNode");
         String name = expression.getIdentifier();
 
         if (SemanticAnalyzer.functions.contains(name)) {
@@ -189,7 +186,6 @@ public class BytecodeCompiler {
     private void generateBuiltInt(MethodCallNode expression) {
         method = method == null ? methodMain : method;
 
-        System.out.println("built-in");
         String name = expression.getIdentifier();
         ArrayList<ParamNode> params = expression.getParameters();
 
@@ -216,7 +212,6 @@ public class BytecodeCompiler {
 
                 idx += 10;
                 ++idx;
-                System.out.println(idx);
                 valueTable.put(name + "_func", idx);
                 method.visitLdcInsn(str.length());
                 method.visitVarInsn(ISTORE, idx);
@@ -231,7 +226,6 @@ public class BytecodeCompiler {
                 method.visitVarInsn(ISTORE, idx);
             }
             case "readint" -> {
-                System.out.println("readInt");
                 ++idx;
                 valueTable.put(name + "_func", idx);
                 method.visitLdcInsn(Integer.parseInt(Compiler.argu[1]));
@@ -243,7 +237,6 @@ public class BytecodeCompiler {
                 method.visitVarInsn(ISTORE, idx);
             }
             case "readreal" -> {
-                System.out.println("readReal");
                 ++idx;
                 valueTable.put(name + "_func", idx);
                 try {
@@ -254,7 +247,6 @@ public class BytecodeCompiler {
                 method.visitVarInsn(FSTORE, idx);
             }
             case "readstring" -> {
-                System.out.println("readString");
                 ++idx;
                 valueTable.put(name + "_func", idx);
                 try {
@@ -274,7 +266,6 @@ public class BytecodeCompiler {
     }
 
     private void generateWhile(WhileStatementNode expression, MethodVisitor method) {
-        System.out.println("while");
         BinaryExpressionNode exp = (BinaryExpressionNode) expression.getCondition();
 
         Label loopStart = new Label();
@@ -297,7 +288,6 @@ public class BytecodeCompiler {
         method = method == null ? methodMain : method;
 
         //BooleanNode valBool = (BooleanNode) expression.getCondition();
-        System.out.println(expression.getCondition());
         boolean hasElse = expression.getElseStatements() != null;
         Label elseLabel = new Label();
         Label endLabel = new Label();
@@ -359,7 +349,6 @@ public class BytecodeCompiler {
     }
 
     private void generateBlock(ArrayList<ParamNode> params, BlockNode block) {
-        System.out.println("Block");
         StatementNode stmt = block.getStatements();
         if (stmt != null) {
             generateStatement(params,stmt);
@@ -368,7 +357,6 @@ public class BytecodeCompiler {
 
     private void generateStatement(ArrayList<ParamNode> params,StatementNode expression) {
         for (ExpressionNode statement : expression.getStatements()) {
-            System.out.println("generate statement");
             if(statement instanceof ReturnNode){
                 generateReturn(params,(ReturnNode) statement);
             }else{
@@ -436,7 +424,6 @@ public class BytecodeCompiler {
                         AssignmentArrayNode array = (AssignmentArrayNode) statement.getValue();
                         NumberNode index = (NumberNode) array.getIndex();
                         StringNode value = (StringNode) array.getValue();
-                        System.out.println(value);
                         method.visitVarInsn(ALOAD, register);
                         method.visitIntInsn(BIPUSH, Integer.parseInt(index.getValue()));
                         method.visitLdcInsn(value.getValue());
@@ -534,9 +521,7 @@ public class BytecodeCompiler {
     }
 
     public void generateVar(AssignmentNode expression, MethodVisitor method) {
-        System.out.println("var || val");
         String type = expression.getTypeStr();
-        System.out.println(type);
         if (type.equals("int")) {
             ExpressionNode valType = expression.getValue();
             if (valType instanceof BinaryExpressionNode) {
@@ -660,7 +645,6 @@ public class BytecodeCompiler {
     }
 
     public void generateRecord(RecordNode record) {
-        System.out.println("pas encore : " + record);
         String id = record.getIdentifier();
         String name = id.substring(0, 1).toUpperCase() + id.substring(1);
         RecordAsm.generateRecord(name,record,loader);
@@ -692,8 +676,6 @@ public class BytecodeCompiler {
             }
         }
 
-        //System.out.println("args : " + argLetter + " | return : " + returnTypeLetter);
-
         method = container.visitMethod(ACC_PUBLIC, name,
                 "(" + argLetter + ")" + returnTypeLetter, null, null);
         method.visitCode();
@@ -715,7 +697,6 @@ public class BytecodeCompiler {
 
 
     public void generateBinaryExpression(BinaryExpressionNode node) {
-        System.out.println("BinaryExpression");
 
         ExpressionNode left = node.getLeft();
         ExpressionNode right = node.getRight();
@@ -733,7 +714,6 @@ public class BytecodeCompiler {
                     } else if (left instanceof StringNode) {
                         String a = ((StringNode) left).getValue();
                         String b = ((StringNode) right).getValue();
-                        System.out.println(a + b);
                     }
                 } else if (right.getTypeStr().equals("str")) {
                 } else {

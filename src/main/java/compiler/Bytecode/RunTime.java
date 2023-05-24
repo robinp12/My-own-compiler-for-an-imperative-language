@@ -18,7 +18,6 @@ public final class RunTime {
      * but not actually used in method calls. Might change that in the future?
      */
     public static String print(String string) {
-        System.out.println(string);
         return string;
     }
 }
