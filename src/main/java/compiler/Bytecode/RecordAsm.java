@@ -34,8 +34,9 @@ public final class RecordAsm {
      */
     public final static int IF_NOT_ZERO = IFNE;
 
+    static ClassWriter container;
+
     public static void generateRecord(String name, RecordNode record, ByteArrayClassLoader loader) {
-        ClassWriter container;
 
         container = new ClassWriter(ClassWriter.COMPUTE_FRAMES | ClassWriter.COMPUTE_MAXS);
         container.visit(V1_8, ACC_PUBLIC, name, null, "java/lang/Object", null);
@@ -79,7 +80,7 @@ public final class RecordAsm {
 
         int idx = 0;
         for (ParamNode recordParameter : recordParameters) {
-            methodInit.visitVarInsn(Opcodes.ALOAD, 0);
+            methodInit.visitVarInsn(ALOAD, 0);
 
             returnTypeLetter = switch (recordParameter.getTypeStr()) {
                 case "str" -> "Ljava/lang/String;";
@@ -93,7 +94,7 @@ public final class RecordAsm {
                 default -> "V";
             };
             methodInit.visitVarInsn(ALOAD, ++idx);
-            methodInit.visitFieldInsn(Opcodes.PUTFIELD, name, recordParameter.getIdentifier(), returnTypeLetter);
+            methodInit.visitFieldInsn(PUTFIELD, name, recordParameter.getIdentifier(), returnTypeLetter);
         }
         methodInit.visitInsn(RETURN);
         methodInit.visitMaxs(-1, -1);
@@ -108,25 +109,8 @@ public final class RecordAsm {
         }
     }
 
-    // ---------------------------------------------------------------------------------------------
-
-
-    // ---------------------------------------------------------------------------------------------
-
-
-    // ---------------------------------------------------------------------------------------------
-
-
-    // ---------------------------------------------------------------------------------------------
-
-
-    // ---------------------------------------------------------------------------------------------
-
-
-    // ---------------------------------------------------------------------------------------------
-
-
-    // ---------------------------------------------------------------------------------------------
-
+    public static byte[] getGeneration() {
+        return container.toByteArray();
+    }
 
 }

@@ -38,16 +38,13 @@ public class SemanticAnalyzer implements ASTVisitor {
 
     @Override
     public void visit(ProgramNode node) throws Exception {
-        System.out.println("program");
         for (ExpressionNode expression : node.getExpressions()) {
-            //System.out.println(expression);
             visit(expression);
         }
     }
 
     @Override
     public void visit(ArithmeticExpressionNode node) {
-        System.out.println("arithmetic expression");
 
     }
 
@@ -58,7 +55,6 @@ public class SemanticAnalyzer implements ASTVisitor {
 
     @Override
     public void visit(AssignmentNode node) throws Exception {
-        System.out.println("assignment");
         String varName = node.getIdentifier();
         String varType = node.getType().getTypeSymbol();
         String valType = node.getValue().getTypeStr();
@@ -79,12 +75,12 @@ public class SemanticAnalyzer implements ASTVisitor {
         if (!valType.equals(varType)) {
             throw new Exception("Assignment error, value type " + valType + " does not match declared type " + varType);
         }
-
         // Check if the variable has already been declared in this scope
         if (SymbolTable.containmut(varName)) {
             if (!symbolTable.lookupmut(varName).getTypeSymbol().equals(varType)) {
                 throw new Exception("Assignment error: this identifier " + varName + " is already used and is of type " + symbolTable.lookupmut(varName).getTypeSymbol() + " and not " + varType);
             }
+        } else if (SymbolTable.containarray(varName)) {
         } else if (SymbolTable.containimmut(varName)) {
             throw new Exception("Assignment exception: you tried to modify a immutable val or const");
         } else if (SymbolTable.containrecord(varName)) {
@@ -120,7 +116,6 @@ public class SemanticAnalyzer implements ASTVisitor {
         String leftType = node.getLeft().getTypeStr();
         String rightType = node.getRight().getTypeStr();
 
-        System.out.println("node "+ node.getLeft());
         if(node.getLeft() instanceof LiteralNode && node.getRight() instanceof LiteralNode){
             return "";
         }
@@ -370,8 +365,6 @@ public class SemanticAnalyzer implements ASTVisitor {
                     } else {
                         rr = Float.valueOf(((NumberNode) right).getValue());
                     }
-                    System.out.println(lr);
-                    System.out.println(rr);
 
                     if (operatorKind.equals(SymbolKind.EQEQ)) {
                         node.setResult(String.valueOf(lr.equals(rr)));
@@ -397,19 +390,15 @@ public class SemanticAnalyzer implements ASTVisitor {
 
     @Override
     public void visit(BlockNode node) throws Exception {
-        System.out.println("block");
-        System.out.println();
         visit(node.getStatements());
     }
 
     @Override
     public void visit(BooleanNode node) {
-        System.out.println("boolean");
     }
 
     @Override
     public void visit(ConstantDeclarationNode node) throws Exception {
-        System.out.println("const");
         if (!SymbolTable.containimmut(node.getAssignment().getIdentifier())) {
             String varName = node.getAssignment().getIdentifier();
             TypeNode varType = node.getAssignment().getType();
@@ -432,8 +421,6 @@ public class SemanticAnalyzer implements ASTVisitor {
 
     @Override
     public void visit(ExpressionNode node) throws Exception {
-        System.out.println(node);
-        System.out.println("expression");
         if (node instanceof VarDeclarationNode) {
             visit((VarDeclarationNode) node);
         } else if (node instanceof ValDeclarationNode) {
@@ -490,7 +477,6 @@ public class SemanticAnalyzer implements ASTVisitor {
 
     @Override
     public void visit(ForStatementNode node) throws Exception {
-        System.out.println("for");
         if (node.getTypeStr().equals("ForLoop")) {
             if (SymbolTable.containmut(node.getVariable()))
                 if (node.getStart() instanceof NumberNode && node.getEnd() instanceof NumberNode && node.getStep() instanceof NumberNode) {
@@ -507,7 +493,6 @@ public class SemanticAnalyzer implements ASTVisitor {
 
     @Override
     public void visit(IfStatementNode node) throws Exception {
-        System.out.println("If");
         if (node.getTypeStr().equals("If")) {
             visit(node.getCondition());
             visit(node.getThenStatements());
@@ -522,7 +507,6 @@ public class SemanticAnalyzer implements ASTVisitor {
 
     @Override
     public void visit(LiteralNode node) {
-        System.out.println("literal");
     }
 
     @Override
@@ -623,7 +607,6 @@ public class SemanticAnalyzer implements ASTVisitor {
 
     @Override
     public void visit(MethodNode node) throws Exception {
-        System.out.println("method");
         String name = node.getIdentifier();
         if (functions.contains(name)) {
             throw new Exception("Reserved keyword : \"" + node.getIdentifier() + "\" is used for built-in function");
@@ -640,17 +623,14 @@ public class SemanticAnalyzer implements ASTVisitor {
 
     @Override
     public void visit(NumberNode node) {
-        System.out.println("number");
     }
 
     @Override
     public void visit(ParamListNode node) {
-        System.out.println("param list");
     }
 
     @Override
     public void visit(ParamNode node) {
-        System.out.println("param");
     }
 
     @Override
@@ -672,7 +652,6 @@ public class SemanticAnalyzer implements ASTVisitor {
                 }
                 SymbolTable.insertrecord(node.getIdentifier(), record_entries);
             }
-            System.out.println("record");
         }
     }
 
@@ -702,7 +681,6 @@ public class SemanticAnalyzer implements ASTVisitor {
 
 
     public void visit(RecordCallNode node, String identifier) throws Exception {
-        System.out.println(node);
         String valtype = node.getvalue().getTypeStr();
         String rectype = getTypeId(SymbolTable.lookuprecord(identifier), node.getfield());
         if (!rectype.equals(valtype)) {
@@ -712,12 +690,10 @@ public class SemanticAnalyzer implements ASTVisitor {
 
     @Override
     public void visit(ReturnNode node) {
-        System.out.println("return");
     }
 
     @Override
     public void visit(StatementNode node) throws Exception {
-        System.out.println("statements");
         for (ExpressionNode statement : node.getStatements()) {
             if(statement instanceof MethodCallNode){
                 visit((MethodCallNode) statement);
@@ -728,12 +704,10 @@ public class SemanticAnalyzer implements ASTVisitor {
 
     @Override
     public void visit(StringNode node) {
-        System.out.println("string");
     }
 
     @Override
     public void visit(ValDeclarationNode node) throws Exception {
-        System.out.println("val");
         if (!SymbolTable.containmut(node.getAssignment().getIdentifier()) && !SymbolTable.containimmut(node.getAssignment().getIdentifier()) && !SymbolTable.containrecord(node.getAssignment().getIdentifier()) && !SymbolTable.containarray(node.getAssignment().getIdentifier())) {            String varName = node.getAssignment().getIdentifier();
             TypeNode varType = node.getAssignment().getType();
             String valType = node.getAssignment().getValue().getTypeStr();
@@ -752,7 +726,6 @@ public class SemanticAnalyzer implements ASTVisitor {
 
     @Override
     public void visit(WhileStatementNode node) throws Exception {
-        System.out.println("while");
         visit((BinaryExpressionNode) node.getCondition());
         visit(node.getBlock());
 
@@ -760,17 +733,14 @@ public class SemanticAnalyzer implements ASTVisitor {
 
     @Override
     public void visit(ValueNode node) {
-        System.out.println("value");
     }
 
     @Override
     public void visit(VarDeclarationNode node) throws Exception {
-        System.out.println("var");
         if (!SymbolTable.containmut(node.getAssignment().getIdentifier()) && !SymbolTable.containimmut(node.getAssignment().getIdentifier()) && !SymbolTable.containrecord(node.getAssignment().getIdentifier()) && !SymbolTable.containarray(node.getAssignment().getIdentifier())) {            String varName = node.getAssignment().getIdentifier();
             TypeNode varType = node.getAssignment().getType();
             if(node.getAssignment().getValue() instanceof MethodCallNode){
                 MethodCallNode val = (MethodCallNode) node.getAssignment().getValue();
-                System.out.println(val.getIdentifier());
                 if(functions.contains(val.getIdentifier())){
 
                 }else{
@@ -788,10 +758,7 @@ public class SemanticAnalyzer implements ASTVisitor {
             }
             else if (node.getAssignment().getValue() != null) {
                 String valType = node.getAssignment().getValue().getTypeStr();
-                System.out.println(node.getAssignment());
-                System.out.println(node.getAssignment().getValue());
                 if(node.getAssignment().getValue() instanceof LiteralNode){
-
                 }
                 else if (valType.equals("binaryExp")) {
                     valType = visit((BinaryExpressionNode) node.getAssignment().getValue());
@@ -814,7 +781,6 @@ public class SemanticAnalyzer implements ASTVisitor {
     public void visit(TypeNode node) throws Exception {
         List<String> validTypes = Arrays.asList("int", "str", "real", "bool", "record");
         if (validTypes.contains(node.getTypeSymbol())) {
-            System.out.println("Valid type");
         } else {
             throw new Exception("Illegal type encountered");
         }

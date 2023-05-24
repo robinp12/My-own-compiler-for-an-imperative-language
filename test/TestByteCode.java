@@ -15,6 +15,7 @@ public class TestByteCode {
                 proc add() int {
                     return 10+1;
                 }
+                add();
                 """;
         StringReader reader = new StringReader(input);
         Lexer lexer = new Lexer(reader);
@@ -300,8 +301,44 @@ public class TestByteCode {
                     x String[];
                     y int[];
                     xx boolean;
-                    yy real;
+                    yys real;
                 }""";
+        StringReader reader = new StringReader(input);
+        Lexer lexer = new Lexer(reader);
+        Parser parser = new Parser(lexer);
+        ProgramNode x = parser.getAST();
+        new SemanticAnalyzer(x);
+        BytecodeCompiler bc = new BytecodeCompiler(x);
+        bc.getRender();
+    }
+    @Test
+    public void testBasicProcs() throws Exception {
+        String input =
+                """
+                    proc lens(v int, a int) int {return v+v;}
+                    proc lens1(v int) int {return v+v;}
+
+                    lens(20000,11);
+                    lens1(111);
+                    var i int = 0;
+                """;
+        StringReader reader = new StringReader(input);
+        Lexer lexer = new Lexer(reader);
+        Parser parser = new Parser(lexer);
+        ProgramNode x = parser.getAST();
+        new SemanticAnalyzer(x);
+        BytecodeCompiler bc = new BytecodeCompiler(x);
+        bc.getRender();
+    }
+    @Test
+    public void testProcIllegalType() throws Exception {
+        String input =
+                """
+                proc add(x int, a int, aaa int) int {
+                    return x + x;
+                }
+                add(1,2,33);
+                """;
         StringReader reader = new StringReader(input);
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
@@ -386,24 +423,6 @@ public class TestByteCode {
                 "return x;" +
                 "}" +
                 "double(1,2);";
-        StringReader reader = new StringReader(input);
-        Lexer lexer = new Lexer(reader);
-        Parser parser = new Parser(lexer);
-        ProgramNode x = parser.getAST();
-        new SemanticAnalyzer(x);
-        BytecodeCompiler bc = new BytecodeCompiler(x);
-        bc.getRender();
-    }
-
-    @Test
-    public void testProcIllegalType() throws Exception {
-        String input =
-                """
-                proc add(x int, a int, aaa int) int {
-                    return x + x;
-                }
-                add(1,2,33);
-                """;
         StringReader reader = new StringReader(input);
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
@@ -584,28 +603,10 @@ public class TestByteCode {
     public void testBasicProcssx() throws Exception {
         String input =
                 """
-                    proc squared(v int, x int) int {return v+x;}
-                    proc square(v int) int {return 0+1;}
+                    proc squared(v int, x int) int {return v%x;}
+                    proc square(v int) int {return v;}
                     squared(10,10);
-                """;
-        StringReader reader = new StringReader(input);
-        Lexer lexer = new Lexer(reader);
-        Parser parser = new Parser(lexer);
-        ProgramNode x = parser.getAST();
-        new SemanticAnalyzer(x);
-        BytecodeCompiler bc = new BytecodeCompiler(x);
-        bc.getRender();
-    }
-    @Test
-    public void testBasicProcs() throws Exception {
-        String input =
-                """
-                    proc lens(v int, a int) int {return v+v;}
-                    proc lens1(a int) int {return v+v;}
-
-                    lens(20000,11);
-                    lens1(111);
-                    var i int = 0;
+                    square(10);
                 """;
         StringReader reader = new StringReader(input);
         Lexer lexer = new Lexer(reader);
@@ -660,29 +661,6 @@ public class TestByteCode {
                 var a int = i * 20.1;
                 var as int = i * "sttttt";
                 var aa int = i * 20;
-                """;
-        StringReader reader = new StringReader(input);
-        Lexer lexer = new Lexer(reader);
-        Parser parser = new Parser(lexer);
-        ProgramNode x = parser.getAST();
-        new SemanticAnalyzer(x);
-        BytecodeCompiler bc = new BytecodeCompiler(x);
-        bc.getRender();
-    }
-
-    @Test
-    public void testMain() throws Exception {
-        String input = """
-            proc main() void {
-                var value int = 3;
-                var i int;
-                for i=1 to 100 by 2 {
-                    while value!=3 {
-                        // ....
-                    }
-                }
-                i = (i+2)*2;
-            }
                 """;
         StringReader reader = new StringReader(input);
         Lexer lexer = new Lexer(reader);
