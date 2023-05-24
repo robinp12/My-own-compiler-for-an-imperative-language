@@ -268,7 +268,6 @@ public class TestSemantic {
         Parser parser = new Parser(lexer);
         ProgramNode x = parser.getAST();
         new SemanticAnalyzer(x);
-        System.out.println(x);
     }
 
     @Test
@@ -278,7 +277,6 @@ public class TestSemantic {
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
         ProgramNode x = parser.getAST();
-        System.out.println(x);
         new SemanticAnalyzer(x);
     }
 
@@ -289,7 +287,6 @@ public class TestSemantic {
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
         ProgramNode x = parser.getAST();
-        System.out.println(x);
         assertThrows(Exception.class, () -> {new SemanticAnalyzer(x);});
     }
 
@@ -302,7 +299,6 @@ public class TestSemantic {
         Parser parser = new Parser(lexer);
         ProgramNode x = parser.getAST();
         new SemanticAnalyzer(x);
-        System.out.println(x);
     }
 
     @Test
@@ -404,7 +400,6 @@ public class TestSemantic {
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
         ProgramNode x = parser.getAST();
-        System.out.println(x);
         assertThrows(Exception.class, () -> {new SemanticAnalyzer(x);});
     }
 

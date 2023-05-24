@@ -40,7 +40,6 @@ public class SemanticAnalyzer implements ASTVisitor {
     public void visit(ProgramNode node) throws Exception {
         System.out.println("program");
         for (ExpressionNode expression : node.getExpressions()) {
-            //System.out.println(expression);
             visit(expression);
         }
     }
@@ -379,8 +378,6 @@ public class SemanticAnalyzer implements ASTVisitor {
                     } else {
                         rr = Float.valueOf(((NumberNode) right).getValue());
                     }
-                    System.out.println(lr);
-                    System.out.println(rr);
 
                     if (operatorKind.equals(SymbolKind.EQEQ)) {
                         node.setResult(String.valueOf(lr.equals(rr)));
@@ -440,7 +437,6 @@ public class SemanticAnalyzer implements ASTVisitor {
 
     @Override
     public void visit(ExpressionNode node) throws Exception {
-        System.out.println(node);
         System.out.println("expression");
         if (node instanceof VarDeclarationNode) {
             visit((VarDeclarationNode) node);
@@ -778,9 +774,8 @@ public class SemanticAnalyzer implements ASTVisitor {
             TypeNode varType = node.getAssignment().getType();
             if(node.getAssignment().getValue() instanceof MethodCallNode){
                 MethodCallNode val = (MethodCallNode) node.getAssignment().getValue();
-                System.out.println(val.getIdentifier());
                 if(functions.contains(val.getIdentifier())){
-
+                    //TODO: weird code
                 }else{
                     throw new Exception("Assignment error, " + val.getIdentifier() + " does not match");
                 }
@@ -816,9 +811,7 @@ public class SemanticAnalyzer implements ASTVisitor {
     @Override
     public void visit(TypeNode node) throws Exception {
         List<String> validTypes = Arrays.asList("int", "str", "real", "bool", "record");
-        if (validTypes.contains(node.getTypeSymbol())) {
-            System.out.println("Valid type");
-        } else {
+        if (!validTypes.contains(node.getTypeSymbol())) {
             throw new Exception("Illegal type encountered");
         }
     }
