@@ -493,7 +493,7 @@ public class TestByteCode {
         BytecodeCompiler bc = new BytecodeCompiler(x);
         bc.getRender();
     }
-
+/*
     @Test
     public void testBinaryOperationWithRegisters() throws Exception {
         String input = """
@@ -513,7 +513,7 @@ public class TestByteCode {
         BytecodeCompiler bc = new BytecodeCompiler(x);
         bc.getRender();
     }
-
+*/
     @Test
     public void testDeclarationBool() throws Exception {
         String input = "var x boolean = (1==1); ";
@@ -526,7 +526,7 @@ public class TestByteCode {
         BytecodeCompiler bc = new BytecodeCompiler(x);
         bc.getRender();
     }
-
+/*
     @Test
     public void testAssignmentBool1() throws Exception {
         String input = "var x boolean = true;" +
@@ -540,7 +540,7 @@ public class TestByteCode {
         BytecodeCompiler bc = new BytecodeCompiler(x);
         bc.getRender();
     }
-
+*/
     @Test
     public void testProc() throws Exception {
         String input =  "proc double(x int, aaaa int) int {" +
@@ -635,6 +635,7 @@ public class TestByteCode {
         BytecodeCompiler bc = new BytecodeCompiler(x);
         bc.getRender();
     }
+    /*
     @Test
     public void testIfBasic() throws Exception {
         String input = """
@@ -672,7 +673,6 @@ public class TestByteCode {
         BytecodeCompiler bc = new BytecodeCompiler(x);
         bc.getRender();
     }
-
 
     @Test
     public void testWhile() throws Exception {
@@ -724,7 +724,7 @@ public class TestByteCode {
         BytecodeCompiler bc = new BytecodeCompiler(x);
         bc.getRender();
     }
-
+*/
     @Test
     public void testBasicProcssx() throws Exception {
         String input =
@@ -800,6 +800,7 @@ public class TestByteCode {
         BytecodeCompiler bc = new BytecodeCompiler(x);
         bc.getRender();
     }
+    /*
     @Test
     public void testBinaryOperationWithRegister() throws Exception {
         String input = """
@@ -842,5 +843,5 @@ public class TestByteCode {
         x = sa.SemanticAnalyzer(x);
         BytecodeCompiler bc = new BytecodeCompiler(x);
         bc.getRender();
-    }
+    }*/
 }

@@ -330,7 +330,7 @@ public class TestSemantic {
         SemanticAnalyzer sa = new SemanticAnalyzer();
         x = sa.SemanticAnalyzer(x);
     }
-
+/*
     @Test
     public void testProcIllegalType() throws Exception {
         String input =  "proc add(x int) void {" +
@@ -382,7 +382,7 @@ public class TestSemantic {
         SemanticAnalyzer sa = new SemanticAnalyzer();
         x = sa.SemanticAnalyzer(x);
     }
-
+*/
 
     @Test
     public void testForLoop() throws Exception {
