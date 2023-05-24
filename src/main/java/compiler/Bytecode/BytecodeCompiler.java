@@ -463,11 +463,11 @@ public class BytecodeCompiler {
             method.visitInsn(IRETURN);
         } else if (val instanceof LiteralNode) {
             String leftId = ((LiteralNode) val).getLiteral();
-            int register = valueTable.get(leftId);
             for (int i = 0; i < params.size(); i++) {
                 if(params.get(i).getIdentifier().equals(leftId)) {
                     method.visitVarInsn(ILOAD, i+1); // load
                 }else{
+                    int register = valueTable.get(leftId);
                     method.visitVarInsn(ILOAD, register);
                 }
             }

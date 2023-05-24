@@ -46,7 +46,9 @@ public class TestByteCode {
     @Test
     public void testBasicProcString() throws Exception {
         String input =  "proc add() string {" +
-                "return \"Hola\";" +
+                "var a int = 1/1;"+
+                "var b int = 2/2;"+
+                "return a;" +
                 "}" +
                 "add()";
         StringReader reader = new StringReader(input);
