@@ -526,21 +526,8 @@ public class TestByteCode {
         BytecodeCompiler bc = new BytecodeCompiler(x);
         bc.getRender();
     }
-/*
-    @Test
-    public void testAssignmentBool1() throws Exception {
-        String input = "var x boolean = true;" +
-                "x = (1+1==3); ";
-        StringReader reader = new StringReader(input);
-        Lexer lexer = new Lexer(reader);
-        Parser parser = new Parser(lexer);
-        ProgramNode x = parser.getAST();
-        SemanticAnalyzer sa = new SemanticAnalyzer();
-        x = sa.SemanticAnalyzer(x);
-        BytecodeCompiler bc = new BytecodeCompiler(x);
-        bc.getRender();
-    }
-*/
+
+
     @Test
     public void testProc() throws Exception {
         String input =  "proc double(x int, aaaa int) int {" +
@@ -578,6 +565,59 @@ public class TestByteCode {
     }
 
     @Test
+    public void testprocexemple1() throws Exception {
+        String input =
+                """
+                proc square(v int) int {
+                    return v*v;
+                }
+                """;
+        StringReader reader = new StringReader(input);
+        Lexer lexer = new Lexer(reader);
+        Parser parser = new Parser(lexer);
+        ProgramNode x = parser.getAST();
+        SemanticAnalyzer sa = new SemanticAnalyzer();
+        x = sa.SemanticAnalyzer(x);
+        BytecodeCompiler bc = new BytecodeCompiler(x);
+        bc.getRender();
+    }
+
+    @Test
+    public void testprocexemple2() throws Exception {
+        String input =
+                """
+                var c int[] = int[](5);  // new array of length 5
+                        """;
+        StringReader reader = new StringReader(input);
+        Lexer lexer = new Lexer(reader);
+        Parser parser = new Parser(lexer);
+        ProgramNode x = parser.getAST();
+        SemanticAnalyzer sa = new SemanticAnalyzer();
+        x = sa.SemanticAnalyzer(x);
+        BytecodeCompiler bc = new BytecodeCompiler(x);
+        bc.getRender();
+    }
+
+    @Test
+    public void testprocexemple3() throws Exception {
+        String input =
+                """
+                 const i int = 3;
+                 const j real = 3.2;
+                 const message string = "Hello";
+                 const isEmpty boolean = true;
+                        """;
+        StringReader reader = new StringReader(input);
+        Lexer lexer = new Lexer(reader);
+        Parser parser = new Parser(lexer);
+        ProgramNode x = parser.getAST();
+        SemanticAnalyzer sa = new SemanticAnalyzer();
+        x = sa.SemanticAnalyzer(x);
+        BytecodeCompiler bc = new BytecodeCompiler(x);
+        bc.getRender();
+    }
+
+        @Test
     public void testProcIllegalType1() throws Exception {
         String input =  "proc add() string {" +
                 "return \"a\" + \"b\";" +
