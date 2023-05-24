@@ -11,7 +11,10 @@ import compiler.Parser.AST.ProgramNode;
 import compiler.Parser.Parser;
 import compiler.Semantic.SemanticAnalyzer;
 
+import java.io.IOException;
 import java.io.StringReader;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.text.ParseException;
 
 import static compiler.Parser.Parser.lookahead;
@@ -22,22 +25,18 @@ public class Compiler {
 
     public static String[] argu;
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         argu = args;
-        System.out.println(args.length);
-        String input = "readReal();";
+        Path filePath = Path.of(args[0]);
+        String input = Files.readString(filePath);
         StringReader reader = new StringReader(input);
         Lexer lexer = new Lexer(reader);
         Parser parser = null;
-        try {
-            parser = new Parser(lexer);
-            ProgramNode x = parser.getAST();
-            new SemanticAnalyzer(x);
-            BytecodeCompiler bc = new BytecodeCompiler(x);
-            bc.getRender();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        parser = new Parser(lexer);
+        ProgramNode x = parser.getAST();
+        new SemanticAnalyzer(x);
+        BytecodeCompiler bc = new BytecodeCompiler(x);
+        bc.getRender();
 
     }
 }

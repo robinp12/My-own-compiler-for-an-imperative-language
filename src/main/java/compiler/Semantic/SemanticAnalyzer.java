@@ -110,8 +110,6 @@ public class SemanticAnalyzer implements ASTVisitor {
         } else {
             throw new Exception("Assignment exception: Illegal assignment, assignation to not  declareted array");
         }
-
-
     }
 
 
@@ -121,6 +119,14 @@ public class SemanticAnalyzer implements ASTVisitor {
         // Get the types of the left and right operands
         String leftType = node.getLeft().getTypeStr();
         String rightType = node.getRight().getTypeStr();
+
+        System.out.println("node "+ node.getLeft());
+        if(node.getLeft() instanceof LiteralNode && node.getRight() instanceof LiteralNode){
+            return "";
+        }
+        if(node.getLeft() instanceof LiteralNode || node.getRight() instanceof LiteralNode){
+            return "";
+        }
 
         if (leftType.equals("binaryExp")) {
             leftType = visit((BinaryExpressionNode) node.getLeft());
@@ -774,8 +780,9 @@ public class SemanticAnalyzer implements ASTVisitor {
             TypeNode varType = node.getAssignment().getType();
             if(node.getAssignment().getValue() instanceof MethodCallNode){
                 MethodCallNode val = (MethodCallNode) node.getAssignment().getValue();
+                System.out.println(val.getIdentifier());
                 if(functions.contains(val.getIdentifier())){
-                    //TODO: weird code
+
                 }else{
                     throw new Exception("Assignment error, " + val.getIdentifier() + " does not match");
                 }
