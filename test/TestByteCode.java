@@ -417,6 +417,80 @@ public class TestByteCode {
     }
 
     @Test
+    public void testRecordAssign2() throws Exception {
+        String input = """
+                record Point {
+                    x int;
+                    y int;
+                }
+                                
+                record Person {
+                    name string;
+                    history int[];
+                }
+                """;
+        StringReader reader = new StringReader(input);
+        Lexer lexer = new Lexer(reader);
+        Parser parser = new Parser(lexer);
+        ProgramNode x = parser.getAST();
+        new SemanticAnalyzer(x);
+        BytecodeCompiler bc = new BytecodeCompiler(x);
+        bc.getRender();
+    }
+    @Test
+    public void testBasicProcssx() throws Exception {
+        String input =
+                """
+                    proc squared(v int, x int) int {return v%x;}
+                    proc square(v int) int {return v;}
+                    squared(10,10);
+                    square(10);
+                """;
+        StringReader reader = new StringReader(input);
+        Lexer lexer = new Lexer(reader);
+        Parser parser = new Parser(lexer);
+        ProgramNode x = parser.getAST();
+        new SemanticAnalyzer(x);
+        BytecodeCompiler bc = new BytecodeCompiler(x);
+        bc.getRender();
+    }
+    @Test
+    public void testIfSameVar() throws Exception {
+        String input = """
+                var i int = 1;
+                if true {
+                    var i int = 1;
+                }else{
+                    var i int = 1;
+                }""";
+        StringReader reader = new StringReader(input);
+        Lexer lexer = new Lexer(reader);
+        Parser parser = new Parser(lexer);
+        ProgramNode x = parser.getAST();
+        new SemanticAnalyzer(x);
+        BytecodeCompiler bc = new BytecodeCompiler(x);
+        bc.getRender();
+    }
+
+    /*
+        NOT WORKING YET
+    */
+
+    @Test
+    public void testArrayReassignmentString() throws Exception {
+        String input = "var c string[] = string[](10); " +
+                "c[3] = \"sc\";" +
+                "";
+        StringReader reader = new StringReader(input);
+        Lexer lexer = new Lexer(reader);
+        Parser parser = new Parser(lexer);
+        ProgramNode x = parser.getAST();
+        new SemanticAnalyzer(x);
+        BytecodeCompiler bc = new BytecodeCompiler(x);
+        bc.getRender();
+    }
+
+    @Test
     public void testBinaryOperationWithRegisters() throws Exception {
         String input = """
                 var i int = 10;
