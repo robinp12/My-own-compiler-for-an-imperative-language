@@ -116,14 +116,6 @@ public class SemanticAnalyzer implements ASTVisitor {
         String leftType = node.getLeft().getTypeStr();
         String rightType = node.getRight().getTypeStr();
 
-        System.out.println("node "+ node.getLeft());
-        if(node.getLeft() instanceof LiteralNode && node.getRight() instanceof LiteralNode){
-            return "";
-        }
-        if(node.getLeft() instanceof LiteralNode || node.getRight() instanceof LiteralNode){
-            return "";
-        }
-
         if (leftType.equals("binaryExp")) {
             leftType = visit((BinaryExpressionNode) node.getLeft());
         }

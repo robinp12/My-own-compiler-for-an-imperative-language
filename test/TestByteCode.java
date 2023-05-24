@@ -373,7 +373,7 @@ public class TestByteCode {
         bc.getRender();
     }
     @Test
-    public void testProcIllegalType() throws Exception {
+    public void testProcIllegalType2() throws Exception {
         String input =
                 """
                 proc add(x int, a int, aaa int) int {
@@ -433,12 +433,13 @@ public class TestByteCode {
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
         ProgramNode x = parser.getAST();
-        new SemanticAnalyzer(x);
+        SemanticAnalyzer sa = new SemanticAnalyzer();
+        x = sa.SemanticAnalyzer(x);
         BytecodeCompiler bc = new BytecodeCompiler(x);
         bc.getRender();
     }
     @Test
-    public void testBasicProcssx() throws Exception {
+    public void testBasicProcssx2() throws Exception {
         String input =
                 """
                     proc squared(v int, x int) int {return v%x;}
@@ -450,12 +451,13 @@ public class TestByteCode {
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
         ProgramNode x = parser.getAST();
-        new SemanticAnalyzer(x);
+        SemanticAnalyzer sa = new SemanticAnalyzer();
+        x = sa.SemanticAnalyzer(x);
         BytecodeCompiler bc = new BytecodeCompiler(x);
         bc.getRender();
     }
     @Test
-    public void testIfSameVar() throws Exception {
+    public void testIfSameVar2() throws Exception {
         String input = """
                 var i int = 1;
                 if true {
@@ -467,7 +469,8 @@ public class TestByteCode {
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
         ProgramNode x = parser.getAST();
-        new SemanticAnalyzer(x);
+        SemanticAnalyzer sa = new SemanticAnalyzer();
+        x = sa.SemanticAnalyzer(x);
         BytecodeCompiler bc = new BytecodeCompiler(x);
         bc.getRender();
     }
@@ -485,7 +488,8 @@ public class TestByteCode {
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
         ProgramNode x = parser.getAST();
-        new SemanticAnalyzer(x);
+        SemanticAnalyzer sa = new SemanticAnalyzer();
+        x = sa.SemanticAnalyzer(x);
         BytecodeCompiler bc = new BytecodeCompiler(x);
         bc.getRender();
     }
@@ -768,7 +772,7 @@ public class TestByteCode {
         bc.getRender();
     }
     @Test
-    public void testBasicProcs() throws Exception {
+    public void testBasicProcs3() throws Exception {
         String input =
                 """
                     proc lens(v int, a int) int {return v+v;}
