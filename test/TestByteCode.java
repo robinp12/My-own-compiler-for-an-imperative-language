@@ -521,7 +521,13 @@ public class TestByteCode {
 */
     @Test
     public void testDeclarationBool() throws Exception {
-        String input = "var x boolean = (1+1==2); ";
+        String input = "var x boolean = (1+1==2); " +
+                "var xs boolean = (1>=2);" +
+                "val x10 boolean = (1*2==2);" +
+                "val x0 boolean = (1*2!=2);" +
+                "val x1 boolean = (2.0==2.0);" +
+                "val x12 boolean = (2.0<=20.0);" +
+                "";
         StringReader reader = new StringReader(input);
         Lexer lexer = new Lexer(reader);
         Parser parser = new Parser(lexer);
